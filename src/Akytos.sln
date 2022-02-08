@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akytos", "Akytos\Akytos.csproj", "{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windmill", "Windmill\Windmill.csproj", "{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
