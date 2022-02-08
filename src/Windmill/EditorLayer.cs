@@ -48,8 +48,7 @@ internal class EditorLayer : ILayer
 
         var bufferLayout = new BufferLayout(new List<BufferElement>
         {
-            new (ShaderDataType.Float3, "a_Position"),
-            new (ShaderDataType.Float4, "a_Color")
+            new (ShaderDataType.Float3, "a_Position")
         });
 
         m_vertexArrayObject = m_graphicsResourceFactory.CreateVertexArray<float, uint>();

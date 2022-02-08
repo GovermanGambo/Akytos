@@ -23,6 +23,6 @@ internal class OpenGLGraphicsDevice : IGraphicsDevice
 
     public unsafe void DrawIndexed(IVertexArrayObject vertexArrayObject)
     {
-        m_gl.DrawElements(PrimitiveType.Triangles, (uint)vertexArrayObject.ElementCount, DrawElementsType.UnsignedInt, (void*)0);
+        m_gl.DrawElements(PrimitiveType.Triangles, (uint)vertexArrayObject.ElementCount, DrawElementsType.UnsignedInt, null);
     }
 }

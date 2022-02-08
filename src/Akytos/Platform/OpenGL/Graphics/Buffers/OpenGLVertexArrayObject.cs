@@ -81,10 +81,14 @@ internal class OpenGLVertexArrayObject<TArray, TElement> : IVertexArrayObject<TA
         }
 
         m_arrayBufferObjects.Add(arrayBuffer);
+        
+        arrayBuffer.Unbind();
     }
 
     public void SetElementArrayBuffer(IBufferObject<TElement> elementArrayBuffer)
     {
+        Bind();
+        elementArrayBuffer.Bind();
         m_elementArrayBufferObject = elementArrayBuffer;
     }
 

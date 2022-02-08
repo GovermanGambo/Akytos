@@ -7,7 +7,7 @@ internal sealed class OpenGLBufferObject<TData> : IBufferObject<TData> where TDa
     private readonly BufferTargetARB m_bufferTargetArb;
     private readonly GL m_gl;
 
-    public OpenGLBufferObject(GL gl, BufferTarget bufferTarget, Span<TData> data)
+    public unsafe OpenGLBufferObject(GL gl, BufferTarget bufferTarget, Span<TData> data)
     {
         m_gl = gl;
         m_bufferTargetArb = (BufferTargetARB) bufferTarget;
@@ -16,7 +16,11 @@ internal sealed class OpenGLBufferObject<TData> : IBufferObject<TData> where TDa
         Handle = new GraphicsHandle(m_gl.GenBuffer());
         m_gl.BindBuffer(m_bufferTargetArb, Handle);
 
-        m_gl.BufferData<TData>(m_bufferTargetArb, data, BufferUsageARB.StaticDraw);
+        fixed (void* d = data)
+        {
+            m_gl.BufferData(m_bufferTargetArb, (nuint)(data.Length * sizeof(TData)), d, BufferUsageARB.StaticDraw);
+        }
+        
     }
 
     public unsafe OpenGLBufferObject(GL gl, BufferTarget bufferTarget, int size)
@@ -27,7 +31,7 @@ internal sealed class OpenGLBufferObject<TData> : IBufferObject<TData> where TDa
         Handle = new GraphicsHandle(m_gl.GenBuffer());
         m_gl.BindBuffer(m_bufferTargetArb, Handle);
 
-        m_gl.BufferData(m_bufferTargetArb, (uint) size, null, BufferUsageARB.DynamicDraw);
+        m_gl.BufferData(m_bufferTargetArb, (nuint) size, null, BufferUsageARB.DynamicDraw);
     }
 
     public void Dispose()
