@@ -1,6 +1,6 @@
 namespace Akytos.Graphics;
 
-public interface IImGuiController : IDisposable
+internal interface IImGuiController : IDisposable
 {
     void Render();
     void Update(float deltaSeconds);

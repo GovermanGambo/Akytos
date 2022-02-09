@@ -8,7 +8,7 @@ using Silk.NET.Windowing;
 
 namespace Akytos.Graphics;
 
-public class OpenGLImGuiController : IImGuiController
+internal class OpenGLImGuiController : IImGuiController
 {
     private readonly List<char> m_pressedChars = new();
     private int m_attribLocationProjMtx;

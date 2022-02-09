@@ -46,22 +46,28 @@ public abstract class Application : IDisposable
                 }
             }
 
-            if (m_imGuiLayer.IsEnabled)
-            {
-                foreach (var layer in m_layerStack)
-                {
-                    if (layer.IsEnabled)
-                    {
-                        layer.OnImGui();
-                    }
-                }
-                m_imGuiLayer.OnRender();
-            }
+            UpdateImGui();
             
             m_window.PollEvents();
         }
         
         Dispose();
+    }
+
+    private void UpdateImGui()
+    {
+        if (m_imGuiLayer.IsEnabled)
+        {
+            foreach (var layer in m_layerStack)
+            {
+                if (layer.IsEnabled)
+                {
+                    layer.OnImGui();
+                }
+            }
+
+            m_imGuiLayer.OnRender();
+        }
     }
 
     internal TLayer PushLayer<TLayer>() where TLayer : ILayer

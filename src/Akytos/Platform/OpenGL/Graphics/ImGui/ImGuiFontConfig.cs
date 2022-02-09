@@ -1,6 +1,6 @@
 namespace Akytos.Graphics;
 
-public readonly struct ImGuiFontConfig
+internal readonly struct ImGuiFontConfig
 {
     public ImGuiFontConfig(string fontPath, int fontSize)
     {

@@ -11,7 +11,7 @@ namespace Akytos.Graphics;
 
 internal class ImGuiLayer : ILayer
 {
-    private IImGuiController m_controller;
+    private readonly IImGuiController m_controller;
 
     public ImGuiLayer(IGameWindow window)
     {
