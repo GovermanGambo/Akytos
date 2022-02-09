@@ -4,10 +4,12 @@ namespace Akytos.Assets;
 
 public static class Asset
 {
-    public static string GetAssetPath()
+    public static string GetAssetPath(string path)
     {
-        return GetExecutingPath("assets");
+        return Path.Combine(AssetPath, path);
     }
+
+    public static string AssetPath => GetExecutingPath("assets");
     
     private static string GetExecutingPath(string path)
     {

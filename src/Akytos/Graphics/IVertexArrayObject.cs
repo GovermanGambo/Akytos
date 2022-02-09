@@ -2,14 +2,14 @@ using Akytos.Graphics.Buffers;
 
 namespace Akytos.Graphics;
 
-public interface IVertexArrayObject : IGraphicsResource
+internal interface IVertexArrayObject : IGraphicsResource
 {
     int ElementCount { get; }
     void Bind();
     void SetBufferLayout(BufferLayout bufferLayout);
 }
 
-public interface IVertexArrayObject<TArray, TElement> : IVertexArrayObject
+internal interface IVertexArrayObject<TArray, TElement> : IVertexArrayObject
     where TArray : unmanaged where TElement : unmanaged
 {
     

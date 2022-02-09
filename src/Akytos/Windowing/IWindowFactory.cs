@@ -1,6 +1,6 @@
 namespace Akytos.Windowing;
 
-public interface IWindowFactory
+internal interface IWindowFactory
 {
     IGameWindow Create(WindowProperties properties);
 }

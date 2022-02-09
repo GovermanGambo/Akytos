@@ -1,6 +1,6 @@
 namespace Akytos.Events;
 
-public enum EventCategory
+internal enum EventCategory
 {
     Mouse,
     Keyboard,

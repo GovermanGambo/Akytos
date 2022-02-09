@@ -58,7 +58,7 @@ internal class EditorLayer : ILayer
         m_vertexArrayObject.SetElementArrayBuffer(elementArrayBufferObject);
 
         m_shaderProgram =
-            m_graphicsResourceFactory.CreateShader(Path.Combine(Asset.GetAssetPath(), "shaders/Red.glsl"));
+            m_graphicsResourceFactory.CreateShader(Asset.GetAssetPath("shaders/Red.glsl"));
     }
 
     public void OnDetach()

@@ -1,6 +1,6 @@
 namespace Akytos.Graphics.Buffers;
 
-public class BufferElement
+internal class BufferElement
 {
     public BufferElement(ShaderDataType dataType, string name, bool isNormalized = false)
     {

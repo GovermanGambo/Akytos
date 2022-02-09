@@ -1,6 +1,6 @@
 namespace Akytos.Graphics.Buffers;
 
-public interface IBufferObject<TData> : IGraphicsResource where TData : unmanaged
+internal interface IBufferObject<TData> : IGraphicsResource where TData : unmanaged
 {
     int Length { get; }
     void Bind();

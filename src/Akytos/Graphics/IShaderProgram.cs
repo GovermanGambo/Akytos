@@ -1,6 +1,6 @@
 namespace Akytos.Graphics;
 
-public interface IShaderProgram : IGraphicsResource
+internal interface IShaderProgram : IGraphicsResource
 {
     string Name { get; }
     void Bind();

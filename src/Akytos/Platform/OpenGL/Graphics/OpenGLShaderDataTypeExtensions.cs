@@ -2,7 +2,7 @@ using Silk.NET.OpenGL;
 
 namespace Akytos.Graphics;
 
-public static class OpenGLShaderDataTypeExtensions
+internal static class OpenGLShaderDataTypeExtensions
 {
     public static GLEnum ToGLShaderType(this ShaderDataType shaderDataType)
     {
