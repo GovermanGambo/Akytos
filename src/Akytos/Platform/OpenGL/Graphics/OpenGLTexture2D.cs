@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Akytos.Assertions;
 using Silk.NET.OpenGL;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -32,12 +33,9 @@ internal class OpenGLTexture2D : ITexture2D
     public unsafe OpenGLTexture2D(GL gl, Span<byte> data, int width, int height)
     {
         m_gl = gl;
-
-        if (data.Length != width * height)
-        {
-            throw new ArgumentException("The data size must match the size of the texture.");
-        }
         
+        Assert.AreEqual(data.Length, width * height, "The data size must match the size of the texture.");
+
         Width = width;
         Height = height;
 
