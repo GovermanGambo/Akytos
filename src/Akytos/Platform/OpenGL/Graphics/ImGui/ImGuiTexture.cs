@@ -75,7 +75,7 @@ internal class ImGuiTexture : IDisposable
     {
         const TextureParameterName textureMaxAnisotropy = (TextureParameterName)0x84FE;
         m_gl.TexParameter(GLEnum.Texture2D, (GLEnum)textureMaxAnisotropy,
-            ImGuiUtil.Clamp(level, 1, MaxAniso.GetValueOrDefault()));
+            Math.Clamp(level, 1, MaxAniso.GetValueOrDefault()));
     }
 
     public void SetLod(int @base, int min, int max)
