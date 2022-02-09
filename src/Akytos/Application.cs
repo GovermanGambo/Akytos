@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using Akytos.Events;
+using Akytos.Graphics;
 using Akytos.Layers;
 using Akytos.Windowing;
 using LightInject;
@@ -13,6 +14,7 @@ public abstract class Application : IDisposable
     private readonly IGameWindow m_window;
     private readonly ILayerStack m_layerStack;
 
+    private ImGuiLayer m_imGuiLayer = null!;
     private float m_lastFrameTime;
     private bool m_disposed;
 
@@ -43,6 +45,18 @@ public abstract class Application : IDisposable
                     layer.OnUpdate(deltaTime);
                 }
             }
+
+            if (m_imGuiLayer.IsEnabled)
+            {
+                foreach (var layer in m_layerStack)
+                {
+                    if (layer.IsEnabled)
+                    {
+                        layer.OnImGui();
+                    }
+                }
+                m_imGuiLayer.OnRender();
+            }
             
             m_window.PollEvents();
         }
@@ -63,7 +77,9 @@ public abstract class Application : IDisposable
 
     protected virtual void OnInitialize()
     {
-        m_window.Initialize();   
+        m_window.Initialize();
+
+        m_imGuiLayer = PushLayer<ImGuiLayer>();
     }
 
     public void Dispose()

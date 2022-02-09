@@ -4,6 +4,7 @@ using Akytos.Events;
 using Akytos.Graphics;
 using Akytos.Graphics.Buffers;
 using Akytos.Layers;
+using ImGuiNET;
 
 namespace Windmill;
 
@@ -76,5 +77,10 @@ internal class EditorLayer : ILayer
 
     public void OnEvent(IEvent e)
     {
+    }
+
+    public void OnImGui()
+    {
+        ImGui.ShowDemoWindow();
     }
 }

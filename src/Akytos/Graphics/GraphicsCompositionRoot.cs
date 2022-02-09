@@ -16,7 +16,7 @@ internal class GraphicsCompositionRoot : ICompositionRoot
         });
         serviceRegistry.RegisterSingleton<IGraphicsDevice, OpenGLGraphicsDevice>();
         serviceRegistry.RegisterSingleton<GraphicsResourceRegistry>();
-        
+
         serviceRegistry.Register<IGraphicsResourceFactory, OpenGLGraphicsResourceFactory>();
     }
 }

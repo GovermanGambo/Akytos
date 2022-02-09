@@ -9,4 +9,5 @@ internal interface ILayer : IDisposable
     void OnDetach();
     void OnUpdate(DeltaTime time);
     void OnEvent(IEvent e);
+    void OnImGui();
 }
