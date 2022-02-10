@@ -8,7 +8,7 @@ internal class EditorOrthographicCamera : IEditorCamera
     private float m_zoomLevel;
     private float m_aspectRatio;
     // TODO: This should be controlled by zooming in/out
-    private int m_scaleFactor = 4;
+    private float m_scaleFactor = 1;
 
     public EditorOrthographicCamera(int width, int height)
     {
@@ -21,7 +21,7 @@ internal class EditorOrthographicCamera : IEditorCamera
     public void SetProjection(int width, int height)
     {
         m_aspectRatio = (float) width / height;
-        m_zoomLevel = (float)width / m_scaleFactor;
+        m_zoomLevel = height / m_scaleFactor / 2;
         
         CalculateProjectionMatrix();
     }

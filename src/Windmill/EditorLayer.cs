@@ -1,3 +1,4 @@
+using System.Numerics;
 using Akytos;
 using Akytos.Assets;
 using Akytos.Editor;
@@ -76,15 +77,20 @@ internal class EditorLayer : ILayer
 
     public void OnUpdate(DeltaTime time)
     {
+        
+        
+        m_shaderProgram.Bind();
+        var transform = Matrix4x4.CreateScale(m_texture2D.Width, m_texture2D.Height, 1f);
+        
         var viewProjection = m_editorViewport.Camera.ProjectionMatrix;
         m_shaderProgram.SetMat4("u_ViewProjection", viewProjection);
-        
+        m_shaderProgram.SetMat4("u_Transform", transform);
+
         m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
         m_graphicsDevice.Clear();
         
         m_texture2D.Bind();
         
-        m_shaderProgram.Bind();
         m_graphicsDevice.DrawIndexed(m_vertexArrayObject);
         m_shaderProgram.Unbind();
     }

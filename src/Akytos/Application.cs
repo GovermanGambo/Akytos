@@ -46,7 +46,7 @@ public abstract class Application : IDisposable
                 }
             }
 
-            //UpdateImGui();
+            UpdateImGui();
             
             m_window.PollEvents();
         }
@@ -85,7 +85,7 @@ public abstract class Application : IDisposable
     {
         m_window.Initialize();
 
-        //m_imGuiLayer = PushLayer<ImGuiLayer>();
+        m_imGuiLayer = PushLayer<ImGuiLayer>();
     }
 
     public void Dispose()
