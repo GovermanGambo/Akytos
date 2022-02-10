@@ -54,7 +54,13 @@ internal class OpenGLShaderProgram : IShaderProgram
     {
         m_gl.UseProgram(0);
     }
-    
+
+    public void SetInt(string name, int value)
+    {
+        int uniformLocation = m_gl.GetUniformLocation(Handle, name);
+        m_gl.Uniform1(uniformLocation, value);
+    }
+
     private uint CompileShader(string shaderSource, ShaderType type)
     {
         uint shaderId = m_gl.CreateShader(type);

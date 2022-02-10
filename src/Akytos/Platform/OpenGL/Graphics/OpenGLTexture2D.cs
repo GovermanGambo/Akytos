@@ -3,6 +3,7 @@ using Akytos.Assertions;
 using Silk.NET.OpenGL;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace Akytos.Graphics;
 
@@ -15,6 +16,8 @@ internal class OpenGLTexture2D : ITexture2D
         m_gl = gl;
 
         var image = Image.Load<Rgba32>(filePath);
+        
+        image.Mutate(x => x.Flip(FlipMode.Vertical));
 
         Width = image.Width;
         Height = image.Height;

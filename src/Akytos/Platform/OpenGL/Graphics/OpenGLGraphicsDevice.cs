@@ -9,6 +9,9 @@ internal class OpenGLGraphicsDevice : IGraphicsDevice
     public OpenGLGraphicsDevice(GL gl)
     {
         m_gl = gl;
+        
+        m_gl.Enable(EnableCap.Blend);
+        m_gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
     }
 
     public void Clear()

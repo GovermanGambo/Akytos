@@ -20,6 +20,14 @@
       <Content Include="assets\shaders\Red.glsl">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <None Remove="assets\sprites\character_malePerson_idle.png" />
+      <Content Include="assets\sprites\character_malePerson_idle.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="assets\shaders\Texture.glsl" />
+      <Content Include="assets\shaders\Texture.glsl">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
