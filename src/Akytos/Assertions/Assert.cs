@@ -6,7 +6,7 @@ public static class Assert
 {
     public static void AreEqual(object? a, object? b, string? message = null)
     {
-        if (a != b)
+        if (a != null && !a.Equals(b))
         {
             HandleAssertionFailed(message);
         }
@@ -14,7 +14,7 @@ public static class Assert
     
     public static void AreNotEqual(object? a, object? b, string? message = null)
     {
-        if (a == b)
+        if (a != null && a.Equals(b))
         {
             HandleAssertionFailed(message);
         }

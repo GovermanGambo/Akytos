@@ -1,3 +1,5 @@
+using System.Numerics;
+using Akytos.Assertions;
 using Silk.NET.OpenGL;
 
 namespace Akytos.Graphics;
@@ -58,7 +60,15 @@ internal class OpenGLShaderProgram : IShaderProgram
     public void SetInt(string name, int value)
     {
         int uniformLocation = m_gl.GetUniformLocation(Handle, name);
+        Assert.AreNotEqual(-1, uniformLocation, $"Uniform {name} does not exist in shader!");
         m_gl.Uniform1(uniformLocation, value);
+    }
+
+    public unsafe void SetMat4(string name, Matrix4x4 value)
+    {
+        int uniformLocation = m_gl.GetUniformLocation(Handle, name);
+        Assert.AreNotEqual(-1, uniformLocation, $"Uniform {name} does not exist in shader!");
+        m_gl.UniformMatrix4(uniformLocation, 1, false, (float*)&value);
     }
 
     private uint CompileShader(string shaderSource, ShaderType type)

@@ -1,5 +1,6 @@
 using Akytos;
 using Akytos.Assets;
+using Akytos.Editor;
 using Akytos.Events;
 using Akytos.Graphics;
 using Akytos.Graphics.Buffers;
@@ -12,15 +13,17 @@ internal class EditorLayer : ILayer
 {
     private readonly IGraphicsDevice m_graphicsDevice;
     private readonly IGraphicsResourceFactory m_graphicsResourceFactory;
+    private readonly IEditorViewport m_editorViewport;
 
     private IVertexArrayObject<float, uint> m_vertexArrayObject;
     private IShaderProgram m_shaderProgram;
     private ITexture2D m_texture2D;
 
-    public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory)
+    public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory, IEditorViewport editorViewport)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
+        m_editorViewport = editorViewport;
     }
 
     public void Dispose()
@@ -73,6 +76,9 @@ internal class EditorLayer : ILayer
 
     public void OnUpdate(DeltaTime time)
     {
+        var viewProjection = m_editorViewport.Camera.ProjectionMatrix;
+        m_shaderProgram.SetMat4("u_ViewProjection", viewProjection);
+        
         m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
         m_graphicsDevice.Clear();
         
@@ -84,7 +90,7 @@ internal class EditorLayer : ILayer
     }
 
     public void OnEvent(IEvent e)
-    {
+    {;
     }
 
     public void OnImGui()
