@@ -16,18 +16,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="assets\shaders\Red.glsl" />
-      <Content Include="assets\shaders\Red.glsl">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <None Remove="assets\sprites\character_malePerson_idle.png" />
-      <Content Include="assets\sprites\character_malePerson_idle.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <None Remove="assets\shaders\Texture.glsl" />
-      <Content Include="assets\shaders\Texture.glsl">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
+        <Content Include="assets\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
