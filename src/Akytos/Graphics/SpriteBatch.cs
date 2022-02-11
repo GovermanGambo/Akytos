@@ -45,7 +45,7 @@ internal class SpriteBatch
 
         m_quadVertices = new QuadVertex[MaxVertices];
 
-        uint[] indices = CreateIndices();
+        uint[] indices = CreateElements();
         var quadElementBuffer = m_graphicsResourceFactory.CreateBuffer<uint>(BufferTarget.ElementArrayBuffer, indices);
         m_quadVertexArray.SetElementArrayBuffer(quadElementBuffer);
 
@@ -85,6 +85,11 @@ internal class SpriteBatch
         
     }
 
+    public void Draw(ITexture2D texture2D, Vector2 position)
+    {
+        Draw(texture2D, position, Color.White);
+    }
+    
     public void Draw(ITexture2D texture2D, Vector2 position, Color color)
     {
         if (m_quadElementCount > MaxElements)
@@ -150,31 +155,6 @@ internal class SpriteBatch
         );
     }
 
-    private static float[] ToFloatArray(QuadVertex[] quadVertices)
-    {
-        float[] result = new float[quadVertices.Length * 10];
-
-        for (var i = 0; i < quadVertices.Length; i++)
-        {
-            var c = i * 10;
-            result[c + 0] = quadVertices[i].Position.X;
-            result[c + 1] = quadVertices[i].Position.Y;
-            result[c + 2] = quadVertices[i].Position.Z;
-
-            result[c + 3] = quadVertices[i].Color.R;
-            result[c + 4] = quadVertices[i].Color.G;
-            result[c + 5] = quadVertices[i].Color.B;
-            result[c + 6] = quadVertices[i].Color.A;
-
-            result[c + 7] = quadVertices[i].UV.X;
-            result[c + 8] = quadVertices[i].UV.Y;
-
-            result[c + 9] = BitConverter.ToSingle(BitConverter.GetBytes(quadVertices[i].TextureIndex), 0);
-        }
-
-        return result;
-    }
-
     private void FlushAndReset()
     {
         End();
@@ -193,7 +173,7 @@ internal class SpriteBatch
         m_graphicsDevice.DrawIndexed(m_quadVertexArray);
     }
 
-    private uint[] CreateIndices()
+    private static uint[] CreateElements()
     {
         uint[] indices = new uint[MaxElements];
         uint offset = 0;
