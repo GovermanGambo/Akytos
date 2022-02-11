@@ -25,7 +25,7 @@ internal class SpriteBatch
     private int m_quadVertexCount;
     private int m_textureSlotIndex;
 
-    public unsafe SpriteBatch(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory)
+    public SpriteBatch(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
@@ -40,7 +40,8 @@ internal class SpriteBatch
         }));
         
         m_quadVertexBuffer =
-            graphicsResourceFactory.CreateBuffer<float>(BufferTarget.ArrayBuffer, MaxVertices * sizeof(QuadVertex));
+            graphicsResourceFactory.CreateBuffer<float>(BufferTarget.ArrayBuffer, MaxVertices * 10);
+        m_quadVertexArray.AddArrayBuffer(m_quadVertexBuffer);
 
         m_quadVertices = new QuadVertex[MaxVertices];
 
@@ -71,7 +72,7 @@ internal class SpriteBatch
 
     public void Begin(ICamera camera)
     {
-        var viewProjection = camera.ViewMatrix * camera.ProjectionMatrix;
+        var viewProjection = camera.ProjectionMatrix;
         
         m_textureShader.Bind();
         m_textureShader.SetMat4("u_ViewProjection", viewProjection);
@@ -94,9 +95,9 @@ internal class SpriteBatch
         Vector2[] uv =
         {
             new(0.0f, 0.0f),
-            new(0.0f, 1.0f),
+            new(1.0f, 0.0f),
             new(1.0f, 1.0f),
-            new(1.0f, 0.0f)
+            new(0.0f, 1.0f)
         };
 
         int textureIndex = 0;
@@ -131,15 +132,11 @@ internal class SpriteBatch
     {
         int size = m_quadVertexCount * sizeof(QuadVertex);
 
-        var span = new Span<float>(ToFloatArray(m_quadVertices), 0, size / 4);
-        
-        m_quadVertexBuffer.SetData(span);
-        
-        /*fixed (QuadVertex* data = &m_quadVertices[0])
+        fixed (QuadVertex* d = &m_quadVertices[0])
         {
-            m_quadVertexBuffer.SetData(data, (uint)size);
-        }*/
-        
+            m_quadVertexBuffer.SetData(d, (uint)size);
+        }
+
         Flush();
     }
 

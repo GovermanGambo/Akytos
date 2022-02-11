@@ -100,6 +100,7 @@ internal class EditorLayer : ILayer
         m_spriteBatch.Begin(m_editorViewport.Camera);
 
         m_spriteBatch.Draw(m_texture2D, Vector2.Zero, Color.White);
+        m_spriteBatch.Draw(m_texture2D, new Vector2(-68f, 0f), Color.White);
         
         m_spriteBatch.End();
     }
