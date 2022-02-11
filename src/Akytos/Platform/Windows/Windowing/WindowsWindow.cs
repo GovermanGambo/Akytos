@@ -72,6 +72,11 @@ internal class WindowsWindow : IGameWindow
         m_window.DoEvents();
     }
 
+    public void Close()
+    {
+        m_window.Close();
+    }
+
     public void Dispose()
     {
         m_window.Dispose();

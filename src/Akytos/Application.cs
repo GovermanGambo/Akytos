@@ -10,6 +10,8 @@ namespace Akytos;
 
 public abstract class Application : IDisposable
 {
+    private static Application s_application;
+    
     private readonly IServiceContainer m_serviceContainer;
     private readonly IGameWindow m_window;
     private readonly ILayerStack m_layerStack;
@@ -26,6 +28,8 @@ public abstract class Application : IDisposable
         m_window = CreateWindow(title, initialWindowWidth, initialWindowHeight);
 
         m_layerStack = new LayerStack(m_serviceContainer);
+
+        s_application = this;
     }
     
     public void Run()
@@ -89,6 +93,16 @@ public abstract class Application : IDisposable
 
         m_imGuiLayer = PushLayer<ImGuiLayer>();
         m_graphicsDevice = m_serviceContainer.GetInstance<IGraphicsDevice>();
+    }
+
+    public void Close()
+    {
+        m_window.Close();
+    }
+    
+    public static void Exit()
+    {
+        s_application.Close();
     }
 
     public void Dispose()

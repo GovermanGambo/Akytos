@@ -1,9 +1,10 @@
+using System.Collections;
 using Akytos.Assertions;
 using LightInject;
 
 namespace Windmill.Panels;
 
-internal class PanelManager
+internal class PanelManager : IEnumerable<IEditorPanel>
 {
     private readonly IServiceFactory m_serviceFactory;
     private IEditorPanel[] m_panels = null!;
@@ -43,5 +44,15 @@ internal class PanelManager
         Assert.IsNotNull(panel, $"Panel {nameof(TPanel)} does not exist!");
 
         return (TPanel)panel;
+    }
+
+    public IEnumerator<IEditorPanel> GetEnumerator()
+    {
+        return ((IEnumerable<IEditorPanel>)m_panels).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

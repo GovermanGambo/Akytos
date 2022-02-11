@@ -17,4 +17,5 @@ public interface IGameWindow : IDisposable
     void Initialize();
     void OnUpdate();
     void PollEvents();
+    void Close();
 }

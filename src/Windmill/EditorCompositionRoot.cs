@@ -2,6 +2,7 @@ using Akytos.Editor;
 using Akytos.Windowing;
 using LightInject;
 using Windmill.Panels;
+using Windmill.Services;
 
 namespace Windmill;
 
@@ -16,7 +17,9 @@ public class EditorCompositionRoot : ICompositionRoot
             return new EditorViewport(window.Width, window.Height);
         });
 
-        serviceRegistry.Register<PanelManager>();
+        serviceRegistry.RegisterSingleton<PanelManager>();
+
+        serviceRegistry.Register<MenuService>();
         
         RegisterPanels(serviceRegistry);
     }
