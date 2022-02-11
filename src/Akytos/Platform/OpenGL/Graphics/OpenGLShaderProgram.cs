@@ -30,6 +30,9 @@ internal class OpenGLShaderProgram : IShaderProgram
 
         m_gl.LinkProgram(Handle);
         m_gl.ValidateProgram(Handle);
+        
+        m_gl.GetProgram(Handle, GLEnum.LinkStatus, out int status);
+        Assert.IsFalse(status == 0, $"Program failed to link with error: {m_gl.GetProgramInfoLog(Handle)}");
 
         foreach (uint shaderId in shaderIds)
         {
@@ -69,6 +72,15 @@ internal class OpenGLShaderProgram : IShaderProgram
         int uniformLocation = m_gl.GetUniformLocation(Handle, name);
         Assert.AreNotEqual(-1, uniformLocation, $"Uniform {name} does not exist in shader!");
         m_gl.UniformMatrix4(uniformLocation, 1, false, (float*)&value);
+    }
+
+    public unsafe void SetIntArray(string name, int[] value)
+    {
+        int uniformLocation = m_gl.GetUniformLocation(Handle, name);
+        fixed (int* i = &value[0])
+        {
+            m_gl.Uniform1(uniformLocation, (uint) value.Length, i);
+        }
     }
 
     private uint CompileShader(string shaderSource, ShaderType type)

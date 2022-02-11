@@ -37,7 +37,7 @@ internal class OpenGLTexture2D : ITexture2D
     {
         m_gl = gl;
         
-        Assert.AreEqual(data.Length, width * height, "The data size must match the size of the texture.");
+        Assert.AreEqual(data.Length / 4, width * height, "The data size must match the size of the texture.");
 
         Width = width;
         Height = height;

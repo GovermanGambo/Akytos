@@ -51,12 +51,21 @@ internal sealed class OpenGLBufferObject<TData> : IBufferObject<TData> where TDa
         m_gl.BindBuffer(m_bufferTargetArb, 0);
     }
 
+    public unsafe void SetData(void* data, uint size)
+    {
+        Bind();
+        
+        m_gl.BufferSubData(m_bufferTargetArb, 0, size, data);
+
+        Unbind();
+    }
+
     public void SetData(Span<TData> data)
     {
         Bind();
-
+        
         m_gl.BufferSubData<TData>(m_bufferTargetArb, 0, data);
-
+        
         Unbind();
     }
 

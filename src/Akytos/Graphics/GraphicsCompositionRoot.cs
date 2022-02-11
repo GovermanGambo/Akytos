@@ -18,5 +18,6 @@ internal class GraphicsCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton<GraphicsResourceRegistry>();
 
         serviceRegistry.Register<IGraphicsResourceFactory, OpenGLGraphicsResourceFactory>();
+        serviceRegistry.Register<SpriteBatch>();
     }
 }

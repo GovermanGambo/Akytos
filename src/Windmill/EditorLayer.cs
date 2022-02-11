@@ -15,16 +15,18 @@ internal class EditorLayer : ILayer
     private readonly IGraphicsDevice m_graphicsDevice;
     private readonly IGraphicsResourceFactory m_graphicsResourceFactory;
     private readonly IEditorViewport m_editorViewport;
+    private readonly SpriteBatch m_spriteBatch;
 
     private IVertexArrayObject<float, uint> m_vertexArrayObject;
     private IShaderProgram m_shaderProgram;
     private ITexture2D m_texture2D;
 
-    public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory, IEditorViewport editorViewport)
+    public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory, IEditorViewport editorViewport, SpriteBatch spriteBatch)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
         m_editorViewport = editorViewport;
+        m_spriteBatch = spriteBatch;
     }
 
     public void Dispose()
@@ -35,7 +37,7 @@ internal class EditorLayer : ILayer
     public bool IsEnabled { get; set; } = true;
     public void OnAttach()
     {
-        float[] vertices = {
+        /*float[] vertices = {
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
              0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
@@ -65,10 +67,10 @@ internal class EditorLayer : ILayer
 
         m_shaderProgram =
             m_graphicsResourceFactory.CreateShader(Asset.GetAssetPath("shaders/Texture.glsl"));
-
+*/
         m_texture2D = m_graphicsResourceFactory.CreateTexture2D(Asset.GetAssetPath("sprites/character_malePerson_idle.png"));
-        m_shaderProgram.Bind();
-        m_shaderProgram.SetInt("u_Texture", 0);
+        //m_shaderProgram.Bind();
+        //m_shaderProgram.SetInt("u_Texture", 0);
     }
 
     public void OnDetach()
@@ -77,8 +79,10 @@ internal class EditorLayer : ILayer
 
     public void OnUpdate(DeltaTime time)
     {
+        m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
+        m_graphicsDevice.Clear();
         
-        
+        /*
         m_shaderProgram.Bind();
         var transform = Matrix4x4.CreateScale(m_texture2D.Width, m_texture2D.Height, 1f);
         
@@ -86,13 +90,18 @@ internal class EditorLayer : ILayer
         m_shaderProgram.SetMat4("u_ViewProjection", viewProjection);
         m_shaderProgram.SetMat4("u_Transform", transform);
 
-        m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
-        m_graphicsDevice.Clear();
+        
         
         m_texture2D.Bind();
         
         m_graphicsDevice.DrawIndexed(m_vertexArrayObject);
-        m_shaderProgram.Unbind();
+        m_shaderProgram.Unbind();*/
+        
+        m_spriteBatch.Begin(m_editorViewport.Camera);
+
+        m_spriteBatch.Draw(m_texture2D, Vector2.Zero, Color.White);
+        
+        m_spriteBatch.End();
     }
 
     public void OnEvent(IEvent e)

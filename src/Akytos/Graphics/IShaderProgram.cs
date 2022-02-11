@@ -10,4 +10,5 @@ internal interface IShaderProgram : IGraphicsResource
 
     void SetInt(string name, int value);
     void SetMat4(string name, Matrix4x4 value);
+    void SetIntArray(string name, int[] value);
 }
