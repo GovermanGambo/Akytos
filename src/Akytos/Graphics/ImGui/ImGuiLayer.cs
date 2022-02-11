@@ -72,7 +72,7 @@ internal class ImGuiLayer : ILayer
     {
     }
 
-    public void OnImGui()
+    public void OnDrawGui()
     {
         
     }

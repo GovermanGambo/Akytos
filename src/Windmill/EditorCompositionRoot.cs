@@ -14,5 +14,12 @@ public class EditorCompositionRoot : ICompositionRoot
             var window = factory.GetInstance<IGameWindow>();
             return new EditorViewport(window.Width, window.Height);
         });
+        
+        RegisterPanels(serviceRegistry);
+    }
+
+    private void RegisterPanels(IServiceRegistry serviceRegistry)
+    {
+        
     }
 }

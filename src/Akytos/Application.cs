@@ -62,7 +62,7 @@ public abstract class Application : IDisposable
             {
                 if (layer.IsEnabled)
                 {
-                    layer.OnImGui();
+                    layer.OnDrawGui();
                 }
             }
 
