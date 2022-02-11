@@ -45,7 +45,7 @@ internal class ImGuiLayer : ILayer
     
     public void Dispose()
     {
-        
+        m_controller.Dispose();
     }
 
     public bool IsEnabled { get; set; } = true;

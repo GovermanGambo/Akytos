@@ -32,7 +32,7 @@ internal class ImGuiTexture : IDisposable
         Width = (uint)width;
         Height = (uint)height;
         InternalFormat = srgb ? Srgb8Alpha8 : SizedInternalFormat.Rgba8;
-        MipmapLevels = (uint)(generateMipmaps == false ? 1 : (int)Math.Floor(Math.Log(Math.Max(Width, Height), 2)));
+        MipmapLevels = (uint)(generateMipmaps == false ? 1 : (int)System.Math.Floor(System.Math.Log(System.Math.Max(Width, Height), 2)));
 
         GlTexture = m_gl.GenTexture();
         Bind();
@@ -75,7 +75,7 @@ internal class ImGuiTexture : IDisposable
     {
         const TextureParameterName textureMaxAnisotropy = (TextureParameterName)0x84FE;
         m_gl.TexParameter(GLEnum.Texture2D, (GLEnum)textureMaxAnisotropy,
-            Math.Clamp(level, 1, MaxAniso.GetValueOrDefault()));
+            System.Math.Clamp(level, 1, MaxAniso.GetValueOrDefault()));
     }
 
     public void SetLod(int @base, int min, int max)

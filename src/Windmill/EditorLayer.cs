@@ -65,6 +65,16 @@ internal class EditorLayer : ILayer
 
         var viewportPanel = m_panelManager.GetPanel<ViewportPanel>();
         viewportPanel.Framebuffer = m_framebuffer;
+
+        var sceneTree = new SceneTree();
+
+        var node = new Node("RootNode");
+        var node2D = new Node("Node2D");
+        var spriteNode = new Node("SpriteNode");
+        node.AddChild(node2D);
+        node.AddChild(spriteNode);
+        
+        sceneTree.SetScene(node);
     }
 
     public void OnDetach()
