@@ -2,6 +2,7 @@ namespace Windmill.Panels;
 
 public interface IEditorPanel : IDisposable
 {
-    bool IsEnabled { get; }
+    string DisplayName { get; }
+    bool IsEnabled { get; set; }
     void OnDrawGui();
 }

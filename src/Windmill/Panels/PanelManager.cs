@@ -9,6 +9,7 @@ internal class PanelManager
     private IEditorPanel[] m_panels = null!;
     private bool m_initialized;
 
+    // TODO: Panels should be created on demand and disposed when they're closed
     public PanelManager(IServiceFactory serviceFactory)
     {
         m_serviceFactory = serviceFactory;

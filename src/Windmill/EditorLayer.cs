@@ -7,6 +7,7 @@ using Akytos.Graphics;
 using Akytos.Graphics.Buffers;
 using Akytos.Layers;
 using ImGuiNET;
+using Windmill.Panels;
 
 namespace Windmill;
 
@@ -16,15 +17,18 @@ internal class EditorLayer : ILayer
     private readonly IGraphicsResourceFactory m_graphicsResourceFactory;
     private readonly IEditorViewport m_editorViewport;
     private readonly SpriteBatch m_spriteBatch;
-    
+    private readonly PanelManager m_panelManager;
+
+    private IFramebuffer m_framebuffer = null!;
     private ITexture2D m_texture2D = null!;
 
-    public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory, IEditorViewport editorViewport, SpriteBatch spriteBatch)
+    public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory, IEditorViewport editorViewport, SpriteBatch spriteBatch, PanelManager panelManager)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
         m_editorViewport = editorViewport;
         m_spriteBatch = spriteBatch;
+        m_panelManager = panelManager;
     }
 
     public void Dispose()
@@ -35,7 +39,27 @@ internal class EditorLayer : ILayer
     public bool IsEnabled { get; set; } = true;
     public void OnAttach()
     {
+        var framebufferSpecification = new FrameBufferSpecification
+        {
+            Width = (uint)m_editorViewport.Width,
+            Height = (uint)m_editorViewport.Height
+        };
+
+        framebufferSpecification.Attachments = new FramebufferAttachmentSpecification(
+            new List<FramebufferTextureSpecification>
+            {
+                new(FramebufferTextureFormat.Rgba8),
+                new(FramebufferTextureFormat.Depth)
+            });
+
+        m_framebuffer = m_graphicsResourceFactory.CreateFramebuffer(framebufferSpecification);
+        
         m_texture2D = m_graphicsResourceFactory.CreateTexture2D(Asset.GetAssetPath("sprites/character_malePerson_idle.png"));
+        
+        m_panelManager.Initialize();
+
+        var viewportPanel = m_panelManager.GetPanel<ViewportPanel>();
+        viewportPanel.Framebuffer = m_framebuffer;
     }
 
     public void OnDetach()
@@ -44,6 +68,8 @@ internal class EditorLayer : ILayer
 
     public void OnUpdate(DeltaTime time)
     {
+        m_framebuffer.Bind();
+        
         m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
         m_graphicsDevice.Clear();
 
@@ -53,6 +79,8 @@ internal class EditorLayer : ILayer
         m_spriteBatch.Draw(m_texture2D, new Vector2(-68f, 0f), Color.White);
         
         m_spriteBatch.End();
+        
+        m_framebuffer.Unbind();
     }
 
     public void OnEvent(IEvent e)
@@ -64,6 +92,8 @@ internal class EditorLayer : ILayer
         Dockspace.Begin();
         
         ImGui.ShowDemoWindow();
+        
+        m_panelManager.OnDrawGui();
         
         Dockspace.End();
     }

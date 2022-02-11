@@ -15,6 +15,8 @@ internal class OpenGLFramebuffer : IFramebuffer
     private List<uint> m_colorAttachments;
     private uint m_depthAttachment;
 
+    private int[] m_windowViewportSize = new int[4];
+
     public OpenGLFramebuffer(GL gl, FrameBufferSpecification framebufferSpecification)
     {
         m_gl = gl;
@@ -55,15 +57,15 @@ internal class OpenGLFramebuffer : IFramebuffer
     public void Bind()
     {
         m_gl.BindFramebuffer(FramebufferTarget.Framebuffer, Handle);
-        // TODO: Is this needed?
-        //m_gl.Viewport(0, 0, Specification.Width, Specification.Height);
+        var previousDimensions = new Span<int>(m_windowViewportSize);
+        m_gl.GetInteger(GLEnum.Viewport, previousDimensions);
+        m_gl.Viewport(0, 0, Specification.Width, Specification.Height);
     }
 
     public void Unbind()
     {
         m_gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-        // TODO: Is this needed?
-        //m_gl.Viewport(0, 0, (uint) Application.Instance.Window.Size.X, (uint) Application.Instance.Window.Size.Y);
+        m_gl.Viewport(m_windowViewportSize[0], m_windowViewportSize[1], (uint)m_windowViewportSize[2], (uint)m_windowViewportSize[3]);
     }
 
     public void Resize(uint width, uint height)

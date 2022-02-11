@@ -15,12 +15,14 @@ public abstract class Application : IDisposable
     private readonly ILayerStack m_layerStack;
 
     private ImGuiLayer m_imGuiLayer = null!;
+    private IGraphicsDevice m_graphicsDevice = null!;
     private float m_lastFrameTime;
     private bool m_disposed;
 
     protected Application(string title, int initialWindowWidth, int initialWindowHeight)
     {
         m_serviceContainer = new ServiceContainer();
+        m_serviceContainer.RegisterSingleton<IServiceFactory>(factory => factory);
         m_window = CreateWindow(title, initialWindowWidth, initialWindowHeight);
 
         m_layerStack = new LayerStack(m_serviceContainer);
@@ -86,6 +88,7 @@ public abstract class Application : IDisposable
         m_window.Initialize();
 
         m_imGuiLayer = PushLayer<ImGuiLayer>();
+        m_graphicsDevice = m_serviceContainer.GetInstance<IGraphicsDevice>();
     }
 
     public void Dispose()
@@ -109,6 +112,9 @@ public abstract class Application : IDisposable
 
     private void OnEvent(IEvent e)
     {
+        var dispatcher = new EventDispatcher(e);
+        dispatcher.Dispatch<WindowResizedEvent>(OnWindowResized);
+        
         foreach (var layer in m_layerStack.Reverse())
         {
             if (layer.IsEnabled)
@@ -116,6 +122,13 @@ public abstract class Application : IDisposable
                 layer.OnEvent(e);
             }
         }
+    }
+
+    private bool OnWindowResized(WindowResizedEvent e)
+    {
+        m_graphicsDevice.SetViewport(0, 0, e.Width, e.Height);
+
+        return false;
     }
 
     private void Dispose(bool disposing)

@@ -24,6 +24,11 @@ internal class OpenGLGraphicsDevice : IGraphicsDevice
         m_gl.ClearColor(color.R, color.G, color.B, color.A);
     }
 
+    public void SetViewport(int x, int y, int width, int height)
+    {
+        m_gl.Viewport(x, y, (uint)width, (uint)height);
+    }
+
     public unsafe void DrawIndexed(IVertexArrayObject vertexArrayObject)
     {
         m_gl.DrawElements(PrimitiveType.Triangles, (uint)vertexArrayObject.ElementCount, DrawElementsType.UnsignedInt, null);
