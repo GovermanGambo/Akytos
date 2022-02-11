@@ -28,6 +28,13 @@ internal class OpenGLGraphicsResourceFactory : IGraphicsResourceFactory
         return bufferObject;
     }
 
+    public IFramebuffer CreateFramebuffer(FrameBufferSpecification specification)
+    {
+        var framebuffer = new OpenGLFramebuffer(m_gl, specification);
+        m_graphicsResourceRegistry.Register(framebuffer);
+        return framebuffer;
+    }
+
     public IShaderProgram CreateShader(string filePath)
     {
         var shader = new OpenGLShaderProgram(m_gl, filePath);

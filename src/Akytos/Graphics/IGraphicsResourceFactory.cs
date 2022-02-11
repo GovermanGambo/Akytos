@@ -20,6 +20,12 @@ internal interface IGraphicsResourceFactory
     /// <typeparam name="TData">The type of data that should be stored.</typeparam>
     IBufferObject<TData> CreateBuffer<TData>(BufferTarget bufferTarget, int length) where TData : unmanaged;
     /// <summary>
+    ///     Creates a new Framebuffer from the provided specifications.
+    /// </summary>
+    /// <param name="specification">The <see cref="FrameBufferSpecification"/> to create a Framebuffer from.</param>
+    /// <returns></returns>
+    IFramebuffer CreateFramebuffer(FrameBufferSpecification specification);
+    /// <summary>
     ///     Creates a new ShaderProgram.
     /// </summary>
     /// <param name="filePath">Path to the file containing the shader source code.</param>
