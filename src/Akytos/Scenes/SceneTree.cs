@@ -1,15 +1,9 @@
-﻿using System.Reflection;
-
-namespace Akytos;
+﻿namespace Akytos;
 
 public sealed class SceneTree
 {
-    private readonly MethodInfo m_updateMethod;
-
     public SceneTree()
     {
-        m_updateMethod = typeof(Node).GetMethod("OnUpdate",
-            BindingFlags.NonPublic | BindingFlags.Instance)!;
     }
 
     public Node CurrentScene { get; private set; } = null!;

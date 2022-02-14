@@ -9,6 +9,7 @@ using Akytos.Layers;
 using ImGuiNET;
 using Windmill.Panels;
 using Windmill.Services;
+using YamlDotNet.Serialization;
 
 namespace Windmill;
 
@@ -19,20 +20,22 @@ internal class EditorLayer : ILayer
     private readonly IGraphicsResourceFactory m_graphicsResourceFactory;
     private readonly MenuService m_menuService;
     private readonly PanelManager m_panelManager;
-    private readonly SpriteBatch m_spriteBatch;
+    private readonly SpriteRendererSystem m_renderingSystem;
+    private readonly SceneTree m_sceneTree;
 
     private IFramebuffer m_framebuffer = null!;
     private ITexture2D m_texture2D = null!;
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
-        IEditorViewport editorViewport, SpriteBatch spriteBatch, PanelManager panelManager, MenuService menuService)
+        IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager, MenuService menuService, SceneTree sceneTree)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
         m_editorViewport = editorViewport;
-        m_spriteBatch = spriteBatch;
+        m_renderingSystem = spriteRenderingSystem;
         m_panelManager = panelManager;
         m_menuService = menuService;
+        m_sceneTree = sceneTree;
     }
 
     public void Dispose()
@@ -66,15 +69,23 @@ internal class EditorLayer : ILayer
         var viewportPanel = m_panelManager.GetPanel<ViewportPanel>();
         viewportPanel.Framebuffer = m_framebuffer;
 
-        var sceneTree = new SceneTree();
-
         var node = new Node("RootNode");
-        var node2D = new Node("Node2D");
-        var spriteNode = new Node("SpriteNode");
+        var node2D = new SpriteNode("Node2D")
+        {
+            GlobalPosition = new Vector2(-96, 0),
+            Texture = m_texture2D
+        };
+        var spriteNode = new SpriteNode("SpriteNode")
+        {
+            Texture = m_texture2D
+        };
         node.AddChild(node2D);
         node.AddChild(spriteNode);
         
-        sceneTree.SetScene(node);
+        m_sceneTree.SetScene(node);
+
+        m_renderingSystem.Camera = m_editorViewport.Camera;
+        m_renderingSystem.Context = node;
     }
 
     public void OnDetach()
@@ -88,12 +99,7 @@ internal class EditorLayer : ILayer
         m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
         m_graphicsDevice.Clear();
 
-        m_spriteBatch.Begin(m_editorViewport.Camera);
-
-        m_spriteBatch.Draw(m_texture2D, Vector2.Zero, Color.White);
-        m_spriteBatch.Draw(m_texture2D, new Vector2(-68f, 0f), Color.White);
-
-        m_spriteBatch.End();
+        m_renderingSystem.OnUpdate(time);
 
         m_framebuffer.Unbind();
     }

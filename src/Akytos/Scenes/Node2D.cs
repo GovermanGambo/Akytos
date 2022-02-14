@@ -5,7 +5,7 @@ namespace Akytos
     public class Node2D : Node
     {
         [SerializeField("Position")] private Vector2 position;
-        [SerializeField("Rotation", SpecialField.Rotation)] private float rotation;
+        [SerializeField("Rotation")] private float rotation;
         [SerializeField("Scale")] private Vector2 scale = Vector2.One;
 
         public Node2D(string name) : base(name)

@@ -33,7 +33,7 @@ public class EditorCompositionRoot : ICompositionRoot
 
         foreach (var type in types)
         {
-            serviceRegistry.RegisterSingleton(panelType, type);
+            serviceRegistry.RegisterSingleton(panelType, type, type.Name);
         }
     }
 }
