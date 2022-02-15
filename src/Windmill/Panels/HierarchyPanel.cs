@@ -51,7 +51,8 @@ public class HierarchyPanel : IEditorPanel
         bool isSelected = SelectedNode?.GetPath() == nodePath;
         var flags = (isSelected ? ImGuiTreeNodeFlags.Selected : 0) |
                     ImGuiTreeNodeFlags.OpenOnArrow |
-                    ImGuiTreeNodeFlags.SpanAvailWidth;
+                    ImGuiTreeNodeFlags.SpanAvailWidth |
+                    ImGuiTreeNodeFlags.DefaultOpen;
 
         bool opened = ImGui.TreeNodeEx(nodePath, flags, node.Name);
 
