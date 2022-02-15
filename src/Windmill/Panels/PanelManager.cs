@@ -1,5 +1,6 @@
 using System.Collections;
 using Akytos.Assertions;
+using Akytos.Events;
 using LightInject;
 
 namespace Windmill.Panels;
@@ -44,6 +45,19 @@ internal class PanelManager : IEnumerable<IEditorPanel>
         Assert.IsNotNull(panel, $"Panel {nameof(TPanel)} does not exist!");
 
         return (TPanel)panel;
+    }
+
+    public void OnEvent(IEvent e)
+    {
+        Assert.IsTrue(m_initialized, "PanelManager is not initialized!");
+        
+        foreach (var editorPanel in m_panels)
+        {
+            if (editorPanel.IsEnabled)
+            {
+                editorPanel.OnEvent(e);
+            }
+        }
     }
 
     public IEnumerator<IEditorPanel> GetEnumerator()

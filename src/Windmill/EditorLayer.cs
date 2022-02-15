@@ -108,6 +108,7 @@ internal class EditorLayer : ILayer
 
     public void OnEvent(IEvent e)
     {
+        m_panelManager.OnEvent(e);
     }
 
     public void OnDrawGui()

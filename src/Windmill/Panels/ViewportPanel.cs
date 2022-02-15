@@ -12,19 +12,17 @@ internal class ViewportPanel : IEditorPanel
 {
     private readonly IEditorViewport m_editorViewport;
     private readonly GizmoService m_gizmoService;
-    private readonly HierarchyPanel m_hierarchyPanel;
-    private readonly SceneTree m_context;
+    private readonly SceneEditorContext m_sceneEditorContext;
     private readonly Vector2[] m_viewportBounds = new Vector2[2];
     
     private Vector2 m_viewportSize;
     private Node? m_hoveredNode;
 
-    public ViewportPanel(IEditorViewport editorViewport, GizmoService gizmoService, HierarchyPanel hierarchyPanel, SceneTree context)
+    public ViewportPanel(IEditorViewport editorViewport, GizmoService gizmoService, SceneEditorContext sceneEditorContext)
     {
         m_editorViewport = editorViewport;
         m_gizmoService = gizmoService;
-        m_hierarchyPanel = hierarchyPanel;
-        m_context = context;
+        m_sceneEditorContext = sceneEditorContext;
     }
 
     public void Dispose()
@@ -57,7 +55,7 @@ internal class ViewportPanel : IEditorPanel
                 return;
             }
 
-            m_hoveredNode = m_context.CurrentScene.GetChildren(true, node1 => node1.Id == nodeId).FirstOrDefault();
+            m_hoveredNode = m_sceneEditorContext.SceneTree.CurrentScene.GetChildren(true, node1 => node1.Id == nodeId).FirstOrDefault();
         }
         else
         {
@@ -82,7 +80,8 @@ internal class ViewportPanel : IEditorPanel
         var textureId = Framebuffer.GetColorAttachmentRendererId();
         ImGui.Image((IntPtr) textureId, m_viewportSize, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
 
-        if (m_hierarchyPanel.SelectedNode is Node2D node2D)
+        // TODO: SelectedNode should be stored in some central SceneEditorContext, not in HierarchyPanel
+        if (m_sceneEditorContext.SelectedNode is Node2D node2D)
         {
             m_gizmoService.DrawGizmos(m_editorViewport.Camera, node2D);
         }
@@ -96,6 +95,18 @@ internal class ViewportPanel : IEditorPanel
         var dispatcher = new EventDispatcher(e);
         dispatcher.Dispatch<KeyDownEvent>(OnKeyDownEvent);
         dispatcher.Dispatch<KeyUpEvent>(OnKeyUpEvent);
+        dispatcher.Dispatch<MouseDownEvent>(OnMouseDownEvent);
+    }
+
+    private bool OnMouseDownEvent(MouseDownEvent e)
+    {
+        if (e.MouseButton == MouseButton.Left && m_hoveredNode != null)
+        {
+            m_sceneEditorContext.SelectedNode = m_hoveredNode;
+            return true;
+        }
+
+        return false;
     }
 
     private bool OnKeyDownEvent(KeyDownEvent e)

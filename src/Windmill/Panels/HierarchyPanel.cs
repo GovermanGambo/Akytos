@@ -1,20 +1,20 @@
 using Akytos;
 using Akytos.Events;
 using ImGuiNET;
+using Windmill.Services;
 
 namespace Windmill.Panels;
 
 internal class HierarchyPanel : IEditorPanel
 {
-    private Node? m_selectedNode;
+    private readonly SceneEditorContext m_sceneEditorContext;
 
-    public HierarchyPanel(SceneTree context)
+    public HierarchyPanel(SceneEditorContext sceneEditorContext)
     {
-        Context = context;
+        m_sceneEditorContext = sceneEditorContext;
         IsEnabled = true;
     }
-        
-    public SceneTree Context { get; set; }
+    
     public string DisplayName => "Scene Hierarchy";
     public bool IsEnabled { get; set; } = true;
 
@@ -28,23 +28,14 @@ internal class HierarchyPanel : IEditorPanel
             return;
         }
 
-        DrawNode(Context.CurrentScene);
+        DrawNode(m_sceneEditorContext.SceneTree.CurrentScene);
 
         ImGui.End();
     }
 
     public void OnEvent(IEvent e)
     {
-        throw new NotImplementedException();
     }
-
-    public Node? SelectedNode
-    {
-        get => m_selectedNode;
-        set => SelectNode(value);
-    }
-
-    public event EventHandler<Node?>? SelectedNodeChanged;
 
     private void DrawNode(Node node)
     {
@@ -55,7 +46,7 @@ internal class HierarchyPanel : IEditorPanel
             return;
         }
 
-        bool isSelected = SelectedNode?.GetPath() == nodePath;
+        bool isSelected = m_sceneEditorContext.SelectedNode?.GetPath() == nodePath;
         var flags = (isSelected ? ImGuiTreeNodeFlags.Selected : 0) |
                     ImGuiTreeNodeFlags.OpenOnArrow |
                     ImGuiTreeNodeFlags.SpanAvailWidth |
@@ -77,8 +68,7 @@ internal class HierarchyPanel : IEditorPanel
 
     private void SelectNode(Node? node)
     {
-        m_selectedNode = node;
-        SelectedNodeChanged?.Invoke(this, node);
+        m_sceneEditorContext.SelectedNode = node;
     }
 
     public void Dispose()

@@ -18,6 +18,7 @@ public class EditorCompositionRoot : ICompositionRoot
         });
 
         serviceRegistry.RegisterSingleton<PanelManager>();
+        serviceRegistry.RegisterSingleton<SceneEditorContext>();
         serviceRegistry.Register<MenuService>();
         serviceRegistry.Register<GizmoService>();
         
