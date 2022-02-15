@@ -18,8 +18,8 @@ public class EditorCompositionRoot : ICompositionRoot
         });
 
         serviceRegistry.RegisterSingleton<PanelManager>();
-
         serviceRegistry.Register<MenuService>();
+        serviceRegistry.Register<GizmoService>();
         
         RegisterPanels(serviceRegistry);
     }

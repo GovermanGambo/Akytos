@@ -1,19 +1,30 @@
 using System.Numerics;
+using Akytos;
 using Akytos.Editor;
+using Akytos.Events;
 using Akytos.Graphics.Buffers;
 using ImGuiNET;
+using Windmill.Services;
 
 namespace Windmill.Panels;
 
 internal class ViewportPanel : IEditorPanel
 {
     private readonly IEditorViewport m_editorViewport;
+    private readonly GizmoService m_gizmoService;
+    private readonly HierarchyPanel m_hierarchyPanel;
+    private readonly SceneTree m_context;
+    private readonly Vector2[] m_viewportBounds = new Vector2[2];
     
     private Vector2 m_viewportSize;
+    private Node? m_hoveredNode;
 
-    public ViewportPanel(IEditorViewport editorViewport)
+    public ViewportPanel(IEditorViewport editorViewport, GizmoService gizmoService, HierarchyPanel hierarchyPanel, SceneTree context)
     {
         m_editorViewport = editorViewport;
+        m_gizmoService = gizmoService;
+        m_hierarchyPanel = hierarchyPanel;
+        m_context = context;
     }
 
     public void Dispose()
@@ -25,6 +36,34 @@ internal class ViewportPanel : IEditorPanel
     public bool IsEnabled { get; set; } = true;
 
     public IFramebuffer Framebuffer { get; set; } = null!;
+    
+    public void OnRender()
+    {
+        var mousePos = ImGui.GetMousePos();
+        mousePos.X -= m_viewportBounds[0].X;
+        mousePos.Y -= m_viewportBounds[0].Y;
+        var viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
+        mousePos.Y = viewportSize.Y - mousePos.Y;
+
+        int mouseX = (int) mousePos.X;
+        int mouseY = (int) mousePos.Y;
+
+        if (mouseX >= 0 && mouseY >= 0 && mouseX < viewportSize.X && mouseY < viewportSize.Y)
+        {
+            int nodeId = Framebuffer.ReadPixel(1, mouseX, mouseY);
+
+            if (nodeId == -1)
+            {
+                return;
+            }
+
+            m_hoveredNode = m_context.CurrentScene.GetChildren(true, node1 => node1.Id == nodeId).FirstOrDefault();
+        }
+        else
+        {
+            m_hoveredNode = null;
+        }
+    }
 
     public void OnDrawGui()
     {
@@ -43,7 +82,54 @@ internal class ViewportPanel : IEditorPanel
         var textureId = Framebuffer.GetColorAttachmentRendererId();
         ImGui.Image((IntPtr) textureId, m_viewportSize, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
 
+        if (m_hierarchyPanel.SelectedNode is Node2D node2D)
+        {
+            m_gizmoService.DrawGizmos(m_editorViewport.Camera, node2D);
+        }
+        
         ImGui.End();
         ImGui.PopStyleVar();
+    }
+
+    public void OnEvent(IEvent e)
+    {
+        var dispatcher = new EventDispatcher(e);
+        dispatcher.Dispatch<KeyDownEvent>(OnKeyDownEvent);
+        dispatcher.Dispatch<KeyUpEvent>(OnKeyUpEvent);
+    }
+
+    private bool OnKeyDownEvent(KeyDownEvent e)
+    {
+        switch (e.KeyCode)
+        {
+            case KeyCode.ControlLeft:
+            case KeyCode.ControlRight:
+                m_gizmoService.IsSnapping = true;
+                break;
+            case KeyCode.Q:
+                m_gizmoService.GizmoMode = GizmoMode.None;
+                return true;
+            case KeyCode.W:
+                m_gizmoService.GizmoMode = GizmoMode.Translate;
+                return true;
+            case KeyCode.E:
+                m_gizmoService.GizmoMode = GizmoMode.Rotate;
+                return true;
+            case KeyCode.R:
+                m_gizmoService.GizmoMode = GizmoMode.Scale;
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool OnKeyUpEvent(KeyUpEvent e)
+    {
+        if (e.KeyCode == KeyCode.ControlLeft || e.KeyCode == KeyCode.ControlRight)
+        {
+            m_gizmoService.IsSnapping = false;
+        }
+
+        return false;
     }
 }

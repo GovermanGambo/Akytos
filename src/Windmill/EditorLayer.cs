@@ -100,6 +100,8 @@ internal class EditorLayer : ILayer
         m_graphicsDevice.Clear();
 
         m_renderingSystem.OnUpdate(time);
+        
+        m_panelManager.GetPanel<ViewportPanel>().OnRender();
 
         m_framebuffer.Unbind();
     }

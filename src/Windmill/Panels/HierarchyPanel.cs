@@ -1,9 +1,10 @@
 using Akytos;
+using Akytos.Events;
 using ImGuiNET;
 
 namespace Windmill.Panels;
 
-public class HierarchyPanel : IEditorPanel
+internal class HierarchyPanel : IEditorPanel
 {
     private Node? m_selectedNode;
 
@@ -16,6 +17,7 @@ public class HierarchyPanel : IEditorPanel
     public SceneTree Context { get; set; }
     public string DisplayName => "Scene Hierarchy";
     public bool IsEnabled { get; set; } = true;
+
     public void OnDrawGui()
     {
         bool open = IsEnabled;
@@ -29,6 +31,11 @@ public class HierarchyPanel : IEditorPanel
         DrawNode(Context.CurrentScene);
 
         ImGui.End();
+    }
+
+    public void OnEvent(IEvent e)
+    {
+        throw new NotImplementedException();
     }
 
     public Node? SelectedNode

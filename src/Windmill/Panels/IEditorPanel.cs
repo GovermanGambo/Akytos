@@ -1,8 +1,11 @@
+using Akytos.Events;
+
 namespace Windmill.Panels;
 
-public interface IEditorPanel : IDisposable
+internal interface IEditorPanel : IDisposable
 {
     string DisplayName { get; }
     bool IsEnabled { get; set; }
     void OnDrawGui();
+    void OnEvent(IEvent e);
 }
