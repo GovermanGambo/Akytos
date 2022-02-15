@@ -10,10 +10,15 @@ public class Node
     // TODO: This is horrible
     private static int s_nextNodeId;
 
-    private readonly List<Node> m_children;
-    private string m_name;
+    [SerializeField("Children")]private readonly List<Node> m_children;
+    [SerializeField("Name")]private string m_name;
     private SceneTree? m_sceneTree;
 
+    public Node()
+        : this("NewNode")
+    {
+    }
+    
     /// <summary>
     ///     Creates a new node with the specified name.
     /// </summary>

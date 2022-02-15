@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Reflection;
 using YamlDotNet.Serialization;
 
@@ -31,8 +32,32 @@ public class SerializedObject
 
             if (!IsPrimitiveType(value.GetType()))
             {
-                // Create new serialized object if not value type
-                value = Create(value);
+                if (value is IEnumerable enumerable)
+                {
+                    var list = new List<object>();
+                    foreach (object element in enumerable)
+                    {
+                        object elementValue;
+                        if (!IsPrimitiveType(element.GetType()))
+                        {
+                            // Create new serialized object if not value type
+                            elementValue = Create(element);
+                        }
+                        else
+                        {
+                            elementValue = element;
+                        }
+                    
+                        list.Add(elementValue);
+                    }
+
+                    value = list;
+                }
+                else
+                {
+                    // Create new serialized object if not value type
+                    value = Create(value);
+                }
             }
 
             serializedFields.Add(new SerializedField(key, type, value));
