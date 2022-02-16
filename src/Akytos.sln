@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akytos", "Akytos\Akytos.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Windmill", "Windmill\Windmill.csproj", "{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akytos.Tests", "Akytos.Tests\Akytos.Tests.csproj", "{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
