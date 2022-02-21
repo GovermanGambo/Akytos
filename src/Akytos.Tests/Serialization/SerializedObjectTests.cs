@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Akytos.Tests.Serialization;
@@ -45,6 +48,18 @@ public class SerializedObjectTests
         public ExampleSerializedObjectB(ExampleSerializedObjectA serializedObjectA)
         {
             this.serializedObjectA = serializedObjectA;
+        }
+    }
+
+    private class ExampleSerializedObjectC
+    {
+        [SerializeField("StringList")] private string[] stringList;
+        [SerializeField("CustomList")] private ExampleSerializedObjectB[] customList;
+
+        public ExampleSerializedObjectC(string[] stringList, ExampleSerializedObjectB[] customList)
+        {
+            this.stringList = stringList;
+            this.customList = customList;
         }
     }
 
@@ -119,5 +134,43 @@ public class SerializedObjectTests
         Assert.Equal("floatField", floatField.Key);
         Assert.Equal(typeof(float), Type.GetType(floatField.Type));
         Assert.Equal(43.97f, floatField.Value);
+    }
+
+    [Fact]
+    public void SerializedObjectCreate_ShouldCreateSerializedObjectWithLists()
+    {
+        string[] stringList = {"A", "B", "C"};
+        var customList = new ExampleSerializedObjectB[]
+        {
+            new ExampleSerializedObjectB(new ExampleSerializedObjectA("A", 1, 0.65f)),
+            new ExampleSerializedObjectB(new ExampleSerializedObjectA("B", 2, 0.65f)),
+            new ExampleSerializedObjectB(new ExampleSerializedObjectA("C", 3, 0.65f))
+        };
+
+        var exampleSerializedObjectC = new ExampleSerializedObjectC(stringList, customList);
+
+        var serializedObject = SerializedObject.Create(exampleSerializedObjectC);
+        
+        Assert.NotNull(serializedObject);
+        Assert.Equal(typeof(ExampleSerializedObjectC), Type.GetType(serializedObject.Type));
+        Assert.Equal(2, serializedObject.Fields.Length);
+
+        var serializedStringList = serializedObject.Fields[0];
+        var serializedCustomList = serializedObject.Fields[1];
+        
+        Assert.NotNull(serializedStringList);
+        Assert.Equal("stringList", serializedStringList.Key);
+        Assert.Equal(typeof(string[]), Type.GetType(serializedStringList.Type));
+        Assert.True(serializedStringList.Value is IEnumerable);
+        
+        Assert.NotNull(serializedCustomList);
+        Assert.Equal("customList", serializedCustomList.Key);
+        Assert.Equal(typeof(ExampleSerializedObjectB[]), Type.GetType(serializedCustomList.Type));
+        Assert.True(serializedCustomList.Value is IEnumerable);
+
+        var serializedObjectList = ((IEnumerable<object>) serializedCustomList.Value!).OfType<SerializedObject>();
+        Assert.NotNull(serializedObjectList);
+        Assert.NotEmpty(serializedObjectList);
+        Assert.Equal(typeof(ExampleSerializedObjectB), Type.GetType(serializedObjectList.ElementAt(0).Type));
     }
 }
