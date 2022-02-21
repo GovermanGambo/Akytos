@@ -140,7 +140,7 @@ public class SerializedObjectTests
     public void SerializedObjectCreate_ShouldCreateSerializedObjectWithLists()
     {
         string[] stringList = {"A", "B", "C"};
-        var customList = new ExampleSerializedObjectB[]
+        var customList = new[]
         {
             new ExampleSerializedObjectB(new ExampleSerializedObjectA("A", 1, 0.65f)),
             new ExampleSerializedObjectB(new ExampleSerializedObjectA("B", 2, 0.65f)),

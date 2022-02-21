@@ -7,9 +7,6 @@ namespace Akytos;
 /// </summary>
 public class Node
 {
-    // TODO: This is horrible
-    private static int s_nextNodeId;
-
     [SerializeField("Children")]private readonly List<Node> m_children;
     [SerializeField("Name")]private string m_name;
     private SceneTree? m_sceneTree;
@@ -28,11 +25,9 @@ public class Node
         m_name = name;
 
         m_children = new List<Node>();
-        Id = s_nextNodeId;
-        s_nextNodeId++;
     }
 
-    public int Id { get; }
+    public int Id => GetPath().GetHashCode();
 
     /// <summary>
     ///     The parent node of this node. A null owner means that this is the root node of a <see cref="SceneTree" />
