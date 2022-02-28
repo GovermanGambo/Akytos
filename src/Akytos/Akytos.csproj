@@ -37,11 +37,11 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>cimgui.so</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include=".\vendor\ImGui.NET\cimgui\osx-x64\cimgui.dylib" Condition="'$(IsOSX)'=='true'">
+        <ContentWithTargetPath Include=".\vendor\ImGui.NET\cimgui\osx-x64\cimgui.dylib" Condition="'$(OS)' == 'Unix'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>cimgui.dylib</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include=".\vendor\ImGui.NET\cimgui\win-x64\cimgui.dll">
+        <ContentWithTargetPath Include=".\vendor\ImGui.NET\cimgui\win-x64\cimgui.dll" Condition="'$(OS)' == 'Windows_NT'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>cimgui.dll</TargetPath>
         </ContentWithTargetPath>
@@ -73,11 +73,11 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>cimguizmo.so</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include=".\vendor\ImGui.NET\cimguizmo\osx-x64\cimguizmo.dylib" Condition="'$(IsOSX)'=='true'">
+        <ContentWithTargetPath Include=".\vendor\ImGui.NET\cimguizmo\osx-x64\cimguizmo.dylib" Condition="'$(OS)' == 'Unix'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>cimguizmo.dylib</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include=".\vendor\ImGui.NET\cimguizmo\win-x64\cimguizmo.dll">
+        <ContentWithTargetPath Include=".\vendor\ImGui.NET\cimguizmo\win-x64\cimguizmo.dll" Condition="'$(OS)' == 'Windows_NT'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>cimguizmo.dll</TargetPath>
         </ContentWithTargetPath>
