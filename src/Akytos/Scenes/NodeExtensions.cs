@@ -18,9 +18,11 @@ namespace Akytos
 
         public static Matrix4x4 GetTransform(this Node2D node)
         {
-            return Matrix4x4.CreateScale(new Vector3(node.Scale, 1.0f))
-                   * Matrix4x4.CreateRotationZ(node.Rotation)
-                   * Matrix4x4.CreateTranslation(new Vector3(node.Position, 0.0f));
+            var matrix = Matrix4x4.CreateScale(new Vector3(node.GlobalScale, 1.0f))
+                         * Matrix4x4.CreateRotationZ(node.GlobalRotation)
+                         * Matrix4x4.CreateTranslation(new Vector3(node.GlobalPosition, 0.0f));
+
+            return matrix;
         }
     }
 }
