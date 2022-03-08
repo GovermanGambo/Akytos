@@ -5,17 +5,20 @@ layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
 layout(location = 2) in vec2 a_UV;
 layout(location = 3) in int a_TextureIndex;
+layout(location = 4) in int a_ObjectId;
 
 uniform mat4 u_ViewProjection;
 
 out vec4 v_Color;
 out vec2 v_UV;
 out flat int v_TextureIndex;
+out flat int v_ObjectId;
 
 void main() {
     v_Color = a_Color;
     v_UV = a_UV;
     v_TextureIndex = a_TextureIndex;
+    v_ObjectId = a_ObjectId;
     gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 }
 
@@ -23,10 +26,12 @@ void main() {
 #version 450
 
 layout(location = 0) out vec4 color;
+layout(location = 1) out int color2;
 
 in vec4 v_Color;
 in vec2 v_UV;
 in flat int v_TextureIndex;
+in flat int v_ObjectId;
 
 uniform sampler2D u_Textures[32];
 
@@ -69,4 +74,5 @@ void main() {
 		case 31: texColor *= texture(u_Textures[31], v_UV); break;
 	}
 	color = texColor;
+	color2 = v_ObjectId;
 }

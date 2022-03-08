@@ -11,22 +11,27 @@ internal class SpriteRendererSystem
         m_spriteBatch = spriteBatch;
     }
 
-    public Node Context { get; set; }
-    public ICamera Camera { get; set; }
+    public Node? Context { get; set; }
+    public ICamera? Camera { get; set; }
 
     public void OnUpdate(DeltaTime deltaTime)
     {
+        if (Context == null || Camera == null)
+        {
+            return;
+        }
+        
         var nodes = Context.GetChildren<SpriteNode>(true);
         
         m_spriteBatch.Begin(Camera);
         foreach (var spriteNode in nodes)
         {
-            if (spriteNode.Texture == null)
+            if (!spriteNode.IsEnabled || spriteNode.Texture == null)
             {
                 continue;
             }
             
-            m_spriteBatch.Draw(spriteNode.Texture, spriteNode.GlobalPosition);
+            m_spriteBatch.Draw(spriteNode.Texture, spriteNode.GlobalPosition, spriteNode.Id);
         }
         m_spriteBatch.End();
     }

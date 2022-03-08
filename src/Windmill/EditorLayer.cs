@@ -9,7 +9,6 @@ using Akytos.Layers;
 using ImGuiNET;
 using Windmill.Panels;
 using Windmill.Services;
-using YamlDotNet.Serialization;
 
 namespace Windmill;
 
@@ -56,19 +55,24 @@ internal class EditorLayer : ILayer
             new List<FramebufferTextureSpecification>
             {
                 new(FramebufferTextureFormat.Rgba8),
+                new(FramebufferTextureFormat.RedInteger),
                 new(FramebufferTextureFormat.Depth)
             });
 
         m_framebuffer = m_graphicsResourceFactory.CreateFramebuffer(framebufferSpecification);
 
-        m_texture2D =
-            m_graphicsResourceFactory.CreateTexture2D(Asset.GetAssetPath("sprites/character_malePerson_idle.png"));
-
         m_panelManager.Initialize();
 
         var viewportPanel = m_panelManager.GetPanel<ViewportPanel>();
         viewportPanel.Framebuffer = m_framebuffer;
+        
+        m_renderingSystem.Camera = m_editorViewport.Camera;
 
+        // TODO: Temporary Scene Setup
+        
+        m_texture2D =
+            m_graphicsResourceFactory.CreateTexture2D(Asset.GetAssetPath("sprites/character_malePerson_idle.png"));
+        
         var node = new Node("RootNode");
         var node2D = new SpriteNode("Node2D")
         {
@@ -83,8 +87,6 @@ internal class EditorLayer : ILayer
         node.AddChild(spriteNode);
         
         m_sceneTree.SetScene(node);
-
-        m_renderingSystem.Camera = m_editorViewport.Camera;
         m_renderingSystem.Context = node;
     }
 

@@ -1,7 +1,6 @@
 using System.Numerics;
 using Akytos;
 using Akytos.Editor;
-using Akytos.Graphics;
 using ImGuiNET;
 using Math = System.Math;
 
@@ -9,12 +8,12 @@ namespace Windmill.Services;
 
 internal class GizmoService
 {
-    public bool IsUsing { get; set; } = true;
+    private const GizmoMode DefaultGizmoMode = GizmoMode.Translate;
 
-
+    public bool IsUsing => GizmoMode != GizmoMode.None;
     public bool IsSnapping { get; set; }
 
-    public GizmoMode GizmoMode { get; set; }
+    public GizmoMode GizmoMode { get; set; } = DefaultGizmoMode;
 
     public void DrawGizmos(IEditorCamera camera, Node2D node2D)
     {

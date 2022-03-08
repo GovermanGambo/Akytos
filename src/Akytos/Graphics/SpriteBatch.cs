@@ -36,7 +36,8 @@ internal class SpriteBatch
             new(ShaderDataType.Float3, "a_Position"),
             new(ShaderDataType.Float4, "a_Color"),
             new(ShaderDataType.Float2, "a_UV"),
-            new(ShaderDataType.Int, "a_TextureIndex")
+            new(ShaderDataType.Int, "a_TextureIndex"),
+            new(ShaderDataType.Int, "a_ObjectId")
         }));
         
         m_quadVertexBuffer =
@@ -85,12 +86,12 @@ internal class SpriteBatch
         
     }
 
-    public void Draw(ITexture2D texture2D, Vector2 position)
+    public void Draw(ITexture2D texture2D, Vector2 position, int objectId)
     {
-        Draw(texture2D, position, Color.White);
+        Draw(texture2D, position, Color.White, objectId);
     }
     
-    public void Draw(ITexture2D texture2D, Vector2 position, Color color)
+    public void Draw(ITexture2D texture2D, Vector2 position, Color color, int objectId)
     {
         if (m_quadElementCount > MaxElements)
         {
@@ -127,7 +128,7 @@ internal class SpriteBatch
 
         for (int i = 0; i < 4; i++)
         {
-            var vertex = CreateQuadVertex(i, transform, color, textureIndex, uv);
+            var vertex = CreateQuadVertex(i, transform, color, textureIndex, uv, objectId);
             m_quadVertices[m_quadVertexCount] = vertex;
             m_quadVertexCount++;
         }
@@ -145,13 +146,15 @@ internal class SpriteBatch
         Flush();
     }
 
-    private QuadVertex CreateQuadVertex(int index, Matrix4x4 transform, Color color, int textureIndex, Vector2[] uv)
+    private QuadVertex CreateQuadVertex(int index, Matrix4x4 transform, Color color, int textureIndex, Vector2[] uv,
+        int objectId)
     {
         return new QuadVertex(
             Vector3.Transform(m_quadVertexPositions[index], transform),
             color,
             uv[index],
-            textureIndex
+            textureIndex,
+            objectId
         );
     }
 
@@ -195,17 +198,19 @@ internal class SpriteBatch
 
     private readonly struct QuadVertex
     {
-        public QuadVertex(Vector3 position, Color color, Vector2 uv, int textureIndex)
+        public QuadVertex(Vector3 position, Color color, Vector2 uv, int textureIndex, int objectId)
         {
             Position = position;
             Color = color;
             UV = uv;
             TextureIndex = textureIndex;
+            ObjectId = BitConverter.ToSingle(BitConverter.GetBytes(objectId), 0);
         }
 
         public Vector3 Position { get; }
         public Color Color { get; }
         public Vector2 UV { get; }
         public int TextureIndex { get; }
+        public float ObjectId { get; }
     }
 }

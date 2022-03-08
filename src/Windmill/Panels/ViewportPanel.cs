@@ -55,7 +55,7 @@ internal class ViewportPanel : IEditorPanel
                 return;
             }
 
-            m_hoveredNode = m_sceneEditorContext.SceneTree.CurrentScene.GetChildren(true, node1 => node1.Id == nodeId).FirstOrDefault();
+            m_hoveredNode = m_sceneEditorContext.SceneTree.CurrentScene.GetChildren(true, node => node.Id == nodeId).FirstOrDefault();
         }
         else
         {
@@ -79,8 +79,7 @@ internal class ViewportPanel : IEditorPanel
 
         var textureId = Framebuffer.GetColorAttachmentRendererId();
         ImGui.Image((IntPtr) textureId, m_viewportSize, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
-
-        // TODO: SelectedNode should be stored in some central SceneEditorContext, not in HierarchyPanel
+        
         if (m_sceneEditorContext.SelectedNode is Node2D node2D)
         {
             m_gizmoService.DrawGizmos(m_editorViewport.Camera, node2D);
