@@ -8,10 +8,12 @@ namespace Windmill.Panels;
 internal class HierarchyPanel : IEditorPanel
 {
     private readonly SceneEditorContext m_sceneEditorContext;
+    private readonly CreateNodePanel m_createNodePanel;
 
-    public HierarchyPanel(SceneEditorContext sceneEditorContext)
+    public HierarchyPanel(SceneEditorContext sceneEditorContext, CreateNodePanel createNodePanel)
     {
         m_sceneEditorContext = sceneEditorContext;
+        m_createNodePanel = createNodePanel;
         IsEnabled = true;
     }
     
@@ -26,6 +28,11 @@ internal class HierarchyPanel : IEditorPanel
             IsEnabled = false;
             ImGui.End();
             return;
+        }
+        
+        if (ImGui.Button("Add Node"))
+        {
+            m_createNodePanel.IsEnabled = true;
         }
 
         DrawNode(m_sceneEditorContext.SceneTree.CurrentScene);
