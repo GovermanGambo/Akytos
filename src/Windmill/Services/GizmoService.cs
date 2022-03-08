@@ -7,7 +7,7 @@ using Math = System.Math;
 
 namespace Windmill.Services;
 
-public class GizmoService
+internal class GizmoService
 {
     public bool IsUsing { get; set; } = true;
 
@@ -16,7 +16,7 @@ public class GizmoService
 
     public GizmoMode GizmoMode { get; set; }
 
-    public void DrawGizmos(ICamera camera, Node2D node2D)
+    public void DrawGizmos(IEditorCamera camera, Node2D node2D)
     {
         if (GizmoMode == GizmoMode.None) return;
 
@@ -33,7 +33,6 @@ public class GizmoService
         var transform = node2D.GetTransform();
         var deltaMatrix = Matrix4x4.Identity;
 
-
         float snapValue = 0.0f;
 
         if (IsSnapping)
@@ -46,13 +45,14 @@ public class GizmoService
         // TODO: Fix snapping
         float[] snapValues = {snapValue, snapValue, snapValue};
 
-        ImGuizmo.Manipulate(ref cameraProjection.M11, ref cameraView.M11, (OPERATION) GizmoMode - 1, MODE.LOCAL,
+        ImGuizmo.Manipulate(ref cameraView.M11, ref cameraProjection.M11, (OPERATION) GizmoMode - 1, MODE.LOCAL,
             ref transform.M11, ref deltaMatrix.M11, ref snapValues[0]);
 
         if (ImGuizmo.IsUsing())
         {
             Matrix4x4.Decompose(transform, out var scale, out var rotation, out var translation);
             float rotationZ = ToEulerAngles(rotation).Z;
+
             node2D.GlobalPosition = new Vector2(translation.X, translation.Y);
             node2D.GlobalRotation = rotationZ;
             node2D.GlobalScale = new Vector2(scale.X, scale.Y);

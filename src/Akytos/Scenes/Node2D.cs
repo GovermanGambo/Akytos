@@ -85,7 +85,7 @@ namespace Akytos
                 }
                 else
                 {
-                    Scale = value / node2D.GlobalPosition;
+                    Scale = value / node2D.GlobalScale;
                 }
             }
         }

@@ -15,7 +15,7 @@ internal class EditorOrthographicCamera : IEditorCamera
         SetProjection(width, height);
     }
 
-    public Matrix4x4 ViewMatrix { get; private set; } = Matrix4x4.Identity;
+    public Matrix4x4 ViewMatrix { get; } = Matrix4x4.Identity;
     public Matrix4x4 ProjectionMatrix { get; private set; } = Matrix4x4.Identity;
 
     public void SetProjection(int width, int height)
