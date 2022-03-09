@@ -8,15 +8,15 @@ namespace Windmill.Panels
     // TODO: This should be a popup/modal. Not sure if this should be an IEditorPanel at all. Maybe dont use ImGui.Begin, but rather some BeginChild or something?
     internal class CreateNodePanel : IEditorPanel
     {
-        private readonly SceneEditorContext m_context;
+        private readonly SceneEditorContext m_sceneEditorContext;
         private readonly Type[] m_nodeTypes;
         
         private string m_searchTerm = "";
         private Type? m_selectedNodeType;
 
-        public CreateNodePanel(SceneEditorContext context)
+        public CreateNodePanel(SceneEditorContext sceneEditorContext)
         {
-            m_context = context;
+            m_sceneEditorContext = sceneEditorContext;
             m_nodeTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes())
                 .Where(t => t.IsSubclassOf(typeof(Node)) || typeof(Node).IsAssignableFrom(t))
@@ -117,7 +117,7 @@ namespace Windmill.Panels
                 return Result.InvalidData;
             }
 
-            var rootNode = DefaultParentNode ?? m_context.SceneTree.CurrentScene;
+            var rootNode = DefaultParentNode ?? m_sceneEditorContext.SceneTree.CurrentScene;
             rootNode.AddChild(node, true);
 
             return Result.Ok;

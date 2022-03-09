@@ -28,11 +28,11 @@ public class Node
     }
 
     public int Id => GetPath().GetHashCode();
-    
+
     /// <summary>
     ///     Whether this Node is enabled in the Scene Hierarchy or not.
     /// </summary>
-    public bool IsEnabled { get; set; }
+    public bool IsEnabled { get; set; } = true;
 
     /// <summary>
     ///     The parent node of this node. A null owner means that this is the root node of a <see cref="SceneTree" />
