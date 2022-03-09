@@ -1,3 +1,5 @@
+#if AKYTOS_EDITOR
+
 namespace Akytos.Editor;
 
 public enum GizmoMode
@@ -7,3 +9,5 @@ public enum GizmoMode
     Scale,
     Rotate
 }
+
+#endif

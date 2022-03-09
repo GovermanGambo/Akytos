@@ -5,6 +5,16 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Configurations>Debug;Release;Debug_Editor;Release_Editor</Configurations>
+        <Platforms>AnyCPU</Platforms>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug_Editor' ">
+      <DefineConstants>TRACE;AKYTOS_EDITOR</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release_Editor' ">
+      <DefineConstants>TRACE;AKYTOS_EDITOR</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>

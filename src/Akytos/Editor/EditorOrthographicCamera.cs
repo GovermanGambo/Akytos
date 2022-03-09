@@ -1,5 +1,6 @@
+#if AKYTOS_EDITOR
+
 using System.Numerics;
-using Akytos.Graphics;
 
 namespace Akytos.Editor;
 
@@ -32,3 +33,5 @@ internal class EditorOrthographicCamera : IEditorCamera
             m_aspectRatio * m_zoomLevel, -m_zoomLevel, m_zoomLevel, 0.01f, 100.0f);
     }
 }
+
+#endif

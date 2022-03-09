@@ -71,10 +71,7 @@ internal class ViewportPanel : IEditorPanel
         var viewportPanelSize = ImGui.GetContentRegionAvail();
         if (m_viewportSize != viewportPanelSize)
         {
-            Framebuffer.Resize((uint) viewportPanelSize.X, (uint) viewportPanelSize.Y);
-            m_viewportSize = viewportPanelSize;
-
-            m_editorViewport.Camera.SetProjection((int)viewportPanelSize.X, (int)viewportPanelSize.Y);
+            OnViewportResized(viewportPanelSize);
         }
 
         var textureId = Framebuffer.GetColorAttachmentRendererId();
@@ -87,6 +84,14 @@ internal class ViewportPanel : IEditorPanel
         
         ImGui.End();
         ImGui.PopStyleVar();
+    }
+
+    private void OnViewportResized(Vector2 newViewportSize)
+    {
+        Framebuffer.Resize((uint) newViewportSize.X, (uint) newViewportSize.Y);
+        m_viewportSize = newViewportSize;
+
+        m_editorViewport.ResizeViewport((int) newViewportSize.X, (int) newViewportSize.Y);
     }
 
     public void OnEvent(IEvent e)

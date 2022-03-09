@@ -1,3 +1,5 @@
+#if AKYTOS_EDITOR
+
 namespace Akytos.Editor;
 
 internal interface IEditorViewport
@@ -7,3 +9,5 @@ internal interface IEditorViewport
     int Height { get; }
     void ResizeViewport(int width, int height);
 }
+
+#endif

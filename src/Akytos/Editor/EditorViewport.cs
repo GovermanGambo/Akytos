@@ -1,3 +1,5 @@
+#if AKYTOS_EDITOR
+
 namespace Akytos.Editor;
 
 internal class EditorViewport : IEditorViewport
@@ -22,3 +24,5 @@ internal class EditorViewport : IEditorViewport
         Camera.SetProjection(width, height);
     }
 }
+
+#endif

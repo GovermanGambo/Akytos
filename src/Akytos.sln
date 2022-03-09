@@ -10,19 +10,33 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Debug_Editor|Any CPU = Debug_Editor|Any CPU
+		Release_Editor|Any CPU = Release_Editor|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Debug_Editor|Any CPU.ActiveCfg = Debug_Editor|Any CPU
+		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Debug_Editor|Any CPU.Build.0 = Debug_Editor|Any CPU
+		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Release_Editor|Any CPU.ActiveCfg = Release_Editor|Any CPU
+		{C2B473EE-B525-4FB2-B6F1-903DD514C5A5}.Release_Editor|Any CPU.Build.0 = Release_Editor|Any CPU
 		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Debug_Editor|Any CPU.ActiveCfg = Debug_Editor|Any CPU
+		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Debug_Editor|Any CPU.Build.0 = Debug_Editor|Any CPU
+		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Release_Editor|Any CPU.ActiveCfg = Release_Editor|Any CPU
+		{1E0D913B-7B99-4DA9-AE5D-9B9D8C0D7E19}.Release_Editor|Any CPU.Build.0 = Release_Editor|Any CPU
 		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Debug_Editor|Any CPU.ActiveCfg = Debug_Editor|Any CPU
+		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Debug_Editor|Any CPU.Build.0 = Debug_Editor|Any CPU
+		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Release_Editor|Any CPU.ActiveCfg = Release_Editor|Any CPU
+		{B5CFD0E6-34DC-4017-9C7D-DAC70C6448E6}.Release_Editor|Any CPU.Build.0 = Release_Editor|Any CPU
 	EndGlobalSection
 EndGlobal
