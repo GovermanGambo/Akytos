@@ -1,3 +1,4 @@
+using System.Reflection;
 using Akytos;
 using Akytos.Editor;
 using Akytos.Events;
@@ -54,6 +55,13 @@ internal class PropertyPanel : IEditorPanel
 
         foreach (var serializedField in serializedObject.Fields)
         {
+            var fieldInfo = type.GetField(serializedField.Key);
+
+            if (fieldInfo?.GetCustomAttribute<HideInInspectorAttribute>() != null)
+            {
+                return;
+            }
+            
             var fieldType = Type.GetType(serializedField.Type);
 
             if (fieldType == null)
@@ -78,7 +86,7 @@ internal class PropertyPanel : IEditorPanel
 
             if (currentValue != null)
             {
-                var fieldInfo = type.GetField(serializedField.Key);
+                
                 fieldInfo?.SetValue(m_sceneEditorContext.SelectedNode, currentValue);
             }
         }
