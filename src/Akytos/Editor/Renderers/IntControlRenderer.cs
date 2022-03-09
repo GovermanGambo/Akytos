@@ -2,21 +2,21 @@
 
 namespace Akytos.Editor.Renderers;
 
-public class IntControlRenderer : IGuiControlRenderer<int?>
+public class IntControlRenderer : IGuiControlRenderer<int>
 {
-    public int? DrawControl(string label, int? value)
+    public int DrawControl(string label, int value)
     {
         if (AkGui.InputInteger(label, ref value))
         {
             return value;
         }
 
-        return null;
+        return value;
     }
 
-    public object? DrawControl(string label, object? value)
+    public object DrawControl(string label, object value)
     {
-        return DrawControl(label, value as int?);
+        return DrawControl(label, (int)value);
     }
 }
 

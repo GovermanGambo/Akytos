@@ -2,21 +2,21 @@
 
 namespace Akytos.Editor.Renderers;
 
-internal class FloatControlRenderer : IGuiControlRenderer<float?>
+internal class FloatControlRenderer : IGuiControlRenderer<float>
 {
-    public float? DrawControl(string label, float? value)
+    public float DrawControl(string label, float value)
     {
         if (AkGui.InputFloat(label, ref value))
         {
             return value;
         }
 
-        return null;
+        return value;
     }
 
-    public object? DrawControl(string label, object? value)
+    public object DrawControl(string label, object value)
     {
-        return DrawControl(label, value as float?);
+        return DrawControl(label, (float)value);
     }
 }
 

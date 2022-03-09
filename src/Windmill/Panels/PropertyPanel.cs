@@ -57,7 +57,12 @@ internal class PropertyPanel : IEditorPanel
         {
             var fieldInfo = type.GetField(serializedField.Key);
 
-            if (fieldInfo?.GetCustomAttribute<HideInInspectorAttribute>() != null)
+            if (fieldInfo == null)
+            {
+                return;
+            }
+
+            if (fieldInfo.GetCustomAttribute<HideInInspectorAttribute>() != null)
             {
                 return;
             }
@@ -82,12 +87,11 @@ internal class PropertyPanel : IEditorPanel
                 throw new NotSupportedException();
             }
             
-            object? currentValue = guiControlRenderer.DrawControl(fieldKey, serializedField.Value);
+            object currentValue = guiControlRenderer.DrawControl(fieldKey, serializedField.Value);
 
-            if (currentValue != null)
+            if (currentValue != fieldInfo.GetValue(m_sceneEditorContext.SelectedNode))
             {
-                
-                fieldInfo?.SetValue(m_sceneEditorContext.SelectedNode, currentValue);
+                fieldInfo.SetValue(m_sceneEditorContext.SelectedNode, currentValue);
             }
         }
     }

@@ -4,19 +4,19 @@ namespace Akytos.Editor.Renderers;
 
 internal class TextControlRenderer : IGuiControlRenderer<string>
 {
-    public string? DrawControl(string label, string? value)
+    public string DrawControl(string label, string value)
     {
         if (AkGui.InputText(label, ref value, 50))
         {
             return value;
         }
 
-        return null;
+        return value;
     }
 
-    public object? DrawControl(string label, object? value)
+    public object DrawControl(string label, object value)
     {
-        return DrawControl(label, value as string);
+        return DrawControl(label, (string)value);
     }
 }
 
