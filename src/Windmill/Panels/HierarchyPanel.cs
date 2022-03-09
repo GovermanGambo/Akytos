@@ -10,10 +10,10 @@ internal class HierarchyPanel : IEditorPanel
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly CreateNodePanel m_createNodePanel;
 
-    public HierarchyPanel(SceneEditorContext sceneEditorContext, CreateNodePanel createNodePanel)
+    public HierarchyPanel(SceneEditorContext sceneEditorContext, IEditorPanel createNodePanel)
     {
         m_sceneEditorContext = sceneEditorContext;
-        m_createNodePanel = createNodePanel;
+        m_createNodePanel = createNodePanel as CreateNodePanel;
         IsEnabled = true;
     }
     
