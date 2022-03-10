@@ -83,7 +83,7 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>cimguizmo.so</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include=".\vendor\ImGui.NET\cimguizmo\osx-x64\cimguizmo.dylib" Condition="'$(OS)' == 'Windows_NT'">
+        <ContentWithTargetPath Include=".\vendor\ImGui.NET\cimguizmo\osx-x64\cimguizmo.dylib" Condition="'$(OS)' == 'Unix'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>cimguizmo.dylib</TargetPath>
         </ContentWithTargetPath>

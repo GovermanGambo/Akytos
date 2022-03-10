@@ -88,10 +88,10 @@ internal class SpriteBatch
 
     public void Draw(ITexture2D texture2D, Vector2 position, int objectId)
     {
-        Draw(texture2D, position, Color.White, objectId);
+        Draw(texture2D, position, Vector2.One, 0f, Color.White, objectId);
     }
     
-    public void Draw(ITexture2D texture2D, Vector2 position, Color color, int objectId)
+    public void Draw(ITexture2D texture2D, Vector2 position, Vector2 scale, float rotation, Color color, int objectId)
     {
         if (m_quadElementCount > MaxElements)
         {
@@ -122,7 +122,10 @@ internal class SpriteBatch
             m_textureSlotIndex++;
         }
 
-        var transform = Matrix4x4.CreateScale(new Vector3(texture2D.Width, texture2D.Height, 1.0f))
+        var rotationMatrix = rotation % MathF.PI * 2 != 0 ? Matrix4x4.CreateRotationZ(rotation) : Matrix4x4.Identity;
+
+        var transform = Matrix4x4.CreateScale(new Vector3(texture2D.Width, texture2D.Height, 1.0f) * new Vector3(scale, 1.0f))
+                        * rotationMatrix
                         * Matrix4x4.CreateTranslation(new Vector3(position.X, position.Y, 0.0f));
                         
 
