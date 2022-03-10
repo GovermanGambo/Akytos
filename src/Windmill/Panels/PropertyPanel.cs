@@ -47,9 +47,7 @@ internal class PropertyPanel : IEditorPanel
             ImGui.End();
             return;
         }
-        
-        DrawHeader(m_sceneEditorContext.SelectedNode);
-        
+
         var serializedObject = SerializedObject.Create(m_sceneEditorContext.SelectedNode);
 
         foreach (var serializedField in serializedObject.Fields)
