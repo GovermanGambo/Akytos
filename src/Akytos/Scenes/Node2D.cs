@@ -8,6 +8,11 @@ namespace Akytos
         [SerializeField("Rotation")] private float rotation;
         [SerializeField("Scale")] private Vector2 scale = Vector2.One;
 
+        public Node2D() : base()
+        {
+            
+        }
+        
         public Node2D(string name) : base(name)
         {
         }

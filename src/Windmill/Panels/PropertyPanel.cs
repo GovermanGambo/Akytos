@@ -101,23 +101,6 @@ internal class PropertyPanel : IEditorPanel
         }
     }
 
-    private void DrawHeader(Node target)
-    {
-        string name = target.Name;
-        if (ImGui.InputText("", ref name, 50))
-        {
-            m_isEditingName = true;
-        }
-
-        if (!m_isEditingName || !ImGui.IsKeyPressed(ImGui.GetKeyIndex(ImGuiKey.Enter)))
-        {
-            return;
-        }
-
-        target.Name = name;
-        m_isEditingName = false;
-    }
-
     public void OnEvent(IEvent e)
     {
     }

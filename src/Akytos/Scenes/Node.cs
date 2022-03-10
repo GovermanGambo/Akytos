@@ -55,7 +55,11 @@ public class Node
             bool treeExited = IsInsideTree && value == null;
 
             m_sceneTree = value;
-            m_children.ForEach(n => n.SceneTree = value);
+            m_children.ForEach(n =>
+            {
+                n.SceneTree = value;
+                n.Owner = treeExited ? null : this;
+            });
             if (value != null)
                 TreeEntered?.Invoke();
             else if (treeExited) TreeExited?.Invoke();
@@ -178,8 +182,11 @@ public class Node
 
         m_children.Add(node);
 
-        node.Owner = this;
-        node.SceneTree = SceneTree;
+        if (IsInsideTree)
+        {
+            node.Owner = this;
+            node.SceneTree = SceneTree;
+        }
 
         SceneTree?.OnNodeAdded(node);
 

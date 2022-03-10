@@ -9,6 +9,14 @@ public class SerializedObject
     public SerializedObject()
     {
     }
+
+    public SerializedObject(IDictionary dictionary)
+    {
+        var fields = dictionary["Fields"] as List<object>;
+
+        Fields = fields.Select(f => f as SerializedField).ToArray();
+        Type = dictionary["Type"] as string;
+    }
     
     public SerializedObject(SerializedField[] fields, string type)
     {
@@ -104,17 +112,35 @@ public class SerializedObject
         {
             return serializedField.Value;
         }
-        else if (serializedField.Value is IEnumerable enumerable)
-        {
-            var list = new List<object>();
-            foreach (object element in enumerable)
-            {
-            }
-        }
-
+        
         if (serializedField.Value is SerializedObject serializedObject)
         {
             return Deserialize(serializedObject);
+        }
+
+        
+        
+        if (serializedField.Value is IEnumerable enumerable)
+        {
+            var list = Activator.CreateInstance(type);
+            foreach (object element in enumerable)
+            {
+                var reference = list as IList;
+                if (element is SerializedObject serializedElement)
+                {
+                    reference.Add(Deserialize(serializedElement));
+                }
+                else if (element is IDictionary dictionary)
+                {
+                    reference.Add(Deserialize(new SerializedObject(dictionary)));
+                }
+                else
+                {
+                    reference.Add(element);
+                }
+            }
+
+            return list;
         }
 
         throw new NotSupportedException();

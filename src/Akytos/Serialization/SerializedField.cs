@@ -21,19 +21,4 @@ public class SerializedField
     public string Type { get; set; }
     [YamlMember]
     public object? Value { get; set; }
-
-    public bool IsPrimitive
-    {
-        get
-        {
-            var type = System.Type.GetType(Type);
-
-            if (type == null)
-            {
-                return false;
-            }
-            
-            return type.IsPrimitive || type.IsValueType || type == typeof(string);
-        }
-    }
 }

@@ -8,6 +8,7 @@ using LightInject;
 using YamlDotNet.Serialization;
 
 [assembly: InternalsVisibleTo("Windmill")]
+[assembly: InternalsVisibleTo("Akytos.Tests")]
 namespace Akytos;
 
 public abstract class Application : IDisposable
