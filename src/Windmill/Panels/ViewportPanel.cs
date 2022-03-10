@@ -77,6 +77,12 @@ internal class ViewportPanel : IEditorPanel
         var textureId = Framebuffer.GetColorAttachmentRendererId();
         ImGui.Image((IntPtr) textureId, m_viewportSize, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
         
+        var viewportMinRegion = ImGui.GetWindowContentRegionMin();
+        var viewportMaxRegion = ImGui.GetWindowContentRegionMax();
+        var viewportOffset = ImGui.GetWindowPos();
+        m_viewportBounds[0] = viewportMinRegion + viewportOffset;
+        m_viewportBounds[1] = viewportMaxRegion + viewportOffset;
+        
         if (m_sceneEditorContext.SelectedNode is Node2D node2D)
         {
             m_gizmoService.DrawGizmos(m_editorViewport.Camera, node2D);

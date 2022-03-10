@@ -2,27 +2,20 @@ using System.Numerics;
 
 namespace Akytos.Editor.Renderers;
 
-public class Vector2ControlRenderer : IGuiControlRenderer<Vector2?>
+public class Vector2ControlRenderer : IGuiControlRenderer<Vector2>
 {
-    public Vector2? DrawControl(string label, Vector2? value)
+    public Vector2 DrawControl(string label, Vector2 value)
     {
-        if (!value.HasValue)
-        {
-            return null;
-        }
-
-        Vector2 vector = value.Value;
-
-        if (AkGui.InputVector2(label, ref vector))
+        if (AkGui.InputVector2(label, ref value))
         {
             return value;
         }
 
-        return null;
+        return value;
     }
 
-    public object? DrawControl(string label, object? value)
+    public object DrawControl(string label, object value)
     {
-        return DrawControl(label, value as Vector2?);
+        return DrawControl(label, (Vector2)value);
     }
 }

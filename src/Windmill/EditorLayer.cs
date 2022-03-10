@@ -116,8 +116,7 @@ internal class EditorLayer : ILayer
     public void OnDrawGui()
     {
         Dockspace.Begin();
-
-        ImGui.ShowDemoWindow();
+        
         m_menuService.OnDrawGui();
 
         m_panelManager.OnDrawGui();

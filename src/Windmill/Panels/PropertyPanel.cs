@@ -49,22 +49,29 @@ internal class PropertyPanel : IEditorPanel
         }
         
         DrawHeader(m_sceneEditorContext.SelectedNode);
-
-        var type = m_sceneEditorContext.SelectedNode.GetType();
+        
         var serializedObject = SerializedObject.Create(m_sceneEditorContext.SelectedNode);
 
         foreach (var serializedField in serializedObject.Fields)
         {
-            var fieldInfo = type.GetField(serializedField.Key);
+            const BindingFlags bf = BindingFlags.Instance | 
+                                    BindingFlags.NonPublic | 
+                                    BindingFlags.DeclaredOnly;
+            
+            FieldInfo? fieldInfo;
+            var type = m_sceneEditorContext.SelectedNode.GetType();
+            while ((fieldInfo = type?.GetField(serializedField.Key, bf)) == null && (type = type?.BaseType) != null)
+            {
+            }
 
             if (fieldInfo == null)
             {
-                return;
+                continue;
             }
 
             if (fieldInfo.GetCustomAttribute<HideInInspectorAttribute>() != null)
             {
-                return;
+                continue;
             }
             
             var fieldType = Type.GetType(serializedField.Type);
@@ -72,7 +79,7 @@ internal class PropertyPanel : IEditorPanel
             if (fieldType == null)
             {
                 Debug.LogError("Type {0} was not found.", serializedField.Type);
-                return;
+                continue;
             }
             
             string fieldKey = serializedField.Key;
@@ -115,6 +122,5 @@ internal class PropertyPanel : IEditorPanel
 
     public void OnEvent(IEvent e)
     {
-        throw new NotImplementedException();
     }
 }

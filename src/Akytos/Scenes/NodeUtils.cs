@@ -13,7 +13,7 @@ namespace Akytos
 
             if (baseType != null)
             {
-                fields = fields.Concat(GetSerializedFields(baseType));
+                fields = GetSerializedFields(baseType).Concat(fields);
             }
 
             return fields;
