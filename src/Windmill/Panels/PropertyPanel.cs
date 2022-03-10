@@ -58,7 +58,7 @@ internal class PropertyPanel : IEditorPanel
             
             FieldInfo? fieldInfo;
             var type = m_sceneEditorContext.SelectedNode.GetType();
-            while ((fieldInfo = type?.GetField(serializedField.Key, bf)) == null && (type = type?.BaseType) != null)
+            while ((fieldInfo = type.GetField(serializedField.Key, bf)) == null && (type = type.BaseType) != null)
             {
             }
 
