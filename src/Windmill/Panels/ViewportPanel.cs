@@ -17,6 +17,7 @@ internal class ViewportPanel : IEditorPanel
     
     private Vector2 m_viewportSize;
     private Node? m_hoveredNode;
+    private bool m_isFocused;
 
     public ViewportPanel(IEditorViewport editorViewport, GizmoService gizmoService, SceneEditorContext sceneEditorContext)
     {
@@ -68,6 +69,8 @@ internal class ViewportPanel : IEditorPanel
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
         ImGui.Begin(DisplayName);
 
+        m_isFocused = ImGui.IsWindowFocused();
+        
         var viewportPanelSize = ImGui.GetContentRegionAvail();
         if (m_viewportSize != viewportPanelSize)
         {
@@ -102,6 +105,11 @@ internal class ViewportPanel : IEditorPanel
 
     public void OnEvent(IEvent e)
     {
+        if (!m_isFocused)
+        {
+            return;
+        }
+        
         var dispatcher = new EventDispatcher(e);
         dispatcher.Dispatch<KeyDownEvent>(OnKeyDownEvent);
         dispatcher.Dispatch<KeyUpEvent>(OnKeyUpEvent);

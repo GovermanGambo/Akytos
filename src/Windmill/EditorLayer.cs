@@ -83,8 +83,10 @@ internal class EditorLayer : ILayer
         {
             Texture = m_texture2D
         };
+        var anotherNode2D = new Node2D("AnotherNode2D");
         node.AddChild(node2D);
-        node.AddChild(spriteNode);
+        node.AddChild(anotherNode2D);
+        anotherNode2D.AddChild(spriteNode);
         
         m_sceneTree.SetScene(node);
         m_renderingSystem.Context = node;
