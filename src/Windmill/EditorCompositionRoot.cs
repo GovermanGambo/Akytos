@@ -23,6 +23,20 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.Register<GizmoService>();
         
         RegisterPanels(serviceRegistry);
+        RegisterModals(serviceRegistry);
+    }
+
+    private static void RegisterModals(IServiceRegistry serviceRegistry)
+    {
+        var modalType = typeof(IModal);
+        var types = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(s => s.GetTypes())
+            .Where(p => modalType.IsAssignableFrom(p) && !p.IsInterface);
+
+        foreach (var type in types)
+        {
+            serviceRegistry.RegisterSingleton(modalType, type, type.Name);
+        }
     }
 
     private static void RegisterPanels(IServiceRegistry serviceRegistry)
