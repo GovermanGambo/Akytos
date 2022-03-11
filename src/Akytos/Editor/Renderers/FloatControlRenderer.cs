@@ -4,7 +4,7 @@ namespace Akytos.Editor.Renderers;
 
 internal class FloatControlRenderer : IGuiControlRenderer<float>
 {
-    public float DrawControl(string label, float value)
+    public float DrawControl(string label, float value, object? arguments = null)
     {
         if (AkGui.InputFloat(label, ref value))
         {
@@ -14,7 +14,7 @@ internal class FloatControlRenderer : IGuiControlRenderer<float>
         return value;
     }
 
-    public object DrawControl(string label, object value)
+    public object DrawControl(string label, object value, object? arguments = null)
     {
         return DrawControl(label, (float)value);
     }

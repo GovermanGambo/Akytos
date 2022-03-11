@@ -5,8 +5,8 @@ namespace Akytos
     public class Node2D : Node
     {
         [SerializeField("Position")] private Vector2 position;
-        [SerializeField("Rotation")] private float rotation;
         [SerializeField("Scale")] private Vector2 scale = Vector2.One;
+        [IntSlider("Rotation", 0, 360)] private int rotation;
 
         public Node2D() : base()
         {
@@ -103,14 +103,14 @@ namespace Akytos
 
         public float Rotation
         {
-            get => rotation;
-            set => rotation = value;
+            get => Math.Radians(RotationDegrees);
+            set => RotationDegrees = (int)Math.Degrees(value);
         }
         
-        public float RotationDegrees
+        public int RotationDegrees
         {
-            get => Math.Degrees(Rotation);
-            set => Rotation = Math.Radians(value);
+            get => rotation;
+            set => rotation = value;
         }
         
         public Vector2 Scale

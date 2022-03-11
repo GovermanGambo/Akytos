@@ -79,26 +79,32 @@ internal class PropertyPanel : IEditorPanel
                 Debug.LogError("Type {0} was not found.", serializedField.Type);
                 continue;
             }
+
+            var attribute = fieldInfo.GetCustomAttribute<SerializeFieldAttribute>();
             
-            string fieldKey = serializedField.Key;
-
-            var controlRendererType = typeof(IGuiControlRenderer<>).MakeGenericType(fieldType);
-
-            var guiControlRenderer = m_serviceFactory.TryGetInstance(controlRendererType) as IGuiControlRenderer;
-
-            if (guiControlRenderer == null)
-            {
-                // TODO: Automatic handling of serialized objects.
-                throw new NotSupportedException();
-            }
-            
-            object currentValue = guiControlRenderer.DrawControl(fieldKey, serializedField.Value);
+            object currentValue = RenderAnonymousField(fieldType, attribute?.Name ?? "N/A", serializedField, attribute);
 
             if (currentValue != fieldInfo.GetValue(m_sceneEditorContext.SelectedNode))
             {
                 fieldInfo.SetValue(m_sceneEditorContext.SelectedNode, currentValue);
             }
         }
+    }
+
+    private object RenderAnonymousField(Type fieldType, string fieldKey, SerializedField serializedField, Attribute? attribute)
+    {
+        var controlRendererType = typeof(IGuiControlRenderer<>).MakeGenericType(fieldType);
+
+        var guiControlRenderer = m_serviceFactory.TryGetInstance(controlRendererType) as IGuiControlRenderer;
+
+        if (guiControlRenderer == null)
+        {
+            // TODO: Automatic handling of serialized objects.
+            throw new NotSupportedException();
+        }
+
+        object currentValue = guiControlRenderer.DrawControl(fieldKey, serializedField.Value, attribute);
+        return currentValue;
     }
 
     public void OnEvent(IEvent e)

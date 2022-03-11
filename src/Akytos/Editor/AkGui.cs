@@ -14,10 +14,13 @@ public static class AkGui
         ImGui.SetColumnWidth(0, columnWidth);
         ImGui.Text(label);
         ImGui.NextColumn();
+        
+        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0.0f, 4.0f));
     }
 
     public static void EndField()
     {
+        ImGui.PopStyleVar();
         ImGui.Columns(1);
         ImGui.PopID();
     }
@@ -39,6 +42,17 @@ public static class AkGui
         
         bool didChange = ImGui.InputFloat(string.Empty, ref value, step);
         
+        EndField();
+        
+        return didChange;
+    }
+
+    public static bool SliderInt(string label, ref int value, int speed = 1, int min = 0, int max = 10)
+    {
+        BeginField(label);
+
+        bool didChange = ImGui.DragInt(string.Empty, ref value, speed, min, max);
+
         EndField();
 
         return didChange;
@@ -64,8 +78,6 @@ public static class AkGui
         BeginField(label, columnWidth);
         
         bool didChange = false;
-
-        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
         float lineHeight = ImGui.GetFont().FontSize + ImGui.GetStyle().FramePadding.Y * 2.0f;
         var buttonSize = new Vector2(lineHeight + 3.0f, lineHeight);
 
@@ -83,7 +95,7 @@ public static class AkGui
         ImGui.PopStyleColor(3);
         ImGui.SameLine();
         ImGui.SetNextItemWidth(75);
-        if (ImGui.DragFloat("##X", ref values.X, 0.1f)) didChange = true;
+        if (ImGui.DragFloat("##X", ref values.X, 1.0f)) didChange = true;
         ImGui.SameLine();
 
         ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.2f, 0.7f, 0.3f, 1.0f));
@@ -100,8 +112,7 @@ public static class AkGui
         ImGui.PopStyleColor(3);
         ImGui.SameLine();
         ImGui.SetNextItemWidth(75);
-        if (ImGui.DragFloat("##Y", ref values.Y, 0.1f)) didChange = true;
-        ImGui.PopStyleVar();
+        if (ImGui.DragFloat("##Y", ref values.Y, 1.0f)) didChange = true;
 
         EndField();
 

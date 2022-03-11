@@ -24,7 +24,7 @@ internal class HierarchyPanel : IEditorPanel
     public void OnDrawGui()
     {
         bool open = IsEnabled;
-        if (!ImGui.Begin(DisplayName, ref open))
+        if (!ImGui.Begin(DisplayName, ref open, ImGuiWindowFlags.NoCollapse))
         {
             IsEnabled = false;
             ImGui.End();
@@ -36,6 +36,8 @@ internal class HierarchyPanel : IEditorPanel
             m_createNodePanel.IsEnabled = true;
             ImGui.OpenPopup("Create Node");
         }
+        
+        ImGui.Separator();
         
         m_createNodePanel.OnDrawGui();
 
