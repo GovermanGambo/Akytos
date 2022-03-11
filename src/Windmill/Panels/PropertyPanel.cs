@@ -42,7 +42,12 @@ internal class PropertyPanel : IEditorPanel
             return;
         }
 
-        if (m_sceneEditorContext.SelectedNode == null)
+        DrawSerializedFields();
+        
+        ImGui.End();
+
+        /*if (m_sceneEditorContext.SelectedNode == null)
+        
         {
             ImGui.End();
             return;
@@ -72,7 +77,8 @@ internal class PropertyPanel : IEditorPanel
                 continue;
             }
             
-            var fieldType = Type.GetType(serializedField.Type);
+            var fieldType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
+                .FirstOrDefault(t => t.FullName == serializedField.Type);
 
             if (fieldType == null)
             {
@@ -86,7 +92,76 @@ internal class PropertyPanel : IEditorPanel
 
             if (currentValue != fieldInfo.GetValue(m_sceneEditorContext.SelectedNode))
             {
-                fieldInfo.SetValue(m_sceneEditorContext.SelectedNode, currentValue);
+                if (currentValue is SerializedObject serialized)
+                {
+                }
+                else
+                {
+                    fieldInfo.SetValue(m_sceneEditorContext.SelectedNode, currentValue);
+                }
+                
+                
+            }
+        }
+        */
+    }
+
+    private void DrawSerializedFields()
+    {
+        if (m_sceneEditorContext.SelectedNode == null)
+        {
+            return;
+        }
+
+        DrawSerializedFieldsForType(m_sceneEditorContext.SelectedNode);
+    }
+
+    private void DrawSerializedFieldsForType(object o)
+    {
+        var type = o.GetType();
+        var serializedFields = NodeUtils.GetSerializedFields(type);
+
+        Type? previousDeclaringType = null;
+        bool collapsed = false;
+        
+        foreach (var serializedField in serializedFields)
+        {
+            var fieldType = serializedField.FieldType;
+
+            if (serializedField.GetCustomAttribute<HideInInspectorAttribute>() != null)
+            {
+                continue;
+            }
+            
+            var controlRendererType = typeof(IGuiControlRenderer<>).MakeGenericType(fieldType);
+            var guiControlRenderer = m_serviceFactory.TryGetInstance(controlRendererType) as IGuiControlRenderer;
+
+            var fieldValue = serializedField.GetValue(o);
+            var declaringType = serializedField.DeclaringType;
+
+            if (declaringType != previousDeclaringType && declaringType != typeof(Node))
+            {
+                collapsed = ImGui.CollapsingHeader(declaringType.Name, ImGuiTreeNodeFlags.DefaultOpen);
+                
+                previousDeclaringType = declaringType;
+            } 
+            
+            if (!collapsed && declaringType != typeof(Node))
+            {
+                continue;
+            }
+
+            if (guiControlRenderer != null)
+            {
+                var attribute = serializedField.GetCustomAttribute<SerializeFieldAttribute>();
+                object currentValue =
+                    guiControlRenderer.DrawControl(attribute.Name, fieldValue, attribute);
+                
+                serializedField.SetValue(o, currentValue);
+            }
+            else
+            {
+                DrawSerializedFieldsForType(fieldValue);
             }
         }
     }
@@ -102,9 +177,10 @@ internal class PropertyPanel : IEditorPanel
             // TODO: Automatic handling of serialized objects.
             throw new NotSupportedException();
         }
+        
+         object currentValue = guiControlRenderer.DrawControl(fieldKey, serializedField.Value, attribute);
 
-        object currentValue = guiControlRenderer.DrawControl(fieldKey, serializedField.Value, attribute);
-        return currentValue;
+         return currentValue;
     }
 
     public void OnEvent(IEvent e)

@@ -7,6 +7,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace Akytos.Graphics;
 
+[Serializable]
 internal class OpenGLTexture2D : ITexture2D
 {
     private readonly GL m_gl;

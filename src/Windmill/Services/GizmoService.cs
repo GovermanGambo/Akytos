@@ -40,6 +40,10 @@ internal class GizmoService
 
             if (GizmoMode == GizmoMode.Rotate) snapValue = 22.5f;
         }
+        else
+        {
+            snapValue = 1.0f;
+        }
 
         // TODO: Fix snapping
         float[] snapValues = {snapValue, snapValue, snapValue};

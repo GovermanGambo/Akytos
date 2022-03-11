@@ -6,7 +6,6 @@ using Akytos.Events;
 using Akytos.Graphics;
 using Akytos.Graphics.Buffers;
 using Akytos.Layers;
-using ImGuiNET;
 using Windmill.Panels;
 using Windmill.Services;
 
@@ -14,6 +13,7 @@ namespace Windmill;
 
 internal class EditorLayer : ILayer
 {
+    private readonly AssetManager m_assetManager;
     private readonly IEditorViewport m_editorViewport;
     private readonly IGraphicsDevice m_graphicsDevice;
     private readonly IGraphicsResourceFactory m_graphicsResourceFactory;
@@ -26,7 +26,8 @@ internal class EditorLayer : ILayer
     private ITexture2D m_texture2D = null!;
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
-        IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager, MenuService menuService, SceneTree sceneTree)
+        IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager,
+        MenuService menuService, SceneTree sceneTree, AssetManager assetManager)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
@@ -35,6 +36,7 @@ internal class EditorLayer : ILayer
         m_panelManager = panelManager;
         m_menuService = menuService;
         m_sceneTree = sceneTree;
+        m_assetManager = assetManager;
     }
 
     public void Dispose()
@@ -65,29 +67,23 @@ internal class EditorLayer : ILayer
 
         var viewportPanel = m_panelManager.GetPanel<ViewportPanel>();
         viewportPanel.Framebuffer = m_framebuffer;
-        
+
         m_renderingSystem.Camera = m_editorViewport.Camera;
 
         // TODO: Temporary Scene Setup
-        
-        m_texture2D =
-            m_graphicsResourceFactory.CreateTexture2D(Asset.GetAssetPath("sprites/character_malePerson_idle.png"));
-        
+
+        var asset = m_assetManager.Load<ITexture2D>("sprites/character_malePerson_idle.png") as Texture2DAsset;
         var node = new Node("RootNode");
-        var node2D = new SpriteNode("Node2D")
+        var node2D = new SpriteNode("Node2D", asset)
         {
-            GlobalPosition = new Vector2(-96, 0),
-            Texture = m_texture2D
+            GlobalPosition = new Vector2(-96, 0)
         };
-        var spriteNode = new SpriteNode("SpriteNode")
-        {
-            Texture = m_texture2D
-        };
+        var spriteNode = new SpriteNode("SpriteNode", asset);
         var anotherNode2D = new Node2D("AnotherNode2D");
         node.AddChild(node2D);
         node.AddChild(anotherNode2D);
         anotherNode2D.AddChild(spriteNode);
-        
+
         m_sceneTree.SetScene(node);
         m_renderingSystem.Context = node;
     }
@@ -104,7 +100,7 @@ internal class EditorLayer : ILayer
         m_graphicsDevice.Clear();
 
         m_renderingSystem.OnUpdate(time);
-        
+
         m_panelManager.GetPanel<ViewportPanel>().OnRender();
 
         m_framebuffer.Unbind();
@@ -118,7 +114,7 @@ internal class EditorLayer : ILayer
     public void OnDrawGui()
     {
         Dockspace.Begin();
-        
+
         m_menuService.OnDrawGui();
 
         m_panelManager.OnDrawGui();

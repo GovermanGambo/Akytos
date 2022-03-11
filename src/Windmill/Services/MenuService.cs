@@ -26,7 +26,7 @@ internal class MenuService
                 ImGui.EndMenu();
             }
 
-            if (ImGui.BeginMenu("View"))
+            if (ImGui.BeginMenu("Layout"))
             {
                 foreach (var panel in m_panelManager)
                 {

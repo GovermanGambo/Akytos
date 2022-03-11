@@ -6,8 +6,17 @@ namespace Akytos
     {
         public static IEnumerable<FieldInfo> GetSerializedFields(Type nodeType)
         {
-            var fields = nodeType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(e => e.IsDefined(typeof(SerializeFieldAttribute), true));
+            IEnumerable<FieldInfo> fields;
+            if (nodeType.GetCustomAttribute<SerializableAttribute>() != null)
+            {
+                fields = nodeType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+            }
+            else
+            {
+                fields = nodeType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                    .Where(e => e.IsDefined(typeof(SerializeFieldAttribute), true));
+            }
+            
 
             var baseType = nodeType.BaseType;
 
