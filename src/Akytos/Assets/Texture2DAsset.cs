@@ -5,7 +5,7 @@ namespace Akytos.Assets;
 [Serializable]
 public class Texture2DAsset : IAsset<ITexture2D>
 {
-    private readonly string m_filePath;
+    private string m_filePath;
 
     public Texture2DAsset()
     {
@@ -18,7 +18,11 @@ public class Texture2DAsset : IAsset<ITexture2D>
         m_filePath = filePath;
     }
 
-    public string FilePath => m_filePath;
+    public string FilePath
+    {
+        get => m_filePath;
+        set => m_filePath = value;
+    }
 
     public ITexture2D? Data { get; }
 }
