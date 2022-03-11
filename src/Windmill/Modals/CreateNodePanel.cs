@@ -1,11 +1,12 @@
 using Akytos;
 using Akytos.Events;
 using ImGuiNET;
+using Windmill.Panels;
 using Windmill.Services;
+using Math = System.Math;
 
-namespace Windmill.Panels
+namespace Windmill.Modals
 {
-    // TODO: This should be a popup/modal. Not sure if this should be an IEditorPanel at all. Maybe dont use ImGui.Begin, but rather some BeginChild or something?
     internal class CreateNodePanel : IEditorPanel
     {
         private readonly SceneEditorContext m_sceneEditorContext;
@@ -23,16 +24,14 @@ namespace Windmill.Panels
                 .ToArray();
         }
         
-        public Node? DefaultParentNode { get; set; }
         public string DisplayName => "Create Node";
-        public bool IsEnabled { get; set; }
+        public bool IsEnabled { get; set; } = true;
+        
         public void OnDrawGui()
         {
             bool open = IsEnabled;
-            if (!ImGui.Begin(DisplayName, ref open) || !ImGui.IsWindowFocused())
+            if (!ImGui.BeginPopupModal("Create Node", ref open))
             {
-                IsEnabled = false;
-                ImGui.End();
                 return;
             }
 
@@ -52,7 +51,7 @@ namespace Windmill.Panels
 
             DrawNodeType(typeof(Node));
 
-            ImGui.End();
+            ImGui.EndPopup();
         }
 
         public void OnEvent(IEvent e)
@@ -99,10 +98,45 @@ namespace Windmill.Panels
             if (e.KeyCode == KeyCode.Enter && m_selectedNodeType != null)
             {
                 var result = CreateNode(m_selectedNodeType, "NewNode");
-                if (result == Result.Ok) IsEnabled = false;
+                if (result == Result.Ok)
+                {
+                    IsEnabled = false;
+                    ImGui.CloseCurrentPopup();
+                }
             }
 
-            if (e.KeyCode == KeyCode.Escape) IsEnabled = false;
+            if (e.KeyCode == KeyCode.Escape)
+            {
+                IsEnabled = false;
+                ImGui.CloseCurrentPopup();
+            }
+
+            if (e.KeyCode == KeyCode.Down)
+            {
+                if (m_selectedNodeType == null)
+                {
+                    m_selectedNodeType = m_nodeTypes.FirstOrDefault();
+                }
+                else
+                {
+                    int currentIndex = Array.FindIndex(m_nodeTypes, t => t == m_selectedNodeType);
+                    currentIndex = Math.Clamp(currentIndex + 1, 0, m_nodeTypes.Length - 1);
+                    m_selectedNodeType = m_nodeTypes[currentIndex];
+                }
+            }
+            else if (e.KeyCode == KeyCode.Up)
+            {
+                if (m_selectedNodeType == null)
+                {
+                    m_selectedNodeType = m_nodeTypes.LastOrDefault();
+                }
+                else
+                {
+                    int currentIndex = Array.FindIndex(m_nodeTypes, t => t == m_selectedNodeType);
+                    currentIndex = Math.Clamp(currentIndex - 1, 0, m_nodeTypes.Length - 1);
+                    m_selectedNodeType = m_nodeTypes[currentIndex];
+                }
+            }
 
             return true;
         }
@@ -117,7 +151,7 @@ namespace Windmill.Panels
                 return Result.InvalidData;
             }
 
-            var rootNode = DefaultParentNode ?? m_sceneEditorContext.SceneTree.CurrentScene;
+            var rootNode = m_sceneEditorContext.SelectedNode ?? m_sceneEditorContext.SceneTree.CurrentScene;
             rootNode.AddChild(node, true);
 
             return Result.Ok;

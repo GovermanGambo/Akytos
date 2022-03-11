@@ -1,6 +1,7 @@
 using Akytos;
 using Akytos.Events;
 using ImGuiNET;
+using Windmill.Modals;
 using Windmill.Services;
 
 namespace Windmill.Panels;
@@ -33,7 +34,10 @@ internal class HierarchyPanel : IEditorPanel
         if (ImGui.Button("Add Node"))
         {
             m_createNodePanel.IsEnabled = true;
+            ImGui.OpenPopup("Create Node");
         }
+        
+        m_createNodePanel.OnDrawGui();
 
         DrawNode(m_sceneEditorContext.SceneTree.CurrentScene);
 

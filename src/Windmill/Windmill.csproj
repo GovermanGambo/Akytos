@@ -123,4 +123,8 @@
             <TargetPath>cimnodes.dll</TargetPath>
         </ContentWithTargetPath>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="assets\fonts\open_sans" />
+    </ItemGroup>
 </Project>

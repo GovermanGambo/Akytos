@@ -44,7 +44,7 @@ internal class GizmoService
         // TODO: Fix snapping
         float[] snapValues = {snapValue, snapValue, snapValue};
 
-        ImGuizmo.Manipulate(ref cameraView.M11, ref cameraProjection.M11, (OPERATION) GizmoMode - 1, MODE.LOCAL,
+        ImGuizmo.Manipulate(ref cameraView.M11, ref cameraProjection.M11, (OPERATION) GizmoMode - 1, MODE.WORLD,
             ref transform.M11, ref deltaMatrix.M11, ref snapValues[0]);
 
         if (ImGuizmo.IsUsing())

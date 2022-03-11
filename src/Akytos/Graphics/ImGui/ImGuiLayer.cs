@@ -31,7 +31,7 @@ internal class ImGuiLayer : ILayer
         var io = ImGui.GetIO();
         io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
         io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
-            
+
         io.Fonts.AddFontFromFileTTF("assets/fonts/open_sans/OpenSans-Regular.ttf", 18.0f);
         io.Fonts.AddFontFromFileTTF("assets/fonts/open_sans/OpenSans-Bold.ttf", 18.0f);
 
@@ -80,6 +80,7 @@ internal class ImGuiLayer : ILayer
     private void SetDarkThemeColors()
     {
         var colors = ImGui.GetStyle().Colors;
+        ImGui.GetStyle().WindowRounding = 0.0f;
         colors[(int) ImGuiCol.WindowBg] = new Vector4(0.1f, 0.105f, 0.11f, 1.0f);
             
         colors[(int) ImGuiCol.Header] = new Vector4(0.2f, 0.205f, 0.21f, 1.0f);
@@ -103,5 +104,7 @@ internal class ImGuiLayer : ILayer
         colors[(int) ImGuiCol.TitleBg] = new Vector4(0.15f, 0.155f, 0.151f, 1.0f);
         colors[(int) ImGuiCol.TitleBgActive] = new Vector4(0.15f, 0.155f, 0.151f, 1.0f);
         colors[(int) ImGuiCol.TitleBgCollapsed] = new Vector4(0.15f, 0.155f, 0.151f, 1.0f);
+        
+        
     }
 }
