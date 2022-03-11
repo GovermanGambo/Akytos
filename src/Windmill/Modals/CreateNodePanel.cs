@@ -25,7 +25,7 @@ namespace Windmill.Modals
         }
         
         public string DisplayName => "Create Node";
-        public bool IsEnabled { get; set; } = true;
+        public bool IsEnabled { get; set; }
         
         public void OnDrawGui()
         {
@@ -138,7 +138,7 @@ namespace Windmill.Modals
                 }
             }
 
-            return true;
+            return false;
         }
         
         private Result CreateNode(Type nodeType, string name)

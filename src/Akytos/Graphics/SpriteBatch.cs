@@ -73,7 +73,7 @@ internal class SpriteBatch
 
     public void Begin(ICamera camera)
     {
-        var viewProjection = camera.ProjectionMatrix;
+        var viewProjection = camera.ViewMatrix * camera.ProjectionMatrix;
         
         m_textureShader.Bind();
         m_textureShader.SetMat4("u_ViewProjection", viewProjection);

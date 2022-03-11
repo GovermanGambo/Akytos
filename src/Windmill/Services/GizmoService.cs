@@ -10,7 +10,7 @@ internal class GizmoService
 {
     private const GizmoMode DefaultGizmoMode = GizmoMode.Translate;
 
-    public bool IsUsing => GizmoMode != GizmoMode.None;
+    public bool IsUsing => ImGuizmo.IsUsing();
     public bool IsSnapping { get; set; }
 
     public GizmoMode GizmoMode { get; set; } = DefaultGizmoMode;

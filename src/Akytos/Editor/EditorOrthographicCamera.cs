@@ -8,21 +8,46 @@ internal class EditorOrthographicCamera : IEditorCamera
 {
     private float m_zoomLevel;
     private float m_aspectRatio;
-    // TODO: This should be controlled by zooming in/out
     private float m_scaleFactor = 1;
+    private Vector2 m_position;
 
     public EditorOrthographicCamera(int width, int height)
     {
         SetProjection(width, height);
+        
+        ViewMatrix = Matrix4x4.CreateTranslation(new Vector3(-m_position.X, -m_position.Y, 0.0f));
     }
 
-    public Matrix4x4 ViewMatrix { get; } = Matrix4x4.Identity;
+    public Matrix4x4 ViewMatrix { get; private set; } = Matrix4x4.Identity;
     public Matrix4x4 ProjectionMatrix { get; private set; } = Matrix4x4.Identity;
+
+    public Vector2 Position
+    {
+        get => m_position;
+        set
+        {
+            m_position = value;
+            ViewMatrix = Matrix4x4.CreateTranslation(new Vector3(-m_position.X, -m_position.Y, 0.0f));
+        }
+    }
+
+    public float ScaleFactor
+    {
+        get => m_scaleFactor;
+        set
+        {
+            m_zoomLevel *= ScaleFactor;
+            m_scaleFactor = value;
+            m_zoomLevel /= ScaleFactor;
+
+            CalculateProjectionMatrix();
+        }
+    }
 
     public void SetProjection(int width, int height)
     {
         m_aspectRatio = (float) width / height;
-        m_zoomLevel = height / m_scaleFactor / 2;
+        m_zoomLevel = height / ScaleFactor / 2;
         
         CalculateProjectionMatrix();
     }
