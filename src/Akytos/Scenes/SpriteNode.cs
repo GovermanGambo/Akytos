@@ -7,10 +7,13 @@ namespace Akytos;
 public class SpriteNode : Node2D
 {
     [SerializeField("Texture")] private Texture2DAsset? m_textureAsset;
-    
-    public SpriteNode(string name, Texture2DAsset? textureAsset) : base(name)
+
+    public SpriteNode() : base()
     {
-        m_textureAsset = textureAsset;
+    }
+    
+    public SpriteNode(string name) : base(name)
+    {
     }
 
     public bool IsCentered { get; set; }

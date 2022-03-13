@@ -74,11 +74,11 @@ internal class EditorLayer : ILayer
 
         var asset = m_assetManager.Load<ITexture2D>("sprites/character_malePerson_idle.png") as Texture2DAsset;
         var node = new Node("RootNode");
-        var node2D = new SpriteNode("Node2D", asset)
+        var node2D = new SpriteNode("Node2D")
         {
             GlobalPosition = new Vector2(-96, 0)
         };
-        var spriteNode = new SpriteNode("SpriteNode", asset);
+        var spriteNode = new SpriteNode("SpriteNode");
         var anotherNode2D = new Node2D("AnotherNode2D");
         node.AddChild(node2D);
         node.AddChild(anotherNode2D);

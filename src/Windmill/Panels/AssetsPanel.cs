@@ -49,10 +49,10 @@ internal class AssetsPanel : IEditorPanel
             ImGui.Selectable(file.Name);
             if (ImGui.BeginDragDropSource())
             {
-                string relativeFilePath = Path.GetRelativePath(RootDirectory, file.FullName);
+                string relativeFilePath = Path.GetRelativePath(RootDirectory, file.FullName).Replace("\\", "/");
                 var handle = GCHandle.Alloc(relativeFilePath);
                 var payload = (IntPtr)handle;
-                ImGui.SetDragDropPayload("AssetsPanelDragNDrop", payload, sizeof(char) * (uint)relativeFilePath.Length);
+                ImGui.SetDragDropPayload("ASSET", payload, sizeof(char) * (uint)relativeFilePath.Length);
                 handle.Free();
                 ImGui.EndDragDropSource();
             }
