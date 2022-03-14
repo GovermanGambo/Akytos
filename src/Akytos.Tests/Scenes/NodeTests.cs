@@ -173,31 +173,6 @@ public class NodeTests
         Assert.Equal(new Vector2(0.5f, 0.75f), childNodeB.Scale);
     }
 
-    [Fact]
-    public void YamlDeserializeNode_Should_WorkProperly()
-    {
-        var rootNode = new Node("RootNode");
-        var childNodeA = new Node("ChildNodeA");
-        var childNodeB = new Node2D("ChildNodeB")
-        {
-            Position = Vector2.One,
-            Scale = new Vector2(0.5f, 0.75f)
-        };
-        var childNodeC = new Node2D("ChildNodeC");
-
-        rootNode.AddChild(childNodeA);
-        rootNode.AddChild(childNodeB);
-        childNodeA.AddChild(childNodeC);
-
-        var serializer = new YamlSerializer();
-        var deserializer = new YamlDeserializer();
-
-        string yaml = serializer.Serialize(rootNode);
-        var deserializedNode = deserializer.Deserialize<Node>(yaml);
-        
-        Assert.NotNull(deserializedNode);
-    }
-
     private static void AssertSerializedNode(SerializedObject serializedObject)
     {
         Assert.Equal(2, serializedObject.Fields.Length);

@@ -1,22 +1,26 @@
-using YamlDotNet.Serialization;
-
 namespace Akytos;
 
 public class YamlDeserializer
 {
-    public T Deserialize<T>(string value)
+    private readonly HashSet<ISerializationSurrogate> m_serializationSurrogates;
+
+    public YamlDeserializer()
     {
-        return (T)Deserialize(value);
+        m_serializationSurrogates = new HashSet<ISerializationSurrogate>();
     }
     
-    public object Deserialize(string value)
+    public YamlDeserializer(HashSet<ISerializationSurrogate> serializationSurrogates)
     {
-        var deserializer = new Deserializer();
+        m_serializationSurrogates = serializationSurrogates;
+    }
 
-        var serializedObject = deserializer.Deserialize<SerializedObject>(value);
+    public string Deserialize(object value)
+    {
+        throw new NotImplementedException();
+    }
 
-        object deserializedObject = SerializedObject.Deserialize(serializedObject);
-
-        return deserializedObject;
+    public void AddSurrogate<T>(ISerializationSurrogate<T> surrogate)
+    {
+        m_serializationSurrogates.Add(surrogate);
     }
 }
