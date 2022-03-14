@@ -197,17 +197,28 @@ public class Node
     ///     Removes the specified Node as a child.
     /// </summary>
     /// <param name="node">The Node to remove.</param>
+    /// <param name="transferChildren">Whether the node's children should be persisted and added to this node.</param>
     /// <returns>Ok if Node was removed. InvalidData if the Node was not a child.</returns>
-    public Result RemoveChild(Node node)
+    public Result RemoveChild(Node node, bool transferChildren = false)
     {
-        if (node.Owner != this || !m_children.Remove(node))
+        if (!m_children.Contains(node))
         {
             Debug.LogError($"{node.Name} is not a child of {Name}.");
             return Result.InvalidData;
         }
 
+        if (transferChildren)
+        {
+            foreach (var child in node.ImmediateChildren)
+            {
+                AddChild(child, true);
+            }
+        }
+
         node.Owner = null;
         node.SceneTree = null;
+
+        m_children.Remove(node);
 
         SceneTree?.OnNodeRemoved(node);
 

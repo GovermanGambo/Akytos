@@ -11,6 +11,8 @@ internal class HierarchyPanel : IEditorPanel
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly CreateNodePanel m_createNodePanel;
 
+    private bool m_treeWasModified;
+
     public HierarchyPanel(SceneEditorContext sceneEditorContext, IEditorPanel createNodePanel)
     {
         m_sceneEditorContext = sceneEditorContext;
@@ -74,9 +76,38 @@ internal class HierarchyPanel : IEditorPanel
             SelectNode(node);
         }
 
+        if (node.Owner != null && ImGui.BeginPopupContextItem("hierarchy_node_context"))
+        {
+            if (ImGui.Selectable("Add child..."))
+            {
+                m_createNodePanel.IsEnabled = true;
+                ImGui.OpenPopup("Create Node");
+            }
+            
+            if (ImGui.Selectable("Delete node"))
+            {
+                node.Owner.RemoveChild(node, true);
+                m_treeWasModified = true;
+                if (m_sceneEditorContext.SelectedNode == node)
+                {
+                    m_sceneEditorContext.SelectedNode = null;
+                }
+            }
+            
+            ImGui.EndPopup();
+        }
+
         if (!opened) return;
 
-        foreach (var child in node.ImmediateChildren) DrawNode(child);
+        foreach (var child in node.ImmediateChildren)
+        {
+            DrawNode(child);
+            if (m_treeWasModified)
+            {
+                m_treeWasModified = false;
+                break;
+            }
+        }
 
         ImGui.TreePop();
     }

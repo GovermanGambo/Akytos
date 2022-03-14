@@ -10,14 +10,8 @@ namespace Windmill.Panels;
 
 internal class PropertyPanel : IEditorPanel
 {
-    private const ImGuiTreeNodeFlags TreeNodeFlags = ImGuiTreeNodeFlags.DefaultOpen |
-                                                     ImGuiTreeNodeFlags.Framed |
-                                                     ImGuiTreeNodeFlags.FramePadding |
-                                                     ImGuiTreeNodeFlags.AllowItemOverlap;
-
     private readonly SceneEditorContext m_sceneEditorContext;
-    private bool m_isEditingName;
-    private IServiceFactory m_serviceFactory;
+    private readonly IServiceFactory m_serviceFactory;
 
     public PropertyPanel(SceneEditorContext sceneEditorContext, IServiceFactory serviceFactory)
     {
@@ -32,7 +26,8 @@ internal class PropertyPanel : IEditorPanel
 
     public string DisplayName => "Properties";
     public bool IsEnabled { get; set; } = true;
-    public bool HideInMenu { get; }
+    // TODO: Create attribute
+    public bool HideInMenu => false;
 
     public void OnDrawGui()
     {
@@ -107,23 +102,6 @@ internal class PropertyPanel : IEditorPanel
                 DrawSerializedFieldsForType(fieldValue);
             }
         }
-    }
-
-    private object RenderAnonymousField(Type fieldType, string fieldKey, SerializedField serializedField, Attribute? attribute)
-    {
-        var controlRendererType = typeof(IGuiControlRenderer<>).MakeGenericType(fieldType);
-
-        var guiControlRenderer = m_serviceFactory.TryGetInstance(controlRendererType) as IGuiControlRenderer;
-
-        if (guiControlRenderer == null)
-        {
-            // TODO: Automatic handling of serialized objects.
-            throw new NotSupportedException();
-        }
-        
-         object currentValue = guiControlRenderer.DrawControl(fieldKey, serializedField.Value, attribute);
-
-         return currentValue;
     }
 
     public void OnEvent(IEvent e)
