@@ -7,9 +7,9 @@ A simple 2D game engine created with .NET 6 using OpenGL and ImGui. The design o
 - Node-oriented scene architecture
     - Scriptable nodes
 
-## Features planned for 1.0
- - Fully working editor
+## Features planned for v0.1
+ - Simple editor
+   - Transformation gizmos (translation, rotation, scale)
    - Texture importing
    - Saving and loading of scenes
-   - Editor runtime
  - Spritesheets
