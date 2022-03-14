@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Akytos.Serialization;
 using Akytos.Serialization.Surrogates;
@@ -157,42 +158,95 @@ value:
         Assert.Equal(expected, yaml);
     }
 
-    private class Person
+    [Fact]
+    public void Deserialize_Should_WorkWithPrimitives()
     {
-        [SerializeField("Age")] private int m_age;
-        [SerializeField("Name")] private string m_name;
-        [SerializeField("Rating")] private float m_rating;
+        var person = new Person("Matt", 28, 6.7f);
 
-        public Person(string name, int age, float rating)
-        {
-            m_name = name;
-            m_age = age;
-            m_rating = rating;
-        }
+        var yamlSerializer = new YamlSerializer();
+        var yamlDeserializer = new YamlDeserializer();
+
+        string yaml = yamlSerializer.Serialize(person);
+
+        var obj = yamlDeserializer.Deserialize(yaml) as Person;
+
+        Assert.Equal(person, obj);
     }
 
-    private class House
+    [Fact]
+    public void Deserialize_Should_WorkWithLists()
     {
-        [SerializeField("Address")] private string m_address;
-        [SerializeField("Person")] private Person m_person;
+        var registry = new Registry(
+            new[] {"Address1", "Address2", "Address3"},
+            new List<Person>
+            {
+                new("Matt", 28, 6.7f),
+                new("Matt", 28, 6.7f),
+                new("Matt", 28, 6.7f)
+            });
 
-        public House(string address, Person person)
-        {
-            m_address = address;
-            m_person = person;
-        }
+        var serializer = new YamlSerializer();
+        var deserializer = new YamlDeserializer();
+        
+        string yaml = serializer.Serialize(registry);
+
+        object? obj = deserializer.Deserialize(yaml);
+    }
+}
+
+public class Person
+{
+    [SerializeField("Age")] private readonly int m_age;
+    [SerializeField("Name")] private readonly string m_name;
+    [SerializeField("Rating")] private readonly float m_rating;
+
+    public Person()
+    {
+        m_name = "";
     }
 
-    private class Registry
+    public Person(string name, int age, float rating)
     {
-        [SerializeField("Addresses")] private string[] m_addresses;
-        [SerializeField("People")] private List<Person> m_people;
+        m_name = name;
+        m_age = age;
+        m_rating = rating;
+    }
 
+    public override bool Equals(object? obj)
+    {
+        if (obj is not Person person) return false;
 
-        public Registry(string[] addresses, List<Person> people)
-        {
-            m_addresses = addresses;
-            m_people = people;
-        }
+        return person.m_name == m_name && person.m_age == m_age &&
+               System.Math.Abs(person.m_rating - m_rating) < 0.0001f;
+    }
+}
+
+public class House
+{
+    [SerializeField("Address")] private string m_address;
+    [SerializeField("Person")] private Person m_person;
+    
+    public House(string address, Person person)
+    {
+        m_address = address;
+        m_person = person;
+    }
+}
+
+public class Registry
+{
+    [SerializeField("Addresses")] private string[] m_addresses;
+    [SerializeField("People")] private List<Person> m_people;
+
+    public Registry()
+    {
+        m_addresses = Array.Empty<string>();
+        m_people = new List<Person>();
+    }
+    
+    public Registry(string[] addresses, List<Person> people)
+    {
+        m_addresses = addresses;
+        m_people = people;
     }
 }
