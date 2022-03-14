@@ -21,6 +21,8 @@ internal class HierarchyPanel : IEditorPanel
     public string DisplayName => "Scene Hierarchy";
     public bool IsEnabled { get; set; } = true;
 
+    public bool HideInMenu { get; }
+
     public void OnDrawGui()
     {
         bool open = IsEnabled;

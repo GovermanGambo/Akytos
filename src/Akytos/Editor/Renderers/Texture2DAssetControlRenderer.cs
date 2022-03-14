@@ -21,9 +21,10 @@ internal class Texture2DAssetRenderer : IGuiControlRenderer<Texture2DAsset?>
         var result = value;
         AkGui.BeginField(label);
 
-        string text = value?.FilePath ?? "None";
+        string text = value?.FilePath ?? StringConstants.None;
 
         ImGui.InputText("", ref text, 200, ImGuiInputTextFlags.ReadOnly);
+        // TODO: Check payload before trying this?
         if (ImGui.BeginDragDropTarget())
         {
             var payload = ImGui.AcceptDragDropPayload("ASSET");
@@ -31,7 +32,7 @@ internal class Texture2DAssetRenderer : IGuiControlRenderer<Texture2DAsset?>
             {
                 var handle = (GCHandle)payload.Data;
 
-                if (handle.Target is string filePath)
+                if (handle.Target is string filePath && Path.GetExtension(filePath) == ".png")
                 {
                     var asset = m_assetManager.Load<ITexture2D>(filePath) as Texture2DAsset;
                     result = asset ?? result;

@@ -21,6 +21,7 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton<SceneEditorContext>();
         serviceRegistry.Register<MenuService>();
         serviceRegistry.Register<GizmoService>();
+        serviceRegistry.RegisterSingleton<ModalStack>();
         
         RegisterPanels(serviceRegistry);
         RegisterModals(serviceRegistry);

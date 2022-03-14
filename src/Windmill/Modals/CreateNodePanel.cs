@@ -26,7 +26,9 @@ namespace Windmill.Modals
         
         public string DisplayName => "Create Node";
         public bool IsEnabled { get; set; }
-        
+
+        public bool HideInMenu => true;
+
         public void OnDrawGui()
         {
             bool open = IsEnabled;

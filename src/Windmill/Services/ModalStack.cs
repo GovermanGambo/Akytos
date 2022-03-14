@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using Akytos.Assertions;
+using ImGuiNET;
 using LightInject;
 
 namespace Windmill.Services;
@@ -31,6 +32,7 @@ public class ModalStack
         m_modals.Push(modal);
 
         modal.IsOpen = true;
+        ImGui.OpenPopup(modal.Name);
 
         return modal;
     }

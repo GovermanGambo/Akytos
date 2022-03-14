@@ -39,7 +39,7 @@ internal class AssetManager
             return null;
         }
     }
-    
+
     public TAsset Get<TAsset>(string url)
     {
         var asset = m_loadedAssets[url] as IAsset<TAsset>;

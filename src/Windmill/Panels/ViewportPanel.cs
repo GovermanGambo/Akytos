@@ -79,6 +79,8 @@ internal class ViewportPanel : IEditorPanel
         }
     }
 
+    public bool HideInMenu { get; }
+
     public void OnDrawGui()
     {
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);

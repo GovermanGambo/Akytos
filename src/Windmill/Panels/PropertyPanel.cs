@@ -32,6 +32,8 @@ internal class PropertyPanel : IEditorPanel
 
     public string DisplayName => "Properties";
     public bool IsEnabled { get; set; } = true;
+    public bool HideInMenu { get; }
+
     public void OnDrawGui()
     {
         bool open = IsEnabled;
@@ -45,65 +47,6 @@ internal class PropertyPanel : IEditorPanel
         DrawSerializedFields();
         
         ImGui.End();
-
-        /*if (m_sceneEditorContext.SelectedNode == null)
-        
-        {
-            ImGui.End();
-            return;
-        }
-
-        var serializedObject = SerializedObject.Create(m_sceneEditorContext.SelectedNode);
-
-        foreach (var serializedField in serializedObject.Fields)
-        {
-            const BindingFlags bf = BindingFlags.Instance | 
-                                    BindingFlags.NonPublic | 
-                                    BindingFlags.DeclaredOnly;
-            
-            FieldInfo? fieldInfo;
-            var type = m_sceneEditorContext.SelectedNode.GetType();
-            while ((fieldInfo = type.GetField(serializedField.Key, bf)) == null && (type = type.BaseType) != null)
-            {
-            }
-
-            if (fieldInfo == null)
-            {
-                continue;
-            }
-
-            if (fieldInfo.GetCustomAttribute<HideInInspectorAttribute>() != null)
-            {
-                continue;
-            }
-            
-            var fieldType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
-                .FirstOrDefault(t => t.FullName == serializedField.Type);
-
-            if (fieldType == null)
-            {
-                Debug.LogError("Type {0} was not found.", serializedField.Type);
-                continue;
-            }
-
-            var attribute = fieldInfo.GetCustomAttribute<SerializeFieldAttribute>();
-            
-            object currentValue = RenderAnonymousField(fieldType, attribute?.Name ?? "N/A", serializedField, attribute);
-
-            if (currentValue != fieldInfo.GetValue(m_sceneEditorContext.SelectedNode))
-            {
-                if (currentValue is SerializedObject serialized)
-                {
-                }
-                else
-                {
-                    fieldInfo.SetValue(m_sceneEditorContext.SelectedNode, currentValue);
-                }
-                
-                
-            }
-        }
-        */
     }
 
     private void DrawSerializedFields()
