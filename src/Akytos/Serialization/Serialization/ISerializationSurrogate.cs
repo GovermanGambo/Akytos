@@ -1,6 +1,6 @@
 using YamlDotNet.Core;
 
-namespace Akytos;
+namespace Akytos.Serialization;
 
 public interface ISerializationSurrogate<T> : ISerializationSurrogate
 {

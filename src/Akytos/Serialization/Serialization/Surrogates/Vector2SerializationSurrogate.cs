@@ -3,7 +3,7 @@ using System.Numerics;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 
-namespace Akytos.Surrogates;
+namespace Akytos.Serialization.Surrogates;
 
 public class Vector2SerializationSurrogate : ISerializationSurrogate<Vector2>
 {

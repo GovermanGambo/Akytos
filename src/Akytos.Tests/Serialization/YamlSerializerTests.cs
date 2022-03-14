@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Numerics;
-using Akytos.Surrogates;
+using Akytos.Serialization;
+using Akytos.Serialization.Surrogates;
 using Xunit;
 
 namespace Akytos.Tests.Serialization;
@@ -26,9 +26,9 @@ value:
     type: System.Single
     value: 6.7
 ";
-        
+
         string yaml = yamlSerializer.Serialize(person);
-        
+
         Assert.Equal(expected, yaml);
     }
 
@@ -60,20 +60,20 @@ value:
         type: System.Single
         value: 6.7
 ";
-        
+
         Assert.Equal(expected, yaml);
     }
-    
+
     [Fact]
     public void Serialize_Should_WorkWithLists()
     {
         var registry = new Registry(
             new[] {"Address1", "Address2", "Address3"},
-            new List<Person>()
+            new List<Person>
             {
-                new Person("Matt", 28, 6.7f),
-                new Person("Matt", 28, 6.7f),
-                new Person("Matt", 28, 6.7f)
+                new("Matt", 28, 6.7f),
+                new("Matt", 28, 6.7f),
+                new("Matt", 28, 6.7f)
             });
 
         var serializer = new YamlSerializer();
@@ -153,14 +153,14 @@ value:
     type: System.Int32
     value: 0
 ";
-        
+
         Assert.Equal(expected, yaml);
     }
 
     private class Person
     {
-        [SerializeField("Name")] private string m_name;
         [SerializeField("Age")] private int m_age;
+        [SerializeField("Name")] private string m_name;
         [SerializeField("Rating")] private float m_rating;
 
         public Person(string name, int age, float rating)

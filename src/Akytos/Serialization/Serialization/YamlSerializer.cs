@@ -1,9 +1,8 @@
 using System.Collections;
-using System.Reflection;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 
-namespace Akytos;
+namespace Akytos.Serialization;
 
 public class YamlSerializer
 {
