@@ -4,20 +4,36 @@ using YamlDotNet.Core.Events;
 
 namespace Akytos.Serialization;
 
+/// <summary>
+///     A class used for serializing objects to Yaml. Note that objects must either be marked with <see cref="SerializableAttribute"/>,
+///     have fields with the <see cref="SerializeFieldAttribute"/> or be a primitive or list.
+/// </summary>
 public class YamlSerializer
 {
     private readonly HashSet<ISerializationSurrogate> m_serializationSurrogates;
 
+    /// <summary>
+    ///     Creates a new <see cref="YamlSerializer"/>
+    /// </summary>
     public YamlSerializer()
     {
         m_serializationSurrogates = new HashSet<ISerializationSurrogate>();
     }
     
-    public YamlSerializer(HashSet<ISerializationSurrogate> serializationSurrogates)
+    /// <summary>
+    ///     Creates a new <see cref="YamlSerializer"/>
+    /// </summary>
+    /// <param name="serializationSurrogates">A collection of serialization surrogates to be used by the serializer.</param>
+    public YamlSerializer(IEnumerable<ISerializationSurrogate> serializationSurrogates)
     {
-        m_serializationSurrogates = serializationSurrogates;
+        m_serializationSurrogates = new HashSet<ISerializationSurrogate>(serializationSurrogates);
     }
 
+    /// <summary>
+    ///     Serializes the supplied object to a Yaml string.
+    /// </summary>
+    /// <param name="value">The object to serialize.</param>
+    /// <returns>Object serialized as yaml string</returns>
     public string Serialize(object value)
     {
         var writer = new StringWriter();
@@ -26,7 +42,7 @@ public class YamlSerializer
         emitter.Emit(new StreamStart());
         emitter.Emit(new DocumentStart());
 
-        SerializeObjectNew(emitter, value);
+        SerializeObject(emitter, value);
         
         emitter.Emit(new DocumentEnd(true));
         emitter.Emit(new StreamEnd());
@@ -36,6 +52,11 @@ public class YamlSerializer
         return result;
     }
 
+    /// <summary>
+    ///     Adds a surrogate to the serializer. Only one of each surrogate type can be registered.
+    /// </summary>
+    /// <param name="surrogate">The surrogate instance to add.</param>
+    /// <typeparam name="T">The object type that this surrogate applies to.</typeparam>
     public void AddSurrogate<T>(ISerializationSurrogate<T> surrogate)
     {
         m_serializationSurrogates.Add(surrogate);
@@ -57,13 +78,13 @@ public class YamlSerializer
         {
             emitter.Emit(new Scalar(serializedField.Name));
             object? fieldObject = serializedField.GetValue(obj);
-            SerializeObjectNew(emitter, fieldObject);
+            SerializeObject(emitter, fieldObject);
         }
         
         emitter.Emit(new MappingEnd());
     }
 
-    private void SerializeObjectNew(IEmitter emitter, object? obj)
+    private void SerializeObject(IEmitter emitter, object? obj)
     {
         if (obj == null)
         {
