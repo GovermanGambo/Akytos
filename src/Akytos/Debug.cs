@@ -11,7 +11,7 @@ public static class Debug
     {
         Logger = new LoggerConfiguration()
             .WriteTo.Console()
-#if DEBUG
+#if DEBUG || DEBUG_EDITOR
             .MinimumLevel.Debug()
 #else
             .MinimumLevel.Information()
