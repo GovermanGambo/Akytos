@@ -97,7 +97,7 @@ public class YamlSerializer
         emitter.Emit(new MappingStart());
         
         emitter.Emit(new Scalar("type"));
-        emitter.Emit(new Scalar(objectType.FullName));
+        emitter.Emit(new Scalar(objectType.FullName!));
         
         emitter.Emit(new Scalar("value"));
 
@@ -128,7 +128,7 @@ public class YamlSerializer
             emitter.Emit(new MappingStart());
             
             emitter.Emit(new Scalar("length"));
-            emitter.Emit(new Scalar(collection.Count.ToString()));
+            emitter.Emit(new Scalar(collection!.Count.ToString()));
             
             emitter.Emit(new Scalar("elements"));
             emitter.Emit(new SequenceStart(null, null, true, SequenceStyle.Block));

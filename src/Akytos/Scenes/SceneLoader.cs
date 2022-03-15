@@ -44,7 +44,6 @@ public class SceneLoader
     /// </summary>
     /// <param name="filePath"></param>
     /// <param name="scene"></param>
-    /// <exception cref="SerializationException">If the serialization of the scene failed.</exception>
     /// <exception cref="IOException">If there was an issue with saving the file to disk.</exception>
     public void SaveScene(string filePath, Node scene)
     {

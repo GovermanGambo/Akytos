@@ -25,18 +25,24 @@ public class YamlDeserializer
 
     public object? Deserialize(string yaml)
     {
-        var reader = new StringReader(yaml);
-        var scanner = new Scanner(reader);
+        try
+        {
+            var reader = new StringReader(yaml);
+            var scanner = new Scanner(reader);
 
-        // Begin
-        scanner.Begin();
-        // Stream Start
-        scanner.Read<StreamStart>();
-        // BlockMappingStart
+            // Begin
+            scanner.Begin();
+            // Stream Start
+            scanner.Read<StreamStart>();
         
-        object? obj = DeserializeObject(scanner);
+            object? obj = DeserializeObject(scanner);
 
-        return obj;
+            return obj;
+        }
+        catch (ArgumentException e)
+        {
+            throw new DeserializationException("Input string was not in correct format", e);
+        }
     }
 
     private object? DeserializeObject(Scanner scanner)
@@ -49,7 +55,6 @@ public class YamlDeserializer
         scanner.Read<BlockMappingStart>();
 
         string objectTypeName = scanner.ReadScalar("type");
-        bool isArrayType = false;
 
         var allTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes());
@@ -78,16 +83,11 @@ public class YamlDeserializer
         
         if (objectType == null)
         {
-            throw new SerializationException($"Type {objectTypeName} was not found!");
+            throw new DeserializationException($"Type {objectTypeName} was not found!");
         }
             
         scanner.ReadScalarKey("value");
         scanner.Read<Value>();
-
-        if (isArrayType)
-        {
-            objectType = objectType.MakeArrayType();
-        }
 
         object? result;
 
@@ -202,8 +202,7 @@ public class YamlDeserializer
 
         if (obj == null)
         {
-            Debug.LogError("Failed to deserialize object of type {0}.", type.FullName);
-            return null;
+            throw new DeserializationException($"Unable to create an instance of type {type.FullName}.");
         }
 
         // Read serialized object fields
@@ -221,7 +220,7 @@ public class YamlDeserializer
 
             if (fieldInfo == null)
             {
-                throw new SerializationException($"No field with name {fieldName} was found on type {type.FullName}.");
+                throw new DeserializationException($"No field with name {fieldName} was found on type {type.FullName}.");
             }
 
             fieldInfo.SetValue(obj, value);
