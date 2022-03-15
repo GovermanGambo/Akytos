@@ -12,6 +12,8 @@ internal class AssetManager
         m_graphicsResourceFactory = graphicsResourceFactory;
         m_loadedAssets = new Dictionary<string, IAsset>();
     }
+    
+    
 
     public IAsset<T>? Load<T>(string filename)
     {

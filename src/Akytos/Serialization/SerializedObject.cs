@@ -30,7 +30,7 @@ public class SerializedObject
     public static SerializedObject Create(object o)
     {
         var objectType = o.GetType();
-        var fieldInfos = NodeUtils.GetSerializedFields(objectType);
+        var fieldInfos = objectType.GetSerializedFields();
         var serializedFields = new List<SerializedField>();
         foreach (var fieldInfo in fieldInfos)
         {
@@ -84,7 +84,7 @@ public class SerializedObject
         
         Assert.IsNotNull(instance, $"Could not create instance of type {serializedObject.Type}!");
 
-        var fields = NodeUtils.GetSerializedFields(objectType).ToList();
+        var fields = objectType.GetSerializedFields().ToList();
 
         foreach (var serializedField in serializedObject.Fields)
         {

@@ -7,15 +7,18 @@ namespace Akytos;
 /// </summary>
 public class Node
 {
-    [SerializeField("Children"), HideInInspector] private readonly List<Node> m_children;
+    [SerializeField("Children")] [HideInInspector]
+    private readonly List<Node> m_children;
+
     [SerializeField("Name")] private string m_name;
+
     private SceneTree? m_sceneTree;
 
     public Node()
         : this("NewNode")
     {
     }
-    
+
     /// <summary>
     ///     Creates a new node with the specified name.
     /// </summary>
@@ -268,38 +271,19 @@ public class Node
 
     public override bool Equals(object? obj)
     {
-        if (obj is not Node node)
-        {
-            return false;
-        }
+        if (obj is not Node node) return false;
 
-        if (node.GetType() != GetType())
-        {
-            return false;
-        }
+        if (node.GetType() != GetType()) return false;
 
-        if (node.Name != Name)
-        {
-            return false;
-        }
+        if (node.Name != Name) return false;
 
-        if (m_children.Count != node.m_children.Count)
-        {
-            return false;
-        }
+        if (m_children.Count != node.m_children.Count) return false;
 
         for (int i = 0; i < m_children.Count; i++)
-        {
             if (!m_children[i].Equals(node.m_children[i]))
-            {
                 return false;
-            }
-        }
 
-        if (IsInsideTree && GetPath() != node.GetPath())
-        {
-            return false;
-        }
+        if (IsInsideTree && GetPath() != node.GetPath()) return false;
 
         return true;
     }

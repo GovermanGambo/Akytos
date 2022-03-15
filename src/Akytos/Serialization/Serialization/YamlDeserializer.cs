@@ -216,7 +216,7 @@ public class YamlDeserializer
 
             scanner.Read<Value>();
             object? value = DeserializeObject(scanner);
-            var fieldInfo = NodeUtils.GetSerializedFields(type).FirstOrDefault(f => f.Name == fieldName);
+            var fieldInfo = type.GetSerializedFields().FirstOrDefault(f => f.Name == fieldName);
             //var fieldInfo = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
 
             if (fieldInfo == null)

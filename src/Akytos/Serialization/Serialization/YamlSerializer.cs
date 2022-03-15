@@ -69,8 +69,8 @@ public class YamlSerializer
             emitter.Emit(new Scalar(string.Empty));
             return;
         }
-        
-        var fields = NodeUtils.GetSerializedFields(obj.GetType());
+
+        var fields = obj.GetType().GetSerializedFields();
         
         emitter.Emit(new MappingStart());
         

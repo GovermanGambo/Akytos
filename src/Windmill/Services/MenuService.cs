@@ -17,14 +17,7 @@ internal class MenuService
     {
         if (ImGui.BeginMenuBar())
         {
-            if (ImGui.BeginMenu("File"))
-            {
-                if (ImGui.MenuItem("Exit"))
-                {
-                    Application.Exit();
-                }
-                ImGui.EndMenu();
-            }
+            DrawFileMenu();
 
             if (ImGui.BeginMenu("Layout"))
             {
@@ -43,6 +36,35 @@ internal class MenuService
                 ImGui.EndMenu();
             }
             ImGui.EndMenuBar();
+        }
+    }
+
+    private static void DrawFileMenu()
+    {
+        if (ImGui.BeginMenu("File"))
+        {
+            if (ImGui.MenuItem("New scene"))
+            {
+            }
+
+            if (ImGui.MenuItem("Load scene..."))
+            {
+            }
+
+            if (ImGui.MenuItem("Save scene"))
+            {
+            }
+
+            if (ImGui.MenuItem("Save scene as..."))
+            {
+            }
+
+            if (ImGui.MenuItem("Exit"))
+            {
+                Application.Exit();
+            }
+
+            ImGui.EndMenu();
         }
     }
 }

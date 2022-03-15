@@ -57,7 +57,7 @@ internal class PropertyPanel : IEditorPanel
     private void DrawSerializedFieldsForType(object o)
     {
         var type = o.GetType();
-        var serializedFields = NodeUtils.GetSerializedFields(type);
+        var serializedFields = type.GetSerializedFields();
 
         Type? previousDeclaringType = null;
         bool collapsed = false;

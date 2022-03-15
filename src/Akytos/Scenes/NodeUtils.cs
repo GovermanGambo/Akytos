@@ -2,9 +2,9 @@
 
 namespace Akytos
 {
-    public static class NodeUtils
+    public static class TypeExtensions
     {
-        public static IEnumerable<FieldInfo> GetSerializedFields(Type nodeType)
+        public static IEnumerable<FieldInfo> GetSerializedFields(this Type nodeType)
         {
             IEnumerable<FieldInfo> fields;
             if (nodeType.GetCustomAttribute<SerializableAttribute>() != null)
@@ -26,11 +26,6 @@ namespace Akytos
             }
 
             return fields;
-        }
-        
-        public static IEnumerable<FieldInfo> GetSerializedFields<TNode>() where TNode : Node
-        {
-            return GetSerializedFields(typeof(TNode));
         }
     }
 }
