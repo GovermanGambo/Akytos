@@ -13,7 +13,6 @@ namespace Windmill;
 
 internal class EditorLayer : ILayer
 {
-    private readonly AssetManager m_assetManager;
     private readonly IEditorViewport m_editorViewport;
     private readonly IGraphicsDevice m_graphicsDevice;
     private readonly IGraphicsResourceFactory m_graphicsResourceFactory;
@@ -27,7 +26,7 @@ internal class EditorLayer : ILayer
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager,
-        MenuService menuService, SceneTree sceneTree, AssetManager assetManager)
+        MenuService menuService, SceneTree sceneTree)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
@@ -36,7 +35,6 @@ internal class EditorLayer : ILayer
         m_panelManager = panelManager;
         m_menuService = menuService;
         m_sceneTree = sceneTree;
-        m_assetManager = assetManager;
     }
 
     public void Dispose()
@@ -71,18 +69,8 @@ internal class EditorLayer : ILayer
         m_renderingSystem.Camera = m_editorViewport.Camera;
 
         // TODO: Temporary Scene Setup
-
-        var asset = m_assetManager.Load<ITexture2D>("sprites/character_malePerson_idle.png") as Texture2DAsset;
+        
         var node = new Node("RootNode");
-        var node2D = new SpriteNode("Node2D")
-        {
-            GlobalPosition = new Vector2(-96, 0)
-        };
-        var spriteNode = new SpriteNode("SpriteNode");
-        var anotherNode2D = new Node2D("AnotherNode2D");
-        node.AddChild(node2D);
-        node.AddChild(anotherNode2D);
-        anotherNode2D.AddChild(spriteNode);
 
         m_sceneTree.SetScene(node);
         m_renderingSystem.Context = node;

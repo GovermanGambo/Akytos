@@ -11,6 +11,8 @@ internal class HierarchyPanel : IEditorPanel
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly CreateNodePanel m_createNodePanel;
 
+    private bool m_treeWasModified;
+
     public HierarchyPanel(SceneEditorContext sceneEditorContext, IEditorPanel createNodePanel)
     {
         m_sceneEditorContext = sceneEditorContext;
@@ -21,7 +23,7 @@ internal class HierarchyPanel : IEditorPanel
     public string DisplayName => "Scene Hierarchy";
     public bool IsEnabled { get; set; } = true;
 
-    public bool HideInMenu { get; }
+    public bool HideInMenu => false;
 
     public void OnDrawGui()
     {
@@ -32,18 +34,30 @@ internal class HierarchyPanel : IEditorPanel
             ImGui.End();
             return;
         }
+
+        bool shouldOpenModal = ImGui.Button("Add node");
+
+        if (ImGui.BeginPopupContextWindow())
+        {
+            if (ImGui.Selectable("Add node..."))
+            {
+                shouldOpenModal = true;
+            }
+            
+            ImGui.EndPopup();
+        }
         
-        if (ImGui.Button("Add Node"))
+        ImGui.Separator();
+
+        DrawNode(m_sceneEditorContext.SceneTree.CurrentScene, ref shouldOpenModal);
+        
+        if (shouldOpenModal)
         {
             m_createNodePanel.IsEnabled = true;
             ImGui.OpenPopup("Create Node");
         }
         
-        ImGui.Separator();
-        
         m_createNodePanel.OnDrawGui();
-
-        DrawNode(m_sceneEditorContext.SceneTree.CurrentScene);
 
         ImGui.End();
     }
@@ -52,12 +66,13 @@ internal class HierarchyPanel : IEditorPanel
     {
     }
 
-    private void DrawNode(Node node)
+    private void DrawNode(Node node, ref bool shouldOpenModal)
     {
         var nodePath = node.GetPath();
         if (nodePath == null)
         {
             Debug.LogWarning($"No path was found for node {node.Name}.");
+            shouldOpenModal = false;
             return;
         }
 
@@ -74,9 +89,38 @@ internal class HierarchyPanel : IEditorPanel
             SelectNode(node);
         }
 
+        if (node.Owner != null && ImGui.BeginPopupContextItem("hierarchy_node_context"))
+        {
+            if (ImGui.Selectable("Add child..."))
+            {
+                m_sceneEditorContext.SelectedNode = node;
+                shouldOpenModal = true;
+            }
+            
+            if (ImGui.Selectable("Delete node"))
+            {
+                node.Owner.RemoveChild(node, true);
+                m_treeWasModified = true;
+                if (m_sceneEditorContext.SelectedNode == node)
+                {
+                    m_sceneEditorContext.SelectedNode = null;
+                }
+            }
+            
+            ImGui.EndPopup();
+        }
+
         if (!opened) return;
 
-        foreach (var child in node.ImmediateChildren) DrawNode(child);
+        foreach (var child in node.ImmediateChildren)
+        {
+            DrawNode(child, ref shouldOpenModal);
+            if (m_treeWasModified)
+            {
+                m_treeWasModified = false;
+                break;
+            }
+        }
 
         ImGui.TreePop();
     }

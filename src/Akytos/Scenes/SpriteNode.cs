@@ -8,7 +8,7 @@ public class SpriteNode : Node2D
 {
     [SerializeField("Texture")] private Texture2DAsset? m_textureAsset;
 
-    public SpriteNode() : base()
+    public SpriteNode() : base("NewSpriteNode")
     {
     }
     
