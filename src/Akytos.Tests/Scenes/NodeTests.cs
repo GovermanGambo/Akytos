@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Numerics;
+using System.Linq;
 using Xunit;
 
 namespace Akytos.Tests.Scenes;
@@ -113,72 +112,130 @@ public class NodeTests
         Assert.Contains(childNodeB, rootNode.ImmediateChildren);
         Assert.Contains(childNodeC, childNodeA.ImmediateChildren);
     }
+
+    [Fact]
+    public void AddChild_Should_DisallowOwnedNodes()
+    {
+        var sceneTree = new SceneTree();
+        
+        var rootNode = new Node("RootNode");
+        sceneTree.SetScene(rootNode);
+        var newNode = new Node("Node");
+        var result = newNode.AddChild(rootNode);
+        
+        Assert.Equal(Result.InvalidData, result);
+    }
     
     [Fact]
-    public void SerializeNode_Should_BeCreatedProperly()
+    public void AddChild_Should_DisallowDuplicateNames()
     {
-        var node = new Node("MyNewNode");
-        var childNode = new Node("ChildNode");
-        node.AddChild(childNode);
+        var rootNode = new Node("RootNode");
+        var childNodeA = new Node("Child");
+        var childNodeB = new Node("Child");
 
-        var serializedObject = SerializedObject.Create(node);
+        var resultA = rootNode.AddChild(childNodeA);
+        var resultB = rootNode.AddChild(childNodeB);
         
-        Assert.NotNull(serializedObject);
-        AssertSerializedNode(serializedObject);
+        Assert.Equal(Result.Ok, resultA);
+        Assert.Equal(Result.InvalidData, resultB);
+    }
+    
+    [Fact]
+    public void AddChild_Should_AllowIfSpecifiedDuplicateNames()
+    {
+        var rootNode = new Node("RootNode");
+        var childNodeA = new Node("Child");
+        var childNodeB = new Node("Child");
 
-        var children = serializedObject.Fields[0].Value as List<object>;
-        foreach (object child in children)
-        {
-            AssertSerializedNode((SerializedObject)child);
-        }
+        var resultA = rootNode.AddChild(childNodeA);
+        var resultB = rootNode.AddChild(childNodeB, true);
+        
+        Assert.Equal(Result.Ok, resultA);
+        Assert.Equal(Result.Ok, resultB);
+        Assert.Equal("Child_1", childNodeB.Name);
+    }
+    
+    [Fact]
+    public void GetPath_Should_BeEmptyIfNoSceneTree()
+    {
+        var newNode = new Node("Node");
+        var nodePath = newNode.GetPath();
+        
+        Assert.Null(nodePath);
+    }
+    
+    [Fact]
+    public void GetNode_Should_ReturnCorrect()
+    {
+        var rootNode = new Node("TestNode");
+        var sceneTree = new SceneTree();
+        sceneTree.SetScene(rootNode);
+        var childNode = new Node("ChildNode");
+        var anotherChildNode = new Node("AnotherChild");
+        var aThirdChildNode = new Node("AThirdChild");
+        rootNode.AddChild(childNode);
+        rootNode.AddChild(anotherChildNode);
+        childNode.AddChild(aThirdChildNode);
+        
+        Assert.Equal(childNode, rootNode.GetNode(new NodePath("./ChildNode")));
+        Assert.Equal(childNode, rootNode.GetNode(new NodePath("ChildNode")));
+        Assert.Equal(anotherChildNode, rootNode.GetNode(new NodePath("./AnotherChild")));
+        Assert.Equal(aThirdChildNode, rootNode.GetNode(new NodePath("./ChildNode/AThirdChild")));
+        Assert.Equal(rootNode, rootNode.GetNode(new NodePath("")));
+        Assert.Equal(aThirdChildNode, anotherChildNode.GetNode(new NodePath("/TestNode/ChildNode/AThirdChild")));
     }
 
     [Fact]
-    public void DeserializeNode_Should_DeserializeProperly()
+    public void RemoveChild_Should_RemoveNode()
     {
         var rootNode = new Node("RootNode");
-        var childNodeA = new Node("ChildNodeA");
-        var childNodeB = new Node2D("ChildNodeB")
-        {
-            Position = Vector2.One,
-            Scale = new Vector2(0.5f, 0.75f)
-        };
-        var childNodeC = new Node2D("ChildNodeC");
+        var childNode = new Node("ChildNode");
+        rootNode.AddChild(childNode);
 
-        rootNode.AddChild(childNodeA);
-        rootNode.AddChild(childNodeB);
-        childNodeA.AddChild(childNodeC);
-
-        var serializedObject = SerializedObject.Create(rootNode);
-
-        var deserializedObject = SerializedObject.Deserialize(serializedObject) as Node;
-        
-        Assert.NotNull(deserializedObject);
-        
-        Assert.Equal("RootNode", deserializedObject.Name);
-        Assert.Equal("ChildNodeA", childNodeA.Name);
-        Assert.Equal("ChildNodeB", childNodeB.Name);
-        Assert.Equal("ChildNodeC", childNodeC.Name);
-        
-        Assert.Null(rootNode.Owner);
-        Assert.Null(childNodeA.Owner);
-        Assert.Null(childNodeB.Owner);
-        Assert.Null(childNodeC.Owner);
-
-        Assert.Contains(childNodeA, rootNode.ImmediateChildren);
-        Assert.Contains(childNodeB, rootNode.ImmediateChildren);
-        Assert.Contains(childNodeC, childNodeA.ImmediateChildren);
-        
-        Assert.Equal(Vector2.One, childNodeB.Position);
-        Assert.Equal(new Vector2(0.5f, 0.75f), childNodeB.Scale);
+        var result = rootNode.RemoveChild(childNode);
+        Assert.Equal(Result.Ok, result);
     }
-
-    private static void AssertSerializedNode(SerializedObject serializedObject)
+    
+    [Fact]
+    public void RemoveChild_ShouldNot_RemoveMissingNode()
     {
-        Assert.Equal(2, serializedObject.Fields.Length);
-        // Children
-        Assert.IsType<List<object>>(serializedObject.Fields[0].Value);
-        // Name
-        Assert.IsType<string>(serializedObject.Fields[1].Value);
+        var rootNode = new Node("RootNode");
+        var childNode = new Node("ChildNode");
+
+        var result = rootNode.RemoveChild(childNode);
+        Assert.Equal(Result.InvalidData, result);
+    }
+    
+    [Fact]
+    public void GetChildren_Should_WorkWithPredicate()
+    {
+        var rootNode = new Node("RootNode");
+        var childNode = new Node("ChildNode");
+        var anotherChildNode = new Node("AnotherChild");
+        var aThirdChildNode = new Node("AThirdChild");
+        rootNode.AddChild(childNode);
+        rootNode.AddChild(anotherChildNode);
+        childNode.AddChild(aThirdChildNode);
+        
+        var children = rootNode.GetChildren(false, n => n.Name == "ChildNode").ToList();
+
+        Assert.Single(children);
+        Assert.Equal(childNode, children.FirstOrDefault());
+    }
+    
+    [Fact]
+    public void GetChildren_Should_IncludeRootIfConfigured()
+    {
+        var rootNode = new Node("RootNode");
+        var childNode = new Node("ChildNode");
+        var anotherChildNode = new Node("AnotherChild");
+        var aThirdChildNode = new Node("AThirdChild");
+        rootNode.AddChild(childNode);
+        rootNode.AddChild(anotherChildNode);
+        childNode.AddChild(aThirdChildNode);
+
+        var children = rootNode.GetChildren(true);
+        
+        Assert.Equal(rootNode, children.FirstOrDefault());
     }
 }

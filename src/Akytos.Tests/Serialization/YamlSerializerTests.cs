@@ -88,41 +88,50 @@ value:
     value:
       length: 3
       elements:
-      - Address1
-      - Address2
-      - Address3
+      - type: System.String
+        value: Address1
+      - type: System.String
+        value: Address2
+      - type: System.String
+        value: Address3
   m_people:
     type: System.Collections.Generic.List`1[[Akytos.Tests.Serialization.Person, Akytos.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
     value:
       length: 3
       elements:
-      - m_age:
-          type: System.Int32
-          value: 28
-        m_name:
-          type: System.String
-          value: Matt
-        m_rating:
-          type: System.Single
-          value: 6.7
-      - m_age:
-          type: System.Int32
-          value: 28
-        m_name:
-          type: System.String
-          value: Matt
-        m_rating:
-          type: System.Single
-          value: 6.7
-      - m_age:
-          type: System.Int32
-          value: 28
-        m_name:
-          type: System.String
-          value: Matt
-        m_rating:
-          type: System.Single
-          value: 6.7
+      - type: Akytos.Tests.Serialization.Person
+        value:
+          m_age:
+            type: System.Int32
+            value: 28
+          m_name:
+            type: System.String
+            value: Matt
+          m_rating:
+            type: System.Single
+            value: 6.7
+      - type: Akytos.Tests.Serialization.Person
+        value:
+          m_age:
+            type: System.Int32
+            value: 28
+          m_name:
+            type: System.String
+            value: Matt
+          m_rating:
+            type: System.Single
+            value: 6.7
+      - type: Akytos.Tests.Serialization.Person
+        value:
+          m_age:
+            type: System.Int32
+            value: 28
+          m_name:
+            type: System.String
+            value: Matt
+          m_rating:
+            type: System.Single
+            value: 6.7
 ";
         
         Assert.Equal(expected, yaml);
@@ -152,58 +161,76 @@ value:
     value:
       length: 2
       elements:
-      - m_children:
-          type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-          value:
-            length: 0
-            elements: []
-        m_name:
-          type: System.String
-          value: Node2D
-        position:
-          x: 0
-          y: 0
-        scale:
-          x: 1
-          y: 1
-        rotation:
-          type: System.Int32
-          value: 0
-      - m_children:
-          type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-          value:
-            length: 1
-            elements:
-            - m_children:
-                type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+      - type: Akytos.Node2D
+        value:
+          m_children:
+            type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+            value:
+              length: 0
+              elements: []
+          m_name:
+            type: System.String
+            value: Node2D
+          position:
+            type: System.Numerics.Vector2
+            value:
+              x: 0
+              y: 0
+          scale:
+            type: System.Numerics.Vector2
+            value:
+              x: 1
+              y: 1
+          rotation:
+            type: System.Int32
+            value: 0
+      - type: Akytos.SpriteNode
+        value:
+          m_children:
+            type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+            value:
+              length: 1
+              elements:
+              - type: Akytos.Node
                 value:
-                  length: 0
-                  elements: []
-              m_name:
-                type: System.String
-                value: ChildOfSpriteNode
-        m_name:
-          type: System.String
-          value: SpriteNode
-        position:
-          x: 0
-          y: 0
-        scale:
-          x: 1
-          y: 1
-        rotation:
-          type: System.Int32
-          value: 0
-        m_textureAsset: ''
+                  m_children:
+                    type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+                    value:
+                      length: 0
+                      elements: []
+                  m_name:
+                    type: System.String
+                    value: ChildOfSpriteNode
+          m_name:
+            type: System.String
+            value: SpriteNode
+          position:
+            type: System.Numerics.Vector2
+            value:
+              x: 0
+              y: 0
+          scale:
+            type: System.Numerics.Vector2
+            value:
+              x: 1
+              y: 1
+          rotation:
+            type: System.Int32
+            value: 0
+          m_textureAsset: ''
   m_name:
     type: System.String
     value: RootNode
   position:
-    x: 0
-    y: 0
+    type: System.Numerics.Vector2
+    value:
+      x: 0
+      y: 0
   scale:
-    x: 1
-    y: 1
+    type: System.Numerics.Vector2
+    value:
+      x: 1
+      y: 1
   rotation:
     type: System.Int32
     value: 0
