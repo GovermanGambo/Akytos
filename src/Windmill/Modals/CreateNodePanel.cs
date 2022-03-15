@@ -47,7 +47,7 @@ namespace Windmill.Modals
             if (ImGui.Button("Add"))
                 if (m_selectedNodeType != null)
                 {
-                    var result = CreateNode(m_selectedNodeType, "NewNode");
+                    var result = CreateNode(m_selectedNodeType);
                     if (result == Result.Ok) IsEnabled = false;
                 }
 
@@ -99,7 +99,7 @@ namespace Windmill.Modals
         {
             if (e.KeyCode == KeyCode.Enter && m_selectedNodeType != null)
             {
-                var result = CreateNode(m_selectedNodeType, "NewNode");
+                var result = CreateNode(m_selectedNodeType);
                 if (result == Result.Ok)
                 {
                     IsEnabled = false;
@@ -143,9 +143,9 @@ namespace Windmill.Modals
             return false;
         }
         
-        private Result CreateNode(Type nodeType, string name)
+        private Result CreateNode(Type nodeType)
         {
-            var node = (Node?) Activator.CreateInstance(nodeType, name);
+            var node = (Node?) Activator.CreateInstance(nodeType);
 
             if (node == null)
             {

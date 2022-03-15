@@ -8,7 +8,7 @@ namespace Akytos
         [SerializeField("Scale")] private Vector2 scale = Vector2.One;
         [IntSlider("Rotation", 0, 360)] private int rotation;
 
-        public Node2D() : base()
+        public Node2D() : base("NewNode2D")
         {
             
         }

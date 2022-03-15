@@ -209,8 +209,11 @@ public class Node
 
         if (transferChildren)
         {
-            foreach (var child in node.ImmediateChildren)
+            int childCount = node.ImmediateChildren.Count;
+            for (int i = 0; i < childCount; i++)
             {
+                var child = node.ImmediateChildren[i];
+                child.Owner.RemoveChild(child);
                 AddChild(child, true);
             }
         }
