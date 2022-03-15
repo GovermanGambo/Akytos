@@ -2,6 +2,8 @@ using System.Globalization;
 using System.Numerics;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
+using YamlDotNet.Core.Tokens;
+using Scalar = YamlDotNet.Core.Events.Scalar;
 
 namespace Akytos.Serialization.Surrogates;
 
@@ -12,9 +14,21 @@ public class Vector2SerializationSurrogate : ISerializationSurrogate<Vector2>
         Serialize(emitter, (Vector2)value!);
     }
 
-    public Vector2 Deserialize(string value)
+    public Vector2 Deserialize(Scanner scanner)
     {
-        throw new NotImplementedException();
+        scanner.Read<BlockMappingStart>();
+
+        string x = scanner.ReadScalar("x");
+        string y = scanner.ReadScalar("y");
+        
+        scanner.Read<BlockEnd>();
+
+        return new Vector2(float.Parse(x), float.Parse(y));
+    }
+
+    object ISerializationSurrogate.Deserialize(Scanner value)
+    {
+        return Deserialize(value);
     }
 
     public void Serialize(IEmitter emitter, Vector2 value)
@@ -28,9 +42,5 @@ public class Vector2SerializationSurrogate : ISerializationSurrogate<Vector2>
         
         emitter.Emit(new MappingEnd());
     }
-
-    object ISerializationSurrogate.Deserialize(string value)
-    {
-        return Deserialize(value);
-    }
+    
 }

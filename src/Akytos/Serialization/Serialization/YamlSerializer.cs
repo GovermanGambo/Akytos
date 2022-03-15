@@ -93,13 +93,6 @@ public class YamlSerializer
         }
 
         var objectType = obj.GetType();
-
-        var surrogate = ResolveSurrogate(objectType);
-        if (surrogate != null)
-        {
-            surrogate.Serialize(emitter, obj);
-            return;
-        }
         
         emitter.Emit(new MappingStart());
         
@@ -108,7 +101,15 @@ public class YamlSerializer
         
         emitter.Emit(new Scalar("value"));
 
-        SerializeObjectData(emitter, obj);
+        var surrogate = ResolveSurrogate(objectType);
+        if (surrogate != null)
+        {
+            surrogate.Serialize(emitter, obj);
+        }
+        else
+        {
+            SerializeObjectData(emitter, obj);
+        }
 
         emitter.Emit(new MappingEnd());
     }
@@ -121,16 +122,23 @@ public class YamlSerializer
         {
             emitter.Emit(new Scalar(obj.ToString() ?? string.Empty));
         }
-        else if (typeof(IEnumerable).IsAssignableFrom(objectType))
+        else if (typeof(ICollection).IsAssignableFrom(objectType))
         {
-            var enumerable = obj as IEnumerable;
+            var collection = obj as ICollection;
+            emitter.Emit(new MappingStart());
+            
+            emitter.Emit(new Scalar("length"));
+            emitter.Emit(new Scalar(collection.Count.ToString()));
+            
+            emitter.Emit(new Scalar("elements"));
             emitter.Emit(new SequenceStart(null, null, true, SequenceStyle.Block));
-            foreach (object element in enumerable!)
+            foreach (object element in collection!)
             {
-                SerializeObjectData(emitter, element);
+                SerializeObject(emitter, element);
             }
             
             emitter.Emit(new SequenceEnd());
+            emitter.Emit(new MappingEnd());
         }
         else
         {

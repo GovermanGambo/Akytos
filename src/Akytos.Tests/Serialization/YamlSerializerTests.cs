@@ -15,14 +15,14 @@ public class YamlSerializerTests
 
         var yamlSerializer = new YamlSerializer();
 
-        const string expected = @"type: Akytos.Tests.Serialization.YamlSerializerTests+Person
+        const string expected = @"type: Akytos.Tests.Serialization.Person
 value:
-  m_name:
-    type: System.String
-    value: Matt
   m_age:
     type: System.Int32
     value: 28
+  m_name:
+    type: System.String
+    value: Matt
   m_rating:
     type: System.Single
     value: 6.7
@@ -43,20 +43,20 @@ value:
 
         string yaml = yamlSerializer.Serialize(house);
 
-        const string expected = @"type: Akytos.Tests.Serialization.YamlSerializerTests+House
+        const string expected = @"type: Akytos.Tests.Serialization.House
 value:
   m_address:
     type: System.String
     value: Person Lane 54
   m_person:
-    type: Akytos.Tests.Serialization.YamlSerializerTests+Person
+    type: Akytos.Tests.Serialization.Person
     value:
-      m_name:
-        type: System.String
-        value: Matt
       m_age:
         type: System.Int32
         value: 28
+      m_name:
+        type: System.String
+        value: Matt
       m_rating:
         type: System.Single
         value: 6.7
@@ -80,6 +80,52 @@ value:
         var serializer = new YamlSerializer();
 
         string yaml = serializer.Serialize(registry);
+
+        const string expected = @"type: Akytos.Tests.Serialization.Registry
+value:
+  m_addresses:
+    type: System.String[]
+    value:
+      length: 3
+      elements:
+      - Address1
+      - Address2
+      - Address3
+  m_people:
+    type: System.Collections.Generic.List`1[[Akytos.Tests.Serialization.Person, Akytos.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+    value:
+      length: 3
+      elements:
+      - m_age:
+          type: System.Int32
+          value: 28
+        m_name:
+          type: System.String
+          value: Matt
+        m_rating:
+          type: System.Single
+          value: 6.7
+      - m_age:
+          type: System.Int32
+          value: 28
+        m_name:
+          type: System.String
+          value: Matt
+        m_rating:
+          type: System.Single
+          value: 6.7
+      - m_age:
+          type: System.Int32
+          value: 28
+        m_name:
+          type: System.String
+          value: Matt
+        m_rating:
+          type: System.Single
+          value: 6.7
+";
+        
+        Assert.Equal(expected, yaml);
     }
 
     [Fact]
@@ -104,43 +150,51 @@ value:
   m_children:
     type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
     value:
-    - m_children:
-        type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-        value: []
-      m_name:
-        type: System.String
-        value: Node2D
-      position:
-        x: 0
-        y: 0
-      scale:
-        x: 1
-        y: 1
-      rotation:
-        type: System.Int32
-        value: 0
-    - m_children:
-        type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-        value:
-        - m_children:
-            type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
-            value: []
-          m_name:
-            type: System.String
-            value: ChildOfSpriteNode
-      m_name:
-        type: System.String
-        value: SpriteNode
-      position:
-        x: 0
-        y: 0
-      scale:
-        x: 1
-        y: 1
-      rotation:
-        type: System.Int32
-        value: 0
-      m_textureAsset: ''
+      length: 2
+      elements:
+      - m_children:
+          type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+          value:
+            length: 0
+            elements: []
+        m_name:
+          type: System.String
+          value: Node2D
+        position:
+          x: 0
+          y: 0
+        scale:
+          x: 1
+          y: 1
+        rotation:
+          type: System.Int32
+          value: 0
+      - m_children:
+          type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+          value:
+            length: 1
+            elements:
+            - m_children:
+                type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+                value:
+                  length: 0
+                  elements: []
+              m_name:
+                type: System.String
+                value: ChildOfSpriteNode
+        m_name:
+          type: System.String
+          value: SpriteNode
+        position:
+          x: 0
+          y: 0
+        scale:
+          x: 1
+          y: 1
+        rotation:
+          type: System.Int32
+          value: 0
+        m_textureAsset: ''
   m_name:
     type: System.String
     value: RootNode
@@ -190,7 +244,34 @@ value:
         
         string yaml = serializer.Serialize(registry);
 
-        object? obj = deserializer.Deserialize(yaml);
+        object? obj = deserializer.Deserialize(yaml) as Registry;
+        
+        Assert.Equal(registry, obj);
+    }
+
+    [Fact]
+    public void DeserializeNode_Should_Work()
+    {
+        var rootNode = new Node2D("RootNode");
+        var node2D = new Node2D("Node2D");
+        var spriteNode = new SpriteNode("SpriteNode");
+        var childNode = new Node("ChildOfSpriteNode");
+
+        rootNode.AddChild(node2D);
+        rootNode.AddChild(spriteNode);
+        spriteNode.AddChild(childNode);
+
+        var serializer = new YamlSerializer();
+        serializer.AddSurrogate(new Vector2SerializationSurrogate());
+
+        string yaml = serializer.Serialize(rootNode);
+
+        var deserializer = new YamlDeserializer();
+        deserializer.AddSurrogate(new Vector2SerializationSurrogate());
+
+        var node = deserializer.Deserialize(yaml) as Node2D;
+        
+        Assert.Equal(rootNode, node);
     }
 }
 
@@ -248,5 +329,36 @@ public class Registry
     {
         m_addresses = addresses;
         m_people = people;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is not Registry registry)
+        {
+            return false;
+        }
+
+        if (m_addresses.Length != registry.m_addresses.Length || m_people.Count != registry.m_people.Count)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < m_addresses.Length; i++)
+        {
+            if (m_addresses[i] != registry.m_addresses[i])
+            {
+                return false;
+            }
+        }
+        
+        for (int i = 0; i < m_people.Count; i++)
+        {
+            if (!m_people[i].Equals(registry.m_people[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

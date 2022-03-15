@@ -251,4 +251,42 @@ public class Node
     public virtual void OnUpdate(float deltaSeconds)
     {
     }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is not Node node)
+        {
+            return false;
+        }
+
+        if (node.GetType() != GetType())
+        {
+            return false;
+        }
+
+        if (node.Name != Name)
+        {
+            return false;
+        }
+
+        if (m_children.Count != node.m_children.Count)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < m_children.Count; i++)
+        {
+            if (!m_children[i].Equals(node.m_children[i]))
+            {
+                return false;
+            }
+        }
+
+        if (IsInsideTree && GetPath() != node.GetPath())
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
