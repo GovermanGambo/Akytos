@@ -10,5 +10,6 @@ public class ScenesCompositionRoot : ICompositionRoot
         
         // TODO: Check for custom implementation?
         serviceRegistry.RegisterSingleton<SceneTree>();
+        serviceRegistry.Register<SceneLoader>();
     }
 }

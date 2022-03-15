@@ -25,7 +25,11 @@ public sealed class SceneTree
 
     public void SetScene(Node scene)
     {
-        if (CurrentScene != null!) NodeRemoved?.Invoke(CurrentScene);
+        if (CurrentScene != null!)
+        {
+            CurrentScene.SceneTree = null;
+            NodeRemoved?.Invoke(CurrentScene);
+        }
 
         CurrentScene = scene;
         CurrentScene.SceneTree = this;
