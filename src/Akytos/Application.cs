@@ -39,6 +39,8 @@ public abstract class Application : IDisposable
     {
         OnInitialize();
         
+        Debug.LogInformation("Application {0} started successfully.", m_window.Title);
+        
         while (!m_window.IsClosing)
         {
             m_window.OnUpdate();
@@ -83,6 +85,9 @@ public abstract class Application : IDisposable
     {
         var layer = m_layerStack.PushLayer<TLayer>();
         layer.OnAttach();
+        
+        Debug.LogInformation("Pushed layer {0}.", typeof(TLayer).Name);
+        
         return layer;
     }
 
