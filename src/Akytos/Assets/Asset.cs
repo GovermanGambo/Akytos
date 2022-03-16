@@ -6,15 +6,15 @@ public static class Asset
 {
     public static string GetAssetPath(string path)
     {
-        return Path.Combine(AssetPath, path);
+        return Path.Combine(AssetsDirectory, path);
     }
 
     public static string GetRelativePath(string path)
     {
-        return Path.GetRelativePath(AssetPath, path);
+        return Path.GetRelativePath(AssetsDirectory, path);
     }
 
-    public static string AssetPath => GetExecutingPath("assets");
+    public static string AssetsDirectory => GetExecutingPath("assets");
     
     private static string GetExecutingPath(string path)
     {

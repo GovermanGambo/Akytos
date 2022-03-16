@@ -15,7 +15,7 @@ internal class SaveSceneModal : IModal
 {
     private const ImGuiWindowFlags ModalFlags = ImGuiWindowFlags.NoResize;
     
-    private static readonly string RootDirectory = Asset.AssetPath;
+    private static readonly string RootDirectory = Asset.AssetsDirectory;
 
     private readonly SceneEditorContext m_editorContext;
 

@@ -15,7 +15,7 @@ internal class AssetManager
 
     public void LoadAll()
     {
-        var directoryInfo = new DirectoryInfo(Asset.AssetPath);
+        var directoryInfo = new DirectoryInfo(Asset.AssetsDirectory);
         var allFiles = directoryInfo.GetDirectories().SelectMany(d => d.GetFiles());
 
         foreach (var fileInfo in allFiles)
@@ -67,15 +67,17 @@ internal class AssetManager
         return asset.Data;
     }
 
-    private void ProcessAssetFile(FileInfo fileInfo)
+    private void ProcessAssetFile(FileSystemInfo fileInfo)
     {
+        string filename = Asset.GetRelativePath(fileInfo.FullName).Replace("\\", "/");
+        
         if (fileInfo.FullName.EndsWith(".png"))
         {
-            Load<Texture2DAsset>(Asset.GetRelativePath(fileInfo.FullName));
+            Load<Texture2DAsset>(filename);
         }
         else if (fileInfo.FullName.EndsWith(".glsl"))
         {
-            Load<ShaderAsset>(Asset.GetRelativePath(fileInfo.FullName));
+            Load<ShaderAsset>(filename);
         }
         else
         {
