@@ -36,50 +36,16 @@ internal class SceneEditorContext
         m_spriteRendererSystem.Context = rootNode;
     }
 
-    public void LoadScene()
+    public void LoadScene(string filePath)
     {
-        string? filePath = m_fileDialogService.SaveFile();
-
-        if (filePath == null)
-        {
-            return;
-        }
-        
         var scene = m_sceneLoader.LoadScene(filePath);
         SceneTree.SetScene(scene);
+        CurrentSceneFilename = filePath;
     }
 
-    public void SaveSceneAs()
+    public void SaveSceneAs(string filePath)
     {
-        string? filePath = m_fileDialogService.SaveFile();
-
-        if (filePath == null)
-        {
-            return;
-        }
-        
         m_sceneLoader.SaveScene(filePath, SceneTree.CurrentScene);
-    }
-
-    public void SaveScene()
-    {
-        try
-        {
-            if (CurrentSceneFilename == null)
-            {
-                SaveSceneAs();
-            }
-            else
-            {
-                string filePath = Asset.GetAssetPath(CurrentSceneFilename);
-                m_sceneLoader.SaveScene(filePath, SceneTree.CurrentScene);
-            }
-        }
-        catch (Exception e)
-        {
-            // TODO: Show error dialog
-            Console.WriteLine(e);
-            throw;
-        }
+        CurrentSceneFilename = filePath;
     }
 }

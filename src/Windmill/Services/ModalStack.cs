@@ -24,6 +24,17 @@ public class ModalStack
         return m_modals.Peek();
     }
 
+    public void OnDrawGui()
+    {
+        foreach (var modal in m_modals)
+        {
+            if (modal.IsOpen)
+            {
+                modal.OnDrawGui();
+            }
+        }
+    }
+
     public TModal PushModal<TModal>() where TModal : IModal
     {
         var modal = m_serviceFactory.TryGetInstance<TModal>();

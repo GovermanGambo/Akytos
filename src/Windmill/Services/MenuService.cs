@@ -1,5 +1,6 @@
 using Akytos;
 using ImGuiNET;
+using Windmill.Modals;
 using Windmill.Panels;
 
 namespace Windmill.Services;
@@ -8,11 +9,13 @@ internal class MenuService
 {
     private readonly PanelManager m_panelManager;
     private readonly SceneEditorContext m_editorContext;
+    private readonly ModalStack m_modalStack;
 
-    public MenuService(PanelManager panelManager, SceneEditorContext editorContext)
+    public MenuService(PanelManager panelManager, SceneEditorContext editorContext, ModalStack modalStack)
     {
         m_panelManager = panelManager;
         m_editorContext = editorContext;
+        m_modalStack = modalStack;
     }
 
     public void OnDrawGui()
@@ -52,18 +55,28 @@ internal class MenuService
 
             if (ImGui.MenuItem("Load scene..."))
             {
-                m_editorContext.LoadScene();
             }
+            
+            ImGui.Separator();
 
             if (ImGui.MenuItem("Save scene"))
             {
-                m_editorContext.SaveScene();
+                if (m_editorContext.CurrentSceneFilename == null)
+                {
+                    m_modalStack.PushModal<SaveSceneModal>();
+                }
+                else
+                {
+                    m_editorContext.SaveSceneAs(m_editorContext.CurrentSceneFilename);
+                }
             }
 
             if (ImGui.MenuItem("Save scene as..."))
             {
-                m_editorContext.SaveSceneAs();
+                m_modalStack.PushModal<SaveSceneModal>();
             }
+            
+            ImGui.Separator();
 
             if (ImGui.MenuItem("Exit"))
             {

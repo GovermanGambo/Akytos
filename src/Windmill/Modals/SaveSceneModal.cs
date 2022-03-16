@@ -7,20 +7,22 @@ using System.Threading.Tasks;
 using Akytos;
 using Akytos.Assets;
 using ImGuiNET;
+using Windmill.Services;
 
 namespace Windmill.Modals;
 
-public class FileDialogModal : IModal
+internal class SaveSceneModal : IModal
 {
     private static readonly string RootDirectory = Asset.AssetPath;
 
-    private string m_currentSubDirectory = "./";
-    private string m_fileName = "";
-    private TaskCompletionSource<bool> m_taskCompletionSource = null!;
+    private readonly SceneEditorContext m_editorContext;
 
-    public FileDialogModal(string name)
+    private string m_currentSubDirectory = "./";
+    private string m_filename = "";
+
+    public SaveSceneModal(SceneEditorContext editorContext)
     {
-        Name = name;
+        m_editorContext = editorContext;
         CurrentDirectory = RootDirectory;
     }
 
@@ -29,7 +31,7 @@ public class FileDialogModal : IModal
 
     }
 
-    public string Name { get; }
+    public string Name => "Save Scene";
 
     public bool IsOpen { get; set; }
 
@@ -39,20 +41,10 @@ public class FileDialogModal : IModal
     {
     }
 
-    public Task<bool> ShowDialog()
-    {
-        m_taskCompletionSource = new TaskCompletionSource<bool>();
-
-        IsOpen = true;
-        ImGui.OpenPopup("Save Scene");
-
-        return m_taskCompletionSource.Task;
-    }
-
-    public void OnDrawGui(DeltaTime deltaTime)
+    public void OnDrawGui()
     {
         bool open = IsOpen;
-        if (!ImGui.BeginPopupModal("Save Scene", ref open))
+        if (!ImGui.BeginPopupModal(Name, ref open))
         {
             return;
         }
@@ -80,17 +72,24 @@ public class FileDialogModal : IModal
         ImGui.SetColumnWidth(1, 100);
         ImGui.SetColumnWidth(2, 100);
 
-        string fileName = m_fileName;
-        if (ImGui.InputText("", ref fileName, 100))
+        string filename = m_filename;
+        if (ImGui.InputText("", ref filename, 100))
         {
-            m_fileName = fileName;
+            m_filename = filename;
         }
         
         ImGui.NextColumn();
 
-        if (ImGui.Button("Save"))
+        bool canSave = !(m_filename == string.Empty || m_filename.IndexOfAny(Path.GetInvalidFileNameChars()) != -1);
+
+        if (ImGui.Button("Save") && canSave)
         {
-            m_taskCompletionSource.SetResult(true);
+            if (!m_filename.EndsWith(".ascn"))
+            {
+                m_filename += ".ascn";
+            }
+            
+            m_editorContext.SaveSceneAs(Path.Combine(CurrentDirectory, m_filename));
             IsOpen = false;
         }
         
@@ -98,7 +97,6 @@ public class FileDialogModal : IModal
 
         if (ImGui.Button("Cancel"))
         {
-            m_taskCompletionSource.SetResult(false);
             IsOpen = false;
         }
         
