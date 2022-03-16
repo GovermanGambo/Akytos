@@ -13,6 +13,8 @@ namespace Windmill.Modals;
 
 internal class SaveSceneModal : IModal
 {
+    private const ImGuiWindowFlags ModalFlags = ImGuiWindowFlags.NoResize;
+    
     private static readonly string RootDirectory = Asset.AssetPath;
 
     private readonly SceneEditorContext m_editorContext;
@@ -44,7 +46,13 @@ internal class SaveSceneModal : IModal
     public void OnDrawGui()
     {
         bool open = IsOpen;
-        if (!ImGui.BeginPopupModal(Name, ref open))
+
+        if (open)
+        {
+            ImGui.SetNextWindowSize(ImGui.GetWindowSize() / 2f);
+        }
+        
+        if (!ImGui.BeginPopupModal(Name, ref open, ModalFlags))
         {
             return;
         }
