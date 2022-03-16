@@ -1,4 +1,6 @@
+using System;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Akytos;
 using Akytos.Editor;
 using ImGuiNET;
@@ -17,6 +19,11 @@ internal class GizmoService
 
     public void DrawGizmos(IEditorCamera camera, Node2D node2D)
     {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            throw new NotSupportedException("Gizmos are only supported on Windows!");
+        }
+        
         if (GizmoMode == GizmoMode.None) return;
 
         ImGuizmo.SetOrthographic(true);

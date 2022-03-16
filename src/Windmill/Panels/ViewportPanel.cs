@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Akytos;
 using Akytos.Editor;
 using Akytos.Events;
@@ -107,7 +108,10 @@ internal class ViewportPanel : IEditorPanel
         
         if (m_sceneEditorContext.SelectedNode is Node2D node2D)
         {
-            m_gizmoService.DrawGizmos(m_editorViewport.Camera, node2D);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                m_gizmoService.DrawGizmos(m_editorViewport.Camera, node2D);
+            }
         }
         
         ImGui.End();

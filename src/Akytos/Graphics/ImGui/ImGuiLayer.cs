@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Akytos.Events;
 using Akytos.Layers;
 using Akytos.Windowing;
@@ -35,8 +36,11 @@ internal class ImGuiLayer : ILayer
         io.Fonts.AddFontFromFileTTF("assets/fonts/open_sans/OpenSans-Regular.ttf", 19.0f);
         io.Fonts.AddFontFromFileTTF("assets/fonts/open_sans/OpenSans-Bold.ttf", 19.0f);
 
-        var imguiCtx = ImGui.GetCurrentContext();
-        ImGuizmo.SetImGuiContext(imguiCtx);
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            var imguiCtx = ImGui.GetCurrentContext();
+            ImGuizmo.SetImGuiContext(imguiCtx);
+        }
 
         SetDarkThemeColors();
 
