@@ -43,8 +43,7 @@ public class ModalStack
         
         m_modals.Push(modal);
 
-        modal.IsOpen = true;
-        ImGui.OpenPopup(modal.Name);
+        modal.Show();
 
         return modal;
     }
@@ -52,7 +51,7 @@ public class ModalStack
     public void PopModal()
     {
         var modal = m_modals.Pop();
-        
+
         modal.Dispose();
     }
 

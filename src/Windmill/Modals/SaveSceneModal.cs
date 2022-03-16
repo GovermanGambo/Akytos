@@ -21,6 +21,7 @@ internal class SaveSceneModal : IModal
 
     private string m_currentSubDirectory = "./";
     private string m_filename = "";
+    private bool m_shouldOpen;
 
     public SaveSceneModal(SceneEditorContext editorContext)
     {
@@ -35,16 +36,29 @@ internal class SaveSceneModal : IModal
 
     public string Name => "Save Scene";
 
-    public bool IsOpen { get; set; }
+    public bool IsOpen { get; private set; }
 
     private string CurrentDirectory { get; set; }
 
-    public void OnAppearing()
+    public void Show()
     {
+        m_shouldOpen = true;
+    }
+
+    public void Hide()
+    {
+        IsOpen = false;
     }
 
     public void OnDrawGui()
     {
+        if (m_shouldOpen)
+        {
+            ImGui.OpenPopup(Name);
+            IsOpen = true;
+            m_shouldOpen = false;
+        }
+        
         bool open = IsOpen;
 
         if (open)
@@ -54,6 +68,7 @@ internal class SaveSceneModal : IModal
         
         if (!ImGui.BeginPopupModal(Name, ref open, ModalFlags))
         {
+            IsOpen = false;
             return;
         }
 
