@@ -2,6 +2,9 @@ using System.Numerics;
 
 namespace Akytos;
 
+/// <summary>
+///     Represents an RGBA color instance.
+/// </summary>
 public readonly struct Color
 {
     public static Color Red => new(1.0f, 0.0f, 0.0f);
@@ -31,8 +34,20 @@ public readonly struct Color
         A = a;
     }
 
+    /// <summary>
+    ///     Red channel strength
+    /// </summary>
     public float R { get; }
+    /// <summary>
+    ///     Green channel strength
+    /// </summary>
     public float G { get; }
+    /// <summary>
+    ///     Blue channel strength
+    /// </summary>
     public float B { get; }
+    /// <summary>
+    ///     Alpha channel strength
+    /// </summary>
     public float A { get; }
 }

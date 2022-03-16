@@ -35,7 +35,7 @@ public abstract class Application : IDisposable
         s_application = this;
     }
     
-    public void Run()
+    internal void Run()
     {
         OnInitialize();
         

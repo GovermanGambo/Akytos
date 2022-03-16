@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Akytos
+namespace Akytos.Serialization
 {
     public static class TypeExtensions
     {

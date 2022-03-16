@@ -9,6 +9,11 @@ public static class Asset
         return Path.Combine(AssetPath, path);
     }
 
+    public static string GetRelativePath(string path)
+    {
+        return Path.GetRelativePath(AssetPath, path);
+    }
+
     public static string AssetPath => GetExecutingPath("assets");
     
     private static string GetExecutingPath(string path)

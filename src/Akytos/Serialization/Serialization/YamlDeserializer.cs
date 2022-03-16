@@ -55,31 +55,7 @@ public class YamlDeserializer
 
         string objectTypeName = scanner.ReadScalar("type");
 
-        var allTypes = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(a => a.GetTypes());
-
-        var objectType = allTypes
-            .FirstOrDefault(t => t.FullName == objectTypeName);
-
-        if (objectTypeName.EndsWith("[]"))
-        {
-            objectTypeName = objectTypeName.Remove(objectTypeName.Length - 2, 2);
-            objectType = allTypes.FirstOrDefault(t => t.FullName == objectTypeName);
-            objectType = objectType.MakeArrayType();
-        }
-        else if (objectTypeName.Contains('`'))
-        {
-            string collectionTypeName =
-                objectTypeName.Substring(0, objectTypeName.IndexOf("`", StringComparison.Ordinal)) + "`1";
-            int genericStartIndex = objectTypeName.IndexOf("[", StringComparison.Ordinal) + 2;
-            string genericTypeArgument = objectTypeName.Substring(genericStartIndex,
-                objectTypeName.IndexOf(",", StringComparison.Ordinal) - genericStartIndex);
-
-            var genericType = allTypes.FirstOrDefault(t => t.FullName == genericTypeArgument);
-            objectType = allTypes
-                .FirstOrDefault(t => t.FullName == collectionTypeName)
-                .MakeGenericType(genericType);
-        }
+        var objectType = ResolveObjectType(objectTypeName);
 
         if (objectType == null) throw new DeserializationException($"Type {objectTypeName} was not found!");
 
@@ -108,6 +84,36 @@ public class YamlDeserializer
         scanner.Read<BlockEnd>();
 
         return result;
+    }
+
+    private static Type? ResolveObjectType(string objectTypeName)
+    {
+        var allTypes = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(a => a.GetTypes());
+        var objectType = allTypes
+            .FirstOrDefault(t => t.FullName == objectTypeName);
+
+        if (objectTypeName.EndsWith("[]"))
+        {
+            objectTypeName = objectTypeName.Remove(objectTypeName.Length - 2, 2);
+            objectType = allTypes.FirstOrDefault(t => t.FullName == objectTypeName);
+            objectType = objectType.MakeArrayType();
+        }
+        else if (objectTypeName.Contains('`'))
+        {
+            string collectionTypeName =
+                objectTypeName.Substring(0, objectTypeName.IndexOf("`", StringComparison.Ordinal)) + "`1";
+            int genericStartIndex = objectTypeName.IndexOf("[", StringComparison.Ordinal) + 2;
+            string genericTypeArgument = objectTypeName.Substring(genericStartIndex,
+                objectTypeName.IndexOf(",", StringComparison.Ordinal) - genericStartIndex);
+
+            var genericType = allTypes.FirstOrDefault(t => t.FullName == genericTypeArgument);
+            objectType = allTypes
+                .FirstOrDefault(t => t.FullName == collectionTypeName)
+                .MakeGenericType(genericType);
+        }
+
+        return objectType;
     }
 
     private object CreatePrimitiveObject(Scanner scanner, Type type)

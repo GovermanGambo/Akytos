@@ -2,7 +2,7 @@ using System.Numerics;
 
 namespace Akytos.Graphics;
 
-internal interface IShaderProgram : IGraphicsResource
+public interface IShaderProgram : IGraphicsResource
 {
     string Name { get; }
     void Bind();

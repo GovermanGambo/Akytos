@@ -12,8 +12,17 @@ internal class AssetManager
         m_graphicsResourceFactory = graphicsResourceFactory;
         m_loadedAssets = new Dictionary<string, IAsset>();
     }
-    
-    
+
+    public void LoadAll()
+    {
+        var directoryInfo = new DirectoryInfo(Asset.AssetPath);
+        var allFiles = directoryInfo.GetDirectories().SelectMany(d => d.GetFiles());
+
+        foreach (var fileInfo in allFiles)
+        {
+            ProcessAssetFile(fileInfo);
+        }
+    }
 
     public IAsset<T>? Load<T>(string filename)
     {
@@ -32,6 +41,15 @@ internal class AssetManager
                 m_loadedAssets.Add(filename, asset);
                 return asset as IAsset<T>;
             }
+            
+            if (typeof(IShaderProgram).IsAssignableFrom(typeof(T)))
+            {
+                string path = Asset.GetAssetPath(filename);
+                var shader = m_graphicsResourceFactory.CreateShader(path);
+                asset = new ShaderAsset(shader, filename);
+                m_loadedAssets.Add(filename, asset);
+                return asset as IAsset<T>;
+            }
 
             throw new NotSupportedException();
         }
@@ -47,5 +65,21 @@ internal class AssetManager
         var asset = m_loadedAssets[url] as IAsset<TAsset>;
 
         return asset.Data;
+    }
+
+    private void ProcessAssetFile(FileInfo fileInfo)
+    {
+        if (fileInfo.FullName.EndsWith(".png"))
+        {
+            Load<Texture2DAsset>(Asset.GetRelativePath(fileInfo.FullName));
+        }
+        else if (fileInfo.FullName.EndsWith(".glsl"))
+        {
+            Load<ShaderAsset>(Asset.GetRelativePath(fileInfo.FullName));
+        }
+        else
+        {
+            // Do nothing.
+        }
     }
 }
