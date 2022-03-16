@@ -12,11 +12,13 @@ internal class OpenGLGraphicsDevice : IGraphicsDevice
         
         m_gl.Enable(EnableCap.Blend);
         m_gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+        m_gl.Enable(EnableCap.DepthTest);
+        m_gl.DepthFunc(DepthFunction.Lequal);
     }
 
     public void Clear()
     {
-        m_gl.Clear(ClearBufferMask.ColorBufferBit);
+        m_gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
     }
 
     public void ClearColor(Color color)
@@ -29,8 +31,8 @@ internal class OpenGLGraphicsDevice : IGraphicsDevice
         m_gl.Viewport(x, y, (uint)width, (uint)height);
     }
 
-    public unsafe void DrawIndexed(IVertexArrayObject vertexArrayObject)
+    public unsafe void DrawIndexed(IVertexArrayObject vertexArrayObject, int elementCount = 0)
     {
-        m_gl.DrawElements(PrimitiveType.Triangles, (uint)vertexArrayObject.ElementCount, DrawElementsType.UnsignedInt, null);
+        m_gl.DrawElements(PrimitiveType.Triangles, (uint)elementCount, DrawElementsType.UnsignedInt, null);
     }
 }

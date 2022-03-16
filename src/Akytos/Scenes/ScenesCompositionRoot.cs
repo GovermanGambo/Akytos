@@ -6,7 +6,7 @@ public class ScenesCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.Register<SpriteRendererSystem>();
+        serviceRegistry.RegisterSingleton<SpriteRendererSystem>();
         
         // TODO: Check for custom implementation?
         serviceRegistry.RegisterSingleton<SceneTree>();

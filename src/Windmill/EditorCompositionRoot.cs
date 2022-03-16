@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Akytos.Editor;
 using Akytos.Windowing;
 using LightInject;
@@ -22,6 +24,7 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.Register<MenuService>();
         serviceRegistry.Register<GizmoService>();
         serviceRegistry.RegisterSingleton<ModalStack>();
+        serviceRegistry.Register<IFileDialogService, WindowsFileDialogService>();
         
         RegisterPanels(serviceRegistry);
         RegisterModals(serviceRegistry);

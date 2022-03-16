@@ -135,6 +135,8 @@ internal class SpriteBatch
             m_quadVertices[m_quadVertexCount] = vertex;
             m_quadVertexCount++;
         }
+
+        m_quadElementCount += 6;
     }
     
     public unsafe void End()
@@ -176,7 +178,7 @@ internal class SpriteBatch
             m_textureSlots[i].Bind(i);
         }
         
-        m_graphicsDevice.DrawIndexed(m_quadVertexArray);
+        m_graphicsDevice.DrawIndexed(m_quadVertexArray, m_quadElementCount);
     }
 
     private static uint[] CreateElements()
