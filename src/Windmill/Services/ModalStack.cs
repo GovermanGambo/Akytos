@@ -11,6 +11,8 @@ public class ModalStack
     private readonly IServiceFactory m_serviceFactory;
     private readonly Stack<IModal> m_modals;
 
+    private bool m_shouldPop;
+
     public ModalStack(IServiceFactory serviceFactory)
     {
         m_serviceFactory = serviceFactory;
@@ -28,10 +30,13 @@ public class ModalStack
     {
         foreach (var modal in m_modals)
         {
-            if (modal.IsOpen)
-            {
-                modal.OnDrawGui();
-            }
+            modal.OnDrawGui();
+        }
+
+        if (m_shouldPop)
+        {
+            PopModal();
+            m_shouldPop = false;
         }
     }
 
@@ -44,13 +49,27 @@ public class ModalStack
         m_modals.Push(modal);
 
         modal.Show();
+        
+        modal.Closing += ModalOnClosing;
 
         return modal;
     }
 
-    public void PopModal()
+    private void ModalOnClosing()
+    {
+        m_shouldPop = true;
+    }
+
+    private void PopModal()
     {
         var modal = m_modals.Pop();
+
+        if (modal.IsOpen)
+        {
+            modal.Hide();
+        }
+
+        modal.Closing -= ModalOnClosing;
 
         modal.Dispose();
     }
@@ -59,6 +78,7 @@ public class ModalStack
     {
         foreach (var modal in m_modals)
         {
+            modal.Closing -= ModalOnClosing;
             modal.Dispose();
         }
         
