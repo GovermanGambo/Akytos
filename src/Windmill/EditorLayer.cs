@@ -6,6 +6,7 @@ using Akytos.Events;
 using Akytos.Graphics;
 using Akytos.Graphics.Buffers;
 using Akytos.Layers;
+using ImGuiNET;
 using Windmill.Panels;
 using Windmill.Services;
 
@@ -108,8 +109,10 @@ internal class EditorLayer : ILayer
         m_menuService.OnDrawGui();
 
         m_panelManager.OnDrawGui();
-        
+
         m_modalStack.OnDrawGui();
+        
+        ImGui.ShowDemoWindow();
 
         Dockspace.End();
     }

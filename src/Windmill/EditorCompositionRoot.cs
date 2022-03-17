@@ -39,7 +39,7 @@ public class EditorCompositionRoot : ICompositionRoot
 
         foreach (var type in types)
         {
-            serviceRegistry.RegisterSingleton(modalType, type, type.Name);
+            serviceRegistry.RegisterSingleton(type);
         }
     }
 

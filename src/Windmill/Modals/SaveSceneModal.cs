@@ -19,9 +19,10 @@ internal class SaveSceneModal : IModal
 
     private readonly SceneEditorContext m_editorContext;
 
-    private string m_currentSubDirectory = "./";
+    private string m_currentSubDirectory = "";
     private string m_filename = "";
     private bool m_shouldOpen;
+    private bool m_isOpen;
 
     public SaveSceneModal(SceneEditorContext editorContext)
     {
@@ -36,7 +37,21 @@ internal class SaveSceneModal : IModal
 
     public string Name => "Save Scene";
 
-    public bool IsOpen { get; private set; }
+    public bool IsOpen
+    {
+        get => m_isOpen;
+        private set
+        {
+            m_isOpen = value;
+
+            if (!value)
+            {
+                Closing?.Invoke();
+            }
+        }
+    }
+
+    public event Action? Closing;
 
     private string CurrentDirectory { get; set; }
 
@@ -72,39 +87,37 @@ internal class SaveSceneModal : IModal
             return;
         }
 
-        float windowWidth = ImGui.GetWindowWidth();
-        float textWidth = ImGui.CalcTextSize(Name).X;
-        ImGui.SetCursorPosX((windowWidth - textWidth) * 0.5f);
-        ImGui.Text(Name);
-
-        ImGui.Separator();
-
         string displayFilePath = GetDisplayFilePath();
-        if (ImGui.InputText("", ref displayFilePath, 100))
+        if (ImGui.InputText("Path", ref displayFilePath, 100, ImGuiInputTextFlags.ReadOnly))
         {
             m_currentSubDirectory = GetPathWithoutPrefix(displayFilePath);
         }
-        
-        ImGui.Separator();
-        
-        DrawFolderContent();
-        
-        ImGui.Separator();
 
-        ImGui.Columns(3);
-        ImGui.SetColumnWidth(1, 100);
-        ImGui.SetColumnWidth(2, 100);
+        float height = ImGui.GetFrameHeight() - ImGui.GetTextLineHeightWithSpacing() * 2f - 10f;
 
+        if (ImGui.BeginChildFrame(ImGui.GetID("frame"),
+                new Vector2(ImGui.GetWindowWidth(), height)))
+        {
+            DrawFolderContent();
+            
+            ImGui.EndChildFrame();
+        }
+        
+        ImGui.Columns(2);
+        
+        ImGui.SetColumnWidth(0, ImGui.GetWindowWidth() - 200f);
+
+        ImGui.SetNextItemWidth(-1);
+        
         string filename = m_filename;
-        if (ImGui.InputText("", ref filename, 100))
+        if (ImGui.InputText("##filename", ref filename, 100))
         {
             m_filename = filename;
         }
-        
+
         ImGui.NextColumn();
-
+        
         bool canSave = !(m_filename == string.Empty || m_filename.IndexOfAny(Path.GetInvalidFileNameChars()) != -1);
-
         if (ImGui.Button("Save") && canSave)
         {
             if (!m_filename.EndsWith(".ascn"))
@@ -116,7 +129,7 @@ internal class SaveSceneModal : IModal
             IsOpen = false;
         }
         
-        ImGui.NextColumn();
+        ImGui.SameLine();
 
         if (ImGui.Button("Cancel"))
         {
@@ -162,12 +175,14 @@ internal class SaveSceneModal : IModal
 
     private string GetDisplayFilePath()
     {
-        return $"{RootDirectory}://{m_currentSubDirectory}";
+        return $"assets://{m_currentSubDirectory}";
     }
 
     private string GetPathWithoutPrefix(string path)
     {
         int startIndex = path.IndexOf("://", StringComparison.Ordinal) + 3;
+
+        startIndex = startIndex <= path.Length - 1 ? startIndex : path.Length;
 
         return startIndex != -1 ? path[startIndex..] : path;
     }
