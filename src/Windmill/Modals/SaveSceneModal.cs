@@ -154,7 +154,10 @@ internal class SaveSceneModal : IModal
         ImGui.PushStyleColor(ImGuiCol.Button, Vector4.Zero);
         foreach (var file in files)
         {
-            ImGui.Selectable(file.Name);
+            if (ImGui.Selectable(file.Name))
+            {
+                m_filename = file.Name;
+            }
         }
 
         ImGui.PopStyleColor();
