@@ -10,7 +10,7 @@ internal class MenuService
     private readonly PanelManager m_panelManager;
     private readonly SceneEditorContext m_editorContext;
     private readonly ModalStack m_modalStack;
-
+    
     public MenuService(PanelManager panelManager, SceneEditorContext editorContext, ModalStack modalStack)
     {
         m_panelManager = panelManager;
@@ -55,6 +55,7 @@ internal class MenuService
 
             if (ImGui.MenuItem("Load scene..."))
             {
+                m_modalStack.PushModal<LoadSceneModal>();
             }
             
             ImGui.Separator();

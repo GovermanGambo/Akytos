@@ -19,6 +19,8 @@ internal class SceneEditorContext
         m_fileDialogService = fileDialogService;
     }
     
+    public bool HasUnsavedChanges { get; set; }
+    
     public string? CurrentSceneFilename { get; private set; }
     public Node? SelectedNode { get; set; }
 
@@ -34,12 +36,15 @@ internal class SceneEditorContext
         SceneTree.SetScene(rootNode);
         SelectedNode = null;
         m_spriteRendererSystem.Context = rootNode;
+        HasUnsavedChanges = true;
     }
 
     public void LoadScene(string filePath)
     {
         var scene = m_sceneLoader.LoadScene(filePath);
         SceneTree.SetScene(scene);
+        SelectedNode = null;
+        m_spriteRendererSystem.Context = SceneTree.CurrentScene;
         CurrentSceneFilename = filePath;
     }
 
@@ -47,5 +52,6 @@ internal class SceneEditorContext
     {
         m_sceneLoader.SaveScene(filePath, SceneTree.CurrentScene);
         CurrentSceneFilename = filePath;
+        HasUnsavedChanges = false;
     }
 }
