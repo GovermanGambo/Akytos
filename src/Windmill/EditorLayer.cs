@@ -100,6 +100,7 @@ internal class EditorLayer : ILayer
     public void OnEvent(IEvent e)
     {
         m_panelManager.OnEvent(e);
+        m_modalStack.Peek()?.OnEvent(e);
     }
 
     public void OnDrawGui()
@@ -111,8 +112,6 @@ internal class EditorLayer : ILayer
         m_panelManager.OnDrawGui();
 
         m_modalStack.OnDrawGui();
-        
-        ImGui.ShowDemoWindow();
 
         Dockspace.End();
     }

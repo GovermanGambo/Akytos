@@ -9,14 +9,14 @@ namespace Windmill.Panels;
 internal class HierarchyPanel : IEditorPanel
 {
     private readonly SceneEditorContext m_sceneEditorContext;
-    private readonly CreateNodePanel m_createNodePanel;
+    private readonly ModalStack m_modalStack;
 
     private bool m_treeWasModified;
 
-    public HierarchyPanel(SceneEditorContext sceneEditorContext, IEditorPanel createNodePanel)
+    public HierarchyPanel(SceneEditorContext sceneEditorContext, ModalStack modalStack)
     {
         m_sceneEditorContext = sceneEditorContext;
-        m_createNodePanel = createNodePanel as CreateNodePanel;
+        m_modalStack = modalStack;
         IsEnabled = true;
     }
     
@@ -35,13 +35,16 @@ internal class HierarchyPanel : IEditorPanel
             return;
         }
 
-        bool shouldOpenModal = ImGui.Button("Add node");
+        if (ImGui.Button("Add node"))
+        {
+            m_modalStack.PushModal<CreateNodeModal>();
+        }
 
         if (ImGui.BeginPopupContextWindow())
         {
             if (ImGui.Selectable("Add node..."))
             {
-                shouldOpenModal = true;
+                m_modalStack.PushModal<CreateNodeModal>();
             }
             
             ImGui.EndPopup();
@@ -49,15 +52,7 @@ internal class HierarchyPanel : IEditorPanel
         
         ImGui.Separator();
 
-        DrawNode(m_sceneEditorContext.SceneTree.CurrentScene, ref shouldOpenModal);
-        
-        if (shouldOpenModal)
-        {
-            m_createNodePanel.IsEnabled = true;
-            ImGui.OpenPopup("Create Node");
-        }
-        
-        m_createNodePanel.OnDrawGui();
+        DrawNode(m_sceneEditorContext.SceneTree.CurrentScene);
 
         ImGui.End();
     }
@@ -66,13 +61,12 @@ internal class HierarchyPanel : IEditorPanel
     {
     }
 
-    private void DrawNode(Node node, ref bool shouldOpenModal)
+    private void DrawNode(Node node)
     {
         var nodePath = node.GetPath();
         if (nodePath == null)
         {
             Debug.LogWarning($"No path was found for node {node.Name}.");
-            shouldOpenModal = false;
             return;
         }
 
@@ -94,7 +88,7 @@ internal class HierarchyPanel : IEditorPanel
             if (ImGui.Selectable("Add child..."))
             {
                 m_sceneEditorContext.SelectedNode = node;
-                shouldOpenModal = true;
+                m_modalStack.PushModal<CreateNodeModal>();
             }
             
             if (ImGui.Selectable("Delete node"))
@@ -114,7 +108,7 @@ internal class HierarchyPanel : IEditorPanel
 
         foreach (var child in node.ImmediateChildren)
         {
-            DrawNode(child, ref shouldOpenModal);
+            DrawNode(child);
             if (m_treeWasModified)
             {
                 m_treeWasModified = false;

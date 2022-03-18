@@ -6,7 +6,7 @@ using LightInject;
 
 namespace Windmill.Services;
 
-public class ModalStack
+internal class ModalStack
 {
     private readonly IServiceFactory m_serviceFactory;
     private readonly Stack<IModal> m_modals;
@@ -21,9 +21,9 @@ public class ModalStack
 
     public IReadOnlyCollection<IModal> Modals => new ReadOnlyCollection<IModal>(m_modals.ToArray());
 
-    public IModal Peek()
+    public IModal? Peek()
     {
-        return m_modals.Peek();
+        return m_modals.Count > 0 ? m_modals.Peek() : null;
     }
 
     public void OnDrawGui()

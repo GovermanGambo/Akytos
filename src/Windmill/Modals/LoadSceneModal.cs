@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using Akytos.Assets;
+using Akytos.Events;
 using ImGuiNET;
 using Windmill.Services;
 
@@ -117,6 +118,11 @@ internal class LoadSceneModal : IModal
         ImGui.Columns(1);
 
         ImGui.End();
+    }
+
+    public void OnEvent(IEvent e)
+    {
+        
     }
 
     private void DrawFolderContent()

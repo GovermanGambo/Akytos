@@ -1,8 +1,9 @@
 using System;
+using Akytos.Events;
 
 namespace Windmill;
 
-public interface IModal : IDisposable
+internal interface IModal : IDisposable
 {
     string Name { get; }
     bool IsOpen { get; }
@@ -10,4 +11,5 @@ public interface IModal : IDisposable
     void Show();
     void Hide();
     void OnDrawGui();
+    void OnEvent(IEvent e);
 }

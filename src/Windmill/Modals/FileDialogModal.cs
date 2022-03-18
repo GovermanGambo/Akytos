@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Akytos;
 using Akytos.Assets;
+using Akytos.Events;
 using ImGuiNET;
 using Windmill.Services;
 
@@ -141,6 +142,11 @@ internal class FileDialogModal : IModal
         ImGui.Columns(1);
 
         ImGui.End();
+    }
+
+    public void OnEvent(IEvent e)
+    {
+        throw new NotImplementedException();
     }
 
     private void DrawFolderContent()
