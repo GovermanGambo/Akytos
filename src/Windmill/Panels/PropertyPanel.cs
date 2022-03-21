@@ -29,8 +29,6 @@ internal class PropertyPanel : IEditorPanel
 
     public string DisplayName => "Properties";
     public bool IsEnabled { get; set; } = true;
-    // TODO: Create attribute
-    public bool HideInMenu => false;
 
     public void OnDrawGui()
     {

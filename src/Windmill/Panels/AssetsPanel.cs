@@ -21,8 +21,6 @@ internal class AssetsPanel : IEditorPanel
     public string DisplayName => "Assets";
     public bool IsEnabled { get; set; } = true;
 
-    public bool HideInMenu { get; }
-
     public void OnDrawGui()
     {
         var open = IsEnabled;

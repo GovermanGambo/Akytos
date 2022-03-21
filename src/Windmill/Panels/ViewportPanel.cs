@@ -7,6 +7,7 @@ using Akytos.Editor;
 using Akytos.Events;
 using Akytos.Graphics.Buffers;
 using ImGuiNET;
+using Windmill.Modals;
 using Windmill.Services;
 
 namespace Windmill.Panels;
@@ -15,32 +16,78 @@ internal class ViewportPanel : IEditorPanel
 {
     private readonly IEditorViewport m_editorViewport;
     private readonly GizmoService m_gizmoService;
+    private readonly ModalStack m_modalStack;
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly Vector2[] m_viewportBounds = new Vector2[2];
+    private Vector2 m_currentCursorPosition;
+    private Vector2 m_dragStartPosition;
 
     private Node? m_hoveredNode;
-    private bool m_isFocused;
     private bool m_isDragging;
-    private Vector2 m_dragStartPosition;
-    private Vector2 m_currentCursorPosition;
+    private bool m_isFocused;
 
-    public ViewportPanel(IEditorViewport editorViewport, GizmoService gizmoService, SceneEditorContext sceneEditorContext)
+    public ViewportPanel(IEditorViewport editorViewport, GizmoService gizmoService,
+        SceneEditorContext sceneEditorContext, ModalStack modalStack)
     {
         m_editorViewport = editorViewport;
         m_gizmoService = gizmoService;
         m_sceneEditorContext = sceneEditorContext;
+        m_modalStack = modalStack;
     }
+
+    public IFramebuffer Framebuffer { get; set; } = null!;
 
     public void Dispose()
     {
-        
     }
 
     public string DisplayName => "Viewport";
     public bool IsEnabled { get; set; } = true;
 
-    public IFramebuffer Framebuffer { get; set; } = null!;
-    
+    public void OnDrawGui()
+    {
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
+        ImGui.Begin(DisplayName);
+
+        if (ImGui.BeginPopupContextWindow())
+        {
+            if (ImGui.Selectable("Add node...")) m_modalStack.PushModal<CreateNodeModal>();
+
+            ImGui.EndPopup();
+        }
+
+        m_isFocused = ImGui.IsWindowFocused();
+
+        var viewportPanelSize = ImGui.GetContentRegionAvail();
+        if (m_editorViewport.Size != viewportPanelSize) OnViewportResized(viewportPanelSize);
+
+        uint textureId = Framebuffer.GetColorAttachmentRendererId();
+        ImGui.Image((IntPtr) textureId, m_editorViewport.Size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
+
+        var viewportMinRegion = ImGui.GetWindowContentRegionMin();
+        var viewportMaxRegion = ImGui.GetWindowContentRegionMax();
+        var viewportOffset = ImGui.GetWindowPos();
+        m_viewportBounds[0] = viewportMinRegion + viewportOffset;
+        m_viewportBounds[1] = viewportMaxRegion + viewportOffset;
+
+        if (m_sceneEditorContext.SelectedNode is Node2D node2D)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                m_gizmoService.DrawGizmos(m_editorViewport.Camera, node2D);
+
+        ImGui.End();
+        ImGui.PopStyleVar();
+    }
+
+    public void OnEvent(IEvent e)
+    {
+        var dispatcher = new EventDispatcher(e);
+        dispatcher.Dispatch<KeyDownEvent>(OnKeyDownEvent, () => m_isFocused);
+        dispatcher.Dispatch<KeyUpEvent>(OnKeyUpEvent);
+        dispatcher.Dispatch<MouseDownEvent>(OnMouseDownEvent);
+        dispatcher.Dispatch<MouseUpEvent>(OnMouseUpEvent);
+        dispatcher.Dispatch<MouseScrolledEvent>(OnMouseScrolled);
+    }
+
     public void OnRender()
     {
         var mousePos = ImGui.GetMousePos();
@@ -56,21 +103,19 @@ internal class ViewportPanel : IEditorPanel
         {
             m_currentCursorPosition = new Vector2(mouseX - m_editorViewport.Width / 2,
                 mouseY - m_editorViewport.Height / 2);
-            
+
             int nodeId = Framebuffer.ReadPixel(1, mouseX, mouseY);
 
-            if (nodeId == -1)
-            {
-                return;
-            }
+            if (nodeId == -1) return;
 
-            m_hoveredNode = m_sceneEditorContext.SceneTree.CurrentScene.GetChildren(true, node => node.Id == nodeId).FirstOrDefault();
+            m_hoveredNode = m_sceneEditorContext.SceneTree.CurrentScene.GetChildren(true, node => node.Id == nodeId)
+                .FirstOrDefault();
 
             if (m_isDragging)
             {
                 var cursorPosRelativeToWorldCenter = new Vector2(mouseX - m_editorViewport.Width / 2,
                     mouseY - m_editorViewport.Height / 2);
-                
+
                 var delta = m_dragStartPosition - cursorPosRelativeToWorldCenter;
                 m_editorViewport.Camera.Position += delta / m_editorViewport.Camera.ScaleFactor;
                 m_dragStartPosition = cursorPosRelativeToWorldCenter;
@@ -82,57 +127,11 @@ internal class ViewportPanel : IEditorPanel
         }
     }
 
-    public bool HideInMenu { get; }
-
-    public void OnDrawGui()
-    {
-        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
-        ImGui.Begin(DisplayName);
-
-        m_isFocused = ImGui.IsWindowFocused();
-        
-        var viewportPanelSize = ImGui.GetContentRegionAvail();
-        if (m_editorViewport.Size != viewportPanelSize)
-        {
-            OnViewportResized(viewportPanelSize);
-        }
-
-        var textureId = Framebuffer.GetColorAttachmentRendererId();
-        ImGui.Image((IntPtr) textureId, m_editorViewport.Size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
-        
-        var viewportMinRegion = ImGui.GetWindowContentRegionMin();
-        var viewportMaxRegion = ImGui.GetWindowContentRegionMax();
-        var viewportOffset = ImGui.GetWindowPos();
-        m_viewportBounds[0] = viewportMinRegion + viewportOffset;
-        m_viewportBounds[1] = viewportMaxRegion + viewportOffset;
-        
-        if (m_sceneEditorContext.SelectedNode is Node2D node2D)
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                m_gizmoService.DrawGizmos(m_editorViewport.Camera, node2D);
-            }
-        }
-        
-        ImGui.End();
-        ImGui.PopStyleVar();
-    }
-
     private void OnViewportResized(Vector2 newViewportSize)
     {
         Framebuffer.Resize((uint) newViewportSize.X, (uint) newViewportSize.Y);
 
         m_editorViewport.ResizeViewport((int) newViewportSize.X, (int) newViewportSize.Y);
-    }
-
-    public void OnEvent(IEvent e)
-    {
-        var dispatcher = new EventDispatcher(e);
-        dispatcher.Dispatch<KeyDownEvent>(OnKeyDownEvent, () => m_isFocused);
-        dispatcher.Dispatch<KeyUpEvent>(OnKeyUpEvent);
-        dispatcher.Dispatch<MouseDownEvent>(OnMouseDownEvent);
-        dispatcher.Dispatch<MouseUpEvent>(OnMouseUpEvent);
-        dispatcher.Dispatch<MouseScrolledEvent>(OnMouseScrolled);
     }
 
     private bool OnMouseUpEvent(MouseUpEvent e)
@@ -148,10 +147,7 @@ internal class ViewportPanel : IEditorPanel
 
     private bool OnMouseScrolled(MouseScrolledEvent e)
     {
-        if (e.Vertical == 0)
-        {
-            return false;
-        }
+        if (e.Vertical == 0) return false;
 
         m_editorViewport.Camera.ScaleFactor += e.Vertical * 0.1f;
 
@@ -203,10 +199,7 @@ internal class ViewportPanel : IEditorPanel
 
     private bool OnKeyUpEvent(KeyUpEvent e)
     {
-        if (e.KeyCode == KeyCode.ControlLeft || e.KeyCode == KeyCode.ControlRight)
-        {
-            m_gizmoService.IsSnapping = false;
-        }
+        if (e.KeyCode == KeyCode.ControlLeft || e.KeyCode == KeyCode.ControlRight) m_gizmoService.IsSnapping = false;
 
         return false;
     }

@@ -28,11 +28,6 @@ internal class MenuService
             {
                 foreach (var panel in m_panelManager)
                 {
-                    if (panel.HideInMenu)
-                    {
-                        continue;
-                    }
-                    
                     if (ImGui.MenuItem(panel.DisplayName, "", panel.IsEnabled))
                     {
                         panel.IsEnabled = !panel.IsEnabled;
