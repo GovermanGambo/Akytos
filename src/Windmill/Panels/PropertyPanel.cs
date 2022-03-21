@@ -4,6 +4,7 @@ using Akytos;
 using Akytos.Editor;
 using Akytos.Events;
 using Akytos.Serialization;
+using Akytos.Utilities;
 using ImGuiNET;
 using LightInject;
 using Windmill.Services;
@@ -95,7 +96,7 @@ internal class PropertyPanel : IEditorPanel
             {
                 var attribute = serializedField.GetCustomAttribute<SerializeFieldAttribute>();
                 object currentValue =
-                    guiControlRenderer.DrawControl(attribute.Name, fieldValue, attribute);
+                    guiControlRenderer.DrawControl(serializedField.Name.SplitCamelCase(), fieldValue, attribute);
                 
                 serializedField.SetValue(o, currentValue);
             }

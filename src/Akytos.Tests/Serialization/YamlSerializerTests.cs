@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Akytos.Assets;
+using Akytos.Graphics;
 using Akytos.Serialization;
 using Akytos.Serialization.Surrogates;
+using Moq;
 using Xunit;
 
 namespace Akytos.Tests.Serialization;
@@ -299,6 +302,18 @@ value:
         var node = deserializer.Deserialize(yaml) as Node2D;
         
         Assert.Equal(rootNode, node);
+    }
+
+    [Fact]
+    public void SerializingSpriteNode_Should_Work()
+    {
+        const string filePath = "textures/Test.png";
+        var textureMock = new Mock<ITexture2D>();
+        var asset = new Texture2DAsset(textureMock.Object, filePath);
+        var assetManagerMock = new Mock<IAssetManager>();
+        assetManagerMock.Setup(am => am.Load<ITexture2D>(filePath)).Returns(asset);
+
+        var spriteNode = new SpriteNode();
     }
 }
 
