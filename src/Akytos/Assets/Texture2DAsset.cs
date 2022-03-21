@@ -2,7 +2,6 @@ using Akytos.Graphics;
 
 namespace Akytos.Assets;
 
-[Serializable]
 public class Texture2DAsset : IAsset<ITexture2D>
 {
     private string m_filePath;

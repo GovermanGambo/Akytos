@@ -2,7 +2,7 @@ using Akytos.Graphics;
 
 namespace Akytos.Assets;
 
-internal class AssetManager
+internal class AssetManager : IAssetManager
 {
     private readonly Dictionary<string, IAsset> m_loadedAssets;
     private readonly IGraphicsResourceFactory m_graphicsResourceFactory;
@@ -12,6 +12,8 @@ internal class AssetManager
         m_graphicsResourceFactory = graphicsResourceFactory;
         m_loadedAssets = new Dictionary<string, IAsset>();
     }
+
+    public IEnumerable<string> LoadedAssets => m_loadedAssets.Keys;
 
     public void LoadAll()
     {
@@ -58,13 +60,6 @@ internal class AssetManager
             Debug.LogError("Failed to load file {0}: {1}", filename, e.Message);
             return null;
         }
-    }
-
-    public TAsset Get<TAsset>(string url)
-    {
-        var asset = m_loadedAssets[url] as IAsset<TAsset>;
-
-        return asset.Data;
     }
 
     private void ProcessAssetFile(FileSystemInfo fileInfo)

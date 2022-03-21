@@ -4,7 +4,7 @@ namespace Akytos.Serialization;
 
 public interface ISerializationSurrogate<T> : ISerializationSurrogate
 {
-    void Serialize(IEmitter emitter, T? value);
+    new void Serialize(IEmitter emitter, T? value);
     new T Deserialize(Scanner value);
 }
 
