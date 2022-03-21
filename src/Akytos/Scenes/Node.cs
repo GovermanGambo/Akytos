@@ -7,10 +7,10 @@ namespace Akytos;
 /// </summary>
 public class Node
 {
-    [SerializeField("Children")] [HideInInspector]
+    [SerializeField] [HideInInspector]
     private readonly List<Node> m_children;
 
-    [SerializeField("Name")] private string m_name;
+    [SerializeField] private string m_name;
 
     private SceneTree? m_sceneTree;
 

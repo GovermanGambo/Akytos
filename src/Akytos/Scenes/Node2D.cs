@@ -4,9 +4,9 @@ namespace Akytos
 {
     public class Node2D : Node
     {
-        [SerializeField("Position")] private Vector2 position;
-        [SerializeField("Scale")] private Vector2 scale = Vector2.One;
-        [IntSlider("Rotation", 0, 360)] private int rotation;
+        [SerializeField] private Vector2 position;
+        [SerializeField] private Vector2 scale = Vector2.One;
+        [IntSlider(0, 360)] private int rotation;
 
         public Node2D() : base("NewNode2D")
         {

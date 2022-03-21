@@ -2,10 +2,10 @@
 
 public class SerializeFieldAttribute : Attribute
 {
-    public SerializeFieldAttribute(string name)
+    public SerializeFieldAttribute(string? name = null)
     {
         Name = name;
     }
 
-    public string Name { get; }
+    public string? Name { get; }
 }

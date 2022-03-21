@@ -96,7 +96,7 @@ internal class PropertyPanel : IEditorPanel
             {
                 var attribute = serializedField.GetCustomAttribute<SerializeFieldAttribute>();
                 object currentValue =
-                    guiControlRenderer.DrawControl(serializedField.Name.SplitCamelCase(), fieldValue, attribute);
+                    guiControlRenderer.DrawControl( attribute.Name ?? serializedField.Name.SplitCamelCase(), fieldValue, attribute);
                 
                 serializedField.SetValue(o, currentValue);
             }
