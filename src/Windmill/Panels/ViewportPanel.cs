@@ -48,11 +48,17 @@ internal class ViewportPanel : IEditorPanel
     {
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
         ImGui.Begin(DisplayName);
-
+        
         if (ImGui.BeginPopupContextWindow())
         {
             if (ImGui.Selectable("Add node...")) m_modalStack.PushModal<CreateNodeModal>();
 
+            // Only allow deletion of node if we are hovering a node
+            if (m_hoveredNode != null && ImGui.Selectable("Delete node"))
+            {
+                m_sceneEditorContext.RemoveNode(m_hoveredNode);
+            }
+            
             ImGui.EndPopup();
         }
 
@@ -77,7 +83,7 @@ internal class ViewportPanel : IEditorPanel
         ImGui.End();
         ImGui.PopStyleVar();
     }
-
+    
     public void OnEvent(IEvent e)
     {
         var dispatcher = new EventDispatcher(e);
@@ -138,6 +144,16 @@ internal class ViewportPanel : IEditorPanel
     {
         if (e.MouseButton == MouseButton.Right)
         {
+            if (m_hoveredNode != null)
+            {
+                if (ImGui.BeginPopupContextWindow())
+                {
+                    if (ImGui.Selectable("Add node...")) m_modalStack.PushModal<CreateNodeModal>();
+
+                    ImGui.EndPopup();
+                }
+            }
+            
             m_isDragging = false;
             return false;
         }

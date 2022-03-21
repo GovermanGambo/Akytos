@@ -91,12 +91,7 @@ internal class HierarchyPanel : IEditorPanel
             
             if (ImGui.Selectable("Delete node"))
             {
-                node.Owner.RemoveChild(node, true);
-                m_treeWasModified = true;
-                if (m_sceneEditorContext.SelectedNode == node)
-                {
-                    m_sceneEditorContext.SelectedNode = null;
-                }
+                m_sceneEditorContext.RemoveNode(node);
             }
             
             ImGui.EndPopup();
