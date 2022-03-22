@@ -24,7 +24,6 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.Register<MenuService>();
         serviceRegistry.Register<GizmoService>();
         serviceRegistry.RegisterSingleton<ModalStack>();
-        serviceRegistry.Register<IFileDialogService, WindowsFileDialogService>();
         
         RegisterPanels(serviceRegistry);
         RegisterModals(serviceRegistry);

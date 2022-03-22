@@ -43,19 +43,19 @@ internal class MenuService
     {
         if (ImGui.BeginMenu("File"))
         {
-            if (ImGui.MenuItem("New scene"))
+            if (ImGui.MenuItem("New scene", "Ctrl+N"))
             {
                 m_editorContext.CreateNewScene<Node2D>();
             }
 
-            if (ImGui.MenuItem("Load scene..."))
+            if (ImGui.MenuItem("Open scene...", "Ctrl+O"))
             {
                 m_modalStack.PushModal<LoadSceneModal>();
             }
             
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Save scene"))
+            if (ImGui.MenuItem("Save scene", "Ctrl+S"))
             {
                 if (m_editorContext.CurrentSceneFilename == null)
                 {
@@ -67,14 +67,14 @@ internal class MenuService
                 }
             }
 
-            if (ImGui.MenuItem("Save scene as..."))
+            if (ImGui.MenuItem("Save scene as...", "Ctrl+Shift+S"))
             {
                 m_modalStack.PushModal<SaveSceneModal>();
             }
             
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Exit"))
+            if (ImGui.MenuItem("Exit", "Ctrl+X"))
             {
                 Application.Exit();
             }

@@ -22,13 +22,14 @@ internal class EditorLayer : ILayer
     private readonly SpriteRendererSystem m_renderingSystem;
     private readonly SceneTree m_sceneTree;
     private readonly ModalStack m_modalStack;
+    private readonly EditorHotKeyService m_editorHotKeyService;
 
     private IFramebuffer m_framebuffer = null!;
     private ITexture2D m_texture2D = null!;
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager,
-        MenuService menuService, SceneTree sceneTree, ModalStack modalStack)
+        MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
@@ -38,6 +39,7 @@ internal class EditorLayer : ILayer
         m_menuService = menuService;
         m_sceneTree = sceneTree;
         m_modalStack = modalStack;
+        m_editorHotKeyService = editorHotKeyService;
     }
 
     public void Dispose()
@@ -99,8 +101,9 @@ internal class EditorLayer : ILayer
 
     public void OnEvent(IEvent e)
     {
-        m_panelManager.OnEvent(e);
         m_modalStack.Peek()?.OnEvent(e);
+        m_panelManager.OnEvent(e);
+        m_editorHotKeyService.OnEvent(e);
     }
 
     public void OnDrawGui()

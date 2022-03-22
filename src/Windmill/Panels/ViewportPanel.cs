@@ -53,7 +53,7 @@ internal class ViewportPanel : IEditorPanel
         {
             if (ImGui.Selectable("Add node...")) m_modalStack.PushModal<CreateNodeModal>();
 
-            // Only allow deletion of node if we are hovering a node
+            // Only allow deletion of node if we are hovering over a node
             if (m_hoveredNode != null && ImGui.Selectable("Delete node"))
             {
                 m_sceneEditorContext.RemoveNode(m_hoveredNode);
@@ -144,16 +144,6 @@ internal class ViewportPanel : IEditorPanel
     {
         if (e.MouseButton == MouseButton.Right)
         {
-            if (m_hoveredNode != null)
-            {
-                if (ImGui.BeginPopupContextWindow())
-                {
-                    if (ImGui.Selectable("Add node...")) m_modalStack.PushModal<CreateNodeModal>();
-
-                    ImGui.EndPopup();
-                }
-            }
-            
             m_isDragging = false;
             return false;
         }
@@ -196,6 +186,19 @@ internal class ViewportPanel : IEditorPanel
             case KeyCode.ControlRight:
                 m_gizmoService.IsSnapping = true;
                 break;
+        }
+
+        return false;
+    }
+
+    private bool OnKeyUpEvent(KeyUpEvent e)
+    {
+        switch (e.KeyCode)
+        {
+            case KeyCode.ControlLeft:
+            case KeyCode.ControlRight:
+                m_gizmoService.IsSnapping = false;
+                break;
             case KeyCode.Q:
                 m_gizmoService.GizmoMode = GizmoMode.None;
                 return true;
@@ -209,14 +212,7 @@ internal class ViewportPanel : IEditorPanel
                 m_gizmoService.GizmoMode = GizmoMode.Scale;
                 return true;
         }
-
-        return false;
-    }
-
-    private bool OnKeyUpEvent(KeyUpEvent e)
-    {
-        if (e.KeyCode == KeyCode.ControlLeft || e.KeyCode == KeyCode.ControlRight) m_gizmoService.IsSnapping = false;
-
+        
         return false;
     }
 }

@@ -39,7 +39,7 @@ internal class GizmoService
         var transform = node2D.GetTransform();
         var deltaMatrix = Matrix4x4.Identity;
 
-        float snapValue = 0.0f;
+        float snapValue;
 
         if (IsSnapping)
         {

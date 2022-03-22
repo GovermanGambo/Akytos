@@ -8,15 +8,13 @@ internal class SceneEditorContext
 {
     private readonly SceneLoader m_sceneLoader;
     private readonly SpriteRendererSystem m_spriteRendererSystem;
-    private readonly IFileDialogService m_fileDialogService;
 
-    public SceneEditorContext(SceneTree sceneTree, SceneLoader sceneLoader, SpriteRendererSystem spriteRendererSystem, IFileDialogService fileDialogService)
+    public SceneEditorContext(SceneTree sceneTree, SceneLoader sceneLoader, SpriteRendererSystem spriteRendererSystem)
     {
         SceneTree = sceneTree;
         m_sceneLoader = sceneLoader;
         // TODO: This should maybe live inside a system registry for the scene tree.
         m_spriteRendererSystem = spriteRendererSystem;
-        m_fileDialogService = fileDialogService;
     }
     
     public bool HasUnsavedChanges { get; set; }
