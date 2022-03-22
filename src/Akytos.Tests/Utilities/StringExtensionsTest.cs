@@ -8,7 +8,8 @@ public class StringExtensionsTest
     [Theory]
     [InlineData("camelCase", "Camel Case")]
     [InlineData("m_camelCase", "Camel Case")]
-    [InlineData("PascalCase", "Pascal")]
+    [InlineData("PascalCase", "Pascal Case")]
+    [InlineData("Pascalcase", "Pascalcase")]
     public void SplitCamelCase_ShouldWork(string camelCase, string result)
     {
         Assert.Equal(result, camelCase.SplitCamelCase());

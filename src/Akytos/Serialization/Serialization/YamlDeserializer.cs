@@ -2,6 +2,7 @@ using System.Collections;
 using Akytos.Serialization;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Tokens;
+using System;
 
 namespace Akytos;
 
@@ -88,34 +89,40 @@ public class YamlDeserializer
 
     private static Type? ResolveObjectType(string objectTypeName)
     {
+        Type? result;
+
         var allTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes());
-        var objectType = allTypes
-            .FirstOrDefault(t => t.FullName == objectTypeName);
-
+        
         if (objectTypeName.EndsWith("[]"))
         {
-            objectTypeName = objectTypeName.Remove(objectTypeName.Length - 2, 2);
-            objectType = allTypes.FirstOrDefault(t => t.FullName == objectTypeName);
-            objectType = objectType.MakeArrayType();
+            objectTypeName = objectTypeName[..^2];
+            result = allTypes
+                .FirstOrDefault(t => t.FullName == objectTypeName)?
+                .MakeArrayType();
         }
         else if (objectTypeName.Contains('`'))
         {
             string collectionTypeName =
-                objectTypeName.Substring(0, objectTypeName.IndexOf("`", StringComparison.Ordinal)) + "`1";
+                string.Concat(objectTypeName.AsSpan(0, objectTypeName.IndexOf("`", StringComparison.Ordinal)), "`1");
             int genericStartIndex = objectTypeName.IndexOf("[", StringComparison.Ordinal) + 2;
             string genericTypeArgument = objectTypeName.Substring(genericStartIndex,
                 objectTypeName.IndexOf(",", StringComparison.Ordinal) - genericStartIndex);
 
             var genericType = allTypes.FirstOrDefault(t => t.FullName == genericTypeArgument);
-            objectType = allTypes
+            result = allTypes
                 .FirstOrDefault(t => t.FullName == collectionTypeName)
                 .MakeGenericType(genericType);
         }
+        else
+        {
+            result = allTypes
+                .FirstOrDefault(t => t.FullName == objectTypeName);
+        }
 
-        return objectType;
+        return result;
     }
-
+    
     private object CreatePrimitiveObject(Scanner scanner, Type type)
     {
         string value = scanner.Read<Scalar>().Value;

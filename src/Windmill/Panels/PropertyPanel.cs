@@ -75,7 +75,7 @@ internal class PropertyPanel : IEditorPanel
             var controlRendererType = typeof(IGuiControlRenderer<>).MakeGenericType(fieldType);
             var guiControlRenderer = m_serviceFactory.TryGetInstance(controlRendererType) as IGuiControlRenderer;
 
-            var fieldValue = serializedField.GetValue(o);
+            object? fieldValue = serializedField.GetValue(o);
             var declaringType = serializedField.DeclaringType;
 
             if (declaringType != previousDeclaringType && declaringType != typeof(Node))
@@ -94,7 +94,7 @@ internal class PropertyPanel : IEditorPanel
             {
                 var attribute = serializedField.GetCustomAttribute<SerializeFieldAttribute>();
                 object currentValue =
-                    guiControlRenderer.DrawControl( attribute.Name ?? serializedField.Name.SplitCamelCase(), fieldValue, attribute);
+                    guiControlRenderer.DrawControl(attribute.Name ?? serializedField.Name.SplitCamelCase(), fieldValue, attribute);
                 
                 serializedField.SetValue(o, currentValue);
             }

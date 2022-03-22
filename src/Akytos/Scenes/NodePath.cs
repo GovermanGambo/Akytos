@@ -4,8 +4,8 @@ namespace Akytos
 {
     public readonly struct NodePath
     {
-        private const string FullPathRegex = @"^(\.|\.\/|\/)?([a-zA-Z0-9]+(\/[a-zA-Z0-9]+)*)*(:[a-z]+)*$";
-        private const string ConcatenatedNamesRegex = @"[a-zA-Z0-9]+(\/[a-zA-Z0-9]+)*";
+        private const string FullPathRegex = @"^(\.|\.\/|\/)?([a-zA-Z0-9-_ ]+(\/[a-zA-Z0-9-_ ]+)*)*(:[a-z]+)*$";
+        private const string ConcatenatedNamesRegex = @"[a-zA-Z0-9-_ ]+(\/[a-zA-Z0-9-_ ]+)*";
         private const string ConcatenatedSubNamesRegex = @"(:[a-z]+)+";
         
         private readonly string m_pathString;
