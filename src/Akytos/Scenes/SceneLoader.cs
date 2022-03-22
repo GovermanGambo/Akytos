@@ -1,3 +1,4 @@
+using Akytos.Assets;
 using Akytos.Serialization;
 using Akytos.Serialization.Surrogates;
 
@@ -6,7 +7,7 @@ namespace Akytos;
 /// <summary>
 ///     Responsible for saving and loading scenes (or Nodes) to/from disk.
 /// </summary>
-public class SceneLoader
+internal class SceneLoader
 {
     private readonly YamlSerializer m_serializer;
     private readonly YamlDeserializer m_deserializer;
@@ -14,12 +15,15 @@ public class SceneLoader
     /// <summary>
     ///     Creates a new <see cref="SceneLoader"/>
     /// </summary>
-    public SceneLoader()
+    public SceneLoader(AssetManager assetManager)
     {
         m_serializer = new YamlSerializer();
         m_deserializer = new YamlDeserializer();
         var vector2Serializer = new Vector2SerializationSurrogate();
+        var texture2DAssetSerializer = new Texture2DAssetSerializationSurrogate(assetManager);
+        m_serializer.AddSurrogate(texture2DAssetSerializer);
         m_serializer.AddSurrogate(vector2Serializer);
+        m_deserializer.AddSurrogate(texture2DAssetSerializer);
         m_deserializer.AddSurrogate(vector2Serializer);
     }
 
