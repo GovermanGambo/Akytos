@@ -8,8 +8,8 @@ internal interface IModal : IDisposable
     string Name { get; }
     bool IsOpen { get; }
     event Action Closing;
-    void Show();
-    void Hide();
+    void Open();
+    void Close();
     void OnDrawGui();
     void OnEvent(IEvent e);
 }

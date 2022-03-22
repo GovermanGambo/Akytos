@@ -46,12 +46,12 @@ internal class CreateNodeModal : IModal
 
     public event Action? Closing;
 
-    public void Show()
+    public void Open()
     {
         m_shouldOpen = true;
     }
 
-    public void Hide()
+    public void Close()
     {
         IsOpen = false;
     }

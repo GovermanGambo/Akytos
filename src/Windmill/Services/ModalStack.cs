@@ -48,7 +48,7 @@ internal class ModalStack
         
         m_modals.Push(modal);
 
-        modal.Show();
+        modal.Open();
         
         modal.Closing += ModalOnClosing;
 
@@ -66,7 +66,7 @@ internal class ModalStack
 
         if (modal.IsOpen)
         {
-            modal.Hide();
+            modal.Close();
         }
 
         modal.Closing -= ModalOnClosing;
