@@ -8,13 +8,15 @@ internal class SceneEditorContext
 {
     private readonly SceneLoader m_sceneLoader;
     private readonly SpriteRendererSystem m_spriteRendererSystem;
+    private readonly AppConfiguration m_appConfiguration;
 
-    public SceneEditorContext(SceneTree sceneTree, SceneLoader sceneLoader, SpriteRendererSystem spriteRendererSystem)
+    public SceneEditorContext(SceneTree sceneTree, SceneLoader sceneLoader, SpriteRendererSystem spriteRendererSystem, AppConfiguration appConfiguration)
     {
         SceneTree = sceneTree;
         m_sceneLoader = sceneLoader;
         // TODO: This should maybe live inside a system registry for the scene tree.
         m_spriteRendererSystem = spriteRendererSystem;
+        m_appConfiguration = appConfiguration;
     }
     
     public bool HasUnsavedChanges { get; set; }
@@ -51,6 +53,8 @@ internal class SceneEditorContext
         SelectedNode = null;
         m_spriteRendererSystem.Context = rootNode;
         HasUnsavedChanges = true;
+
+        CurrentSceneFilename = null;
     }
 
     public void LoadScene(string filePath)
@@ -60,6 +64,11 @@ internal class SceneEditorContext
         SelectedNode = null;
         m_spriteRendererSystem.Context = SceneTree.CurrentScene;
         CurrentSceneFilename = filePath;
+        
+        m_appConfiguration.WriteString("initialScene", filePath);
+        m_appConfiguration.Save();
+        
+        Debug.LogInformation("Loaded scene: {0}", filePath);
     }
 
     public void SaveSceneAs(string filePath)
@@ -67,5 +76,10 @@ internal class SceneEditorContext
         m_sceneLoader.SaveScene(filePath, SceneTree.CurrentScene);
         CurrentSceneFilename = filePath;
         HasUnsavedChanges = false;
+        
+        m_appConfiguration.WriteString("initialScene", filePath);
+        m_appConfiguration.Save();
+        
+        Debug.LogInformation("Saved scene: {0}", filePath);
     }
 }

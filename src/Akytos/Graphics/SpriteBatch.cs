@@ -122,7 +122,7 @@ internal class SpriteBatch
             m_textureSlotIndex++;
         }
 
-        var rotationMatrix = rotation % MathF.PI * 2 != 0 ? Matrix4x4.CreateRotationZ(rotation) : Matrix4x4.Identity;
+        var rotationMatrix = Matrix4x4.CreateRotationZ(rotation);
 
         var transform = Matrix4x4.CreateScale(new Vector3(texture2D.Width, texture2D.Height, 1.0f) * new Vector3(scale, 1.0f))
                         * rotationMatrix

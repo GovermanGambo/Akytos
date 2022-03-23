@@ -120,6 +120,12 @@ internal class CreateNodeModal : IModal
         var opened = ImGui.TreeNodeEx(nodeType.GUID.ToString(), flags, name);
 
         if (ImGui.IsItemClicked()) m_selectedNodeType = nodeType;
+        
+        if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(0))
+        {
+            var result = CreateNode(nodeType);
+            if (result == Result.Ok) Close();
+        }
 
         if (!opened) return;
 

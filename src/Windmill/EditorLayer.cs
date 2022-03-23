@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using Akytos;
+using Akytos.Assets;
 using Akytos.Editor;
 using Akytos.Events;
 using Akytos.Graphics;
@@ -23,13 +24,16 @@ internal class EditorLayer : ILayer
     private readonly SceneTree m_sceneTree;
     private readonly ModalStack m_modalStack;
     private readonly EditorHotKeyService m_editorHotKeyService;
+    private readonly SceneEditorContext m_sceneEditorContext;
 
     private IFramebuffer m_framebuffer = null!;
     private ITexture2D m_texture2D = null!;
 
+    private string? m_initialScene = null;
+
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager,
-        MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService)
+        MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService, AppConfiguration appConfiguration, SceneEditorContext sceneEditorContext)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
@@ -40,6 +44,9 @@ internal class EditorLayer : ILayer
         m_sceneTree = sceneTree;
         m_modalStack = modalStack;
         m_editorHotKeyService = editorHotKeyService;
+        m_sceneEditorContext = sceneEditorContext;
+
+        m_initialScene = appConfiguration.ReadString("initialScene");
     }
 
     public void Dispose()
@@ -74,11 +81,15 @@ internal class EditorLayer : ILayer
         m_renderingSystem.Camera = m_editorViewport.Camera;
 
         // TODO: Temporary Scene Setup
-        
-        var node = new Node("RootNode");
 
-        m_sceneTree.SetScene(node);
-        m_renderingSystem.Context = node;
+        if (m_initialScene != null)
+        {
+            m_sceneEditorContext.LoadScene(m_initialScene);
+        }
+        else
+        {
+            m_sceneEditorContext.CreateNewScene<Node2D>();
+        }
     }
 
     public void OnDetach()
@@ -115,6 +126,8 @@ internal class EditorLayer : ILayer
         m_panelManager.OnDrawGui();
 
         m_modalStack.OnDrawGui();
+        
+        ImGui.ShowDemoWindow();
 
         Dockspace.End();
     }
