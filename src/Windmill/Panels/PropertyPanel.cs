@@ -7,6 +7,7 @@ using Akytos.Serialization;
 using Akytos.Utilities;
 using ImGuiNET;
 using LightInject;
+using Windmill.Actions;
 using Windmill.Services;
 
 namespace Windmill.Panels;
@@ -15,11 +16,13 @@ internal class PropertyPanel : IEditorPanel
 {
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly IServiceFactory m_serviceFactory;
+    private readonly ActionExecutor m_actionExecutor;
 
-    public PropertyPanel(SceneEditorContext sceneEditorContext, IServiceFactory serviceFactory)
+    public PropertyPanel(SceneEditorContext sceneEditorContext, IServiceFactory serviceFactory, ActionExecutor actionExecutor)
     {
         m_sceneEditorContext = sceneEditorContext;
         m_serviceFactory = serviceFactory;
+        m_actionExecutor = actionExecutor;
     }
 
     public void Dispose()
@@ -96,7 +99,14 @@ internal class PropertyPanel : IEditorPanel
                 object currentValue =
                     guiControlRenderer.DrawControl(attribute.Name ?? serializedField.Name.SplitCamelCase(), fieldValue, attribute);
                 
-                serializedField.SetValue(o, currentValue);
+                //serializedField.SetValue(o, currentValue);
+
+                if (currentValue != fieldValue)
+                {
+                    var action = new SetNodeFieldAction(o, serializedField, currentValue);
+                    m_actionExecutor.Execute(action);
+                }
+                
             }
             else
             {

@@ -3,6 +3,7 @@ using System.Linq;
 using Akytos.Editor;
 using Akytos.Windowing;
 using LightInject;
+using Windmill.Actions;
 using Windmill.Panels;
 using Windmill.Services;
 
@@ -24,6 +25,7 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.Register<MenuService>();
         serviceRegistry.Register<GizmoService>();
         serviceRegistry.RegisterSingleton<ModalStack>();
+        serviceRegistry.RegisterSingleton<ActionExecutor>();
         
         RegisterPanels(serviceRegistry);
         RegisterModals(serviceRegistry);

@@ -1,5 +1,6 @@
 using Akytos;
 using ImGuiNET;
+using Windmill.Actions;
 using Windmill.Modals;
 using Windmill.Panels;
 
@@ -10,12 +11,14 @@ internal class MenuService
     private readonly PanelManager m_panelManager;
     private readonly SceneEditorContext m_editorContext;
     private readonly ModalStack m_modalStack;
+    private readonly ActionExecutor m_actionExecutor;
     
-    public MenuService(PanelManager panelManager, SceneEditorContext editorContext, ModalStack modalStack)
+    public MenuService(PanelManager panelManager, SceneEditorContext editorContext, ModalStack modalStack, ActionExecutor actionExecutor)
     {
         m_panelManager = panelManager;
         m_editorContext = editorContext;
         m_modalStack = modalStack;
+        m_actionExecutor = actionExecutor;
     }
 
     public void OnDrawGui()
@@ -23,6 +26,19 @@ internal class MenuService
         if (ImGui.BeginMenuBar())
         {
             DrawFileMenu();
+
+            if (ImGui.BeginMenu("Edit"))
+            {
+                if (ImGui.MenuItem("Undo", m_actionExecutor.CanUndo))
+                {
+                    m_actionExecutor.Undo();
+                }
+
+                if (ImGui.MenuItem("Redo", m_actionExecutor.CanRedo))
+                {
+                    m_actionExecutor.Redo();
+                }
+            }
 
             if (ImGui.BeginMenu("Layout"))
             {
