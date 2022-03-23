@@ -101,7 +101,7 @@ internal class PropertyPanel : IEditorPanel
                 
                 //serializedField.SetValue(o, currentValue);
 
-                if (currentValue != fieldValue)
+                if (!currentValue.Equals(fieldValue))
                 {
                     var action = new SetNodeFieldAction(o, serializedField, currentValue);
                     m_actionExecutor.Execute(action);

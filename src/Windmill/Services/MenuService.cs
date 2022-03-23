@@ -29,15 +29,16 @@ internal class MenuService
 
             if (ImGui.BeginMenu("Edit"))
             {
-                if (ImGui.MenuItem("Undo", m_actionExecutor.CanUndo))
+                if (ImGui.MenuItem("Undo", "Ctrl+Z", false, m_actionExecutor.CanUndo))
                 {
                     m_actionExecutor.Undo();
                 }
 
-                if (ImGui.MenuItem("Redo", m_actionExecutor.CanRedo))
+                if (ImGui.MenuItem("Redo", "Ctrl+Y", false, m_actionExecutor.CanRedo))
                 {
                     m_actionExecutor.Redo();
                 }
+                ImGui.EndMenu();
             }
 
             if (ImGui.BeginMenu("Layout"))

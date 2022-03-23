@@ -65,7 +65,7 @@ internal class GizmoService
             float rotationZ = ToEulerAngles(rotation).Z;
 
             node2D.GlobalPosition = new Vector2(translation.X, translation.Y);
-            node2D.GlobalRotation = 0f;
+            node2D.GlobalRotation = rotationZ;
             node2D.GlobalScale = new Vector2(scale.X, scale.Y);
         }
     }

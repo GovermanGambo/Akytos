@@ -4,27 +4,25 @@ namespace Windmill.Actions;
 
 public class ActionExecutor
 {
-    private readonly List<IEditorAction> m_performedActions;
-    
-    private int m_actionPointer = 0;
+    private readonly Stack<IEditorAction> m_undoStack;
+    private readonly Stack<IEditorAction> m_redoStack;
 
     public ActionExecutor()
     {
-        m_performedActions = new List<IEditorAction>();
+        m_undoStack = new Stack<IEditorAction>();
+        m_redoStack = new Stack<IEditorAction>();
     }
 
-    public bool CanUndo => m_actionPointer > 0;
-    public bool CanRedo => m_actionPointer < m_performedActions.Count;
-
-    private int CurrentIndex => m_actionPointer - 1;
+    public bool CanUndo => m_undoStack.Count != 0;
+    public bool CanRedo => m_redoStack.Count != 0;
 
     public void Execute(IEditorAction action)
     {
-        m_actionPointer++;
-
-        m_performedActions.Add(action);
-
-        m_performedActions[CurrentIndex].Execute();
+        action.Execute();
+        
+        m_undoStack.Push(action);
+        
+        m_redoStack.Clear();
     }
 
     public void Undo()
@@ -34,9 +32,11 @@ public class ActionExecutor
             return;
         }
 
-        m_actionPointer--;
-
-        m_performedActions[CurrentIndex].Undo();
+        var action = m_undoStack.Pop();
+        
+        action.Undo();
+        
+        m_redoStack.Push(action);
     }
 
     public void Redo()
@@ -46,8 +46,10 @@ public class ActionExecutor
             return;
         }
 
-        m_actionPointer++;
-
-        m_performedActions[CurrentIndex].Execute();
+        var action = m_redoStack.Pop();
+        
+        action.Execute();
+        
+        m_undoStack.Push(action);
     }
 }

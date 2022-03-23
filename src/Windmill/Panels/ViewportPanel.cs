@@ -177,9 +177,13 @@ internal class ViewportPanel : IEditorPanel
 
     private bool OnMouseDownEvent(MouseDownEvent e)
     {
-        if (e.MouseButton == MouseButton.Left && m_hoveredNode != null && !m_gizmoService.IsUsing)
+        if (e.MouseButton == MouseButton.Left && !m_gizmoService.IsUsing)
         {
-            m_sceneEditorContext.SelectedNode = m_hoveredNode;
+            if (m_hoveredNode != null)
+            {
+                m_sceneEditorContext.SelectedNode = m_hoveredNode;
+            }
+            
             return true;
         }
 

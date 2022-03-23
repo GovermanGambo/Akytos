@@ -1,5 +1,6 @@
 using Akytos;
 using Akytos.Events;
+using Windmill.Actions;
 using Windmill.Modals;
 
 namespace Windmill.Services;
@@ -11,11 +12,13 @@ internal class EditorHotKeyService
     private bool m_isControlDown;
     private bool m_isShiftDown;
     private ModalStack m_modalStack;
+    private ActionExecutor m_actionExecutor;
 
-    public EditorHotKeyService(SceneEditorContext sceneEditorContext, ModalStack modalStack)
+    public EditorHotKeyService(SceneEditorContext sceneEditorContext, ModalStack modalStack, ActionExecutor actionExecutor)
     {
         m_sceneEditorContext = sceneEditorContext;
         m_modalStack = modalStack;
+        m_actionExecutor = actionExecutor;
     }
 
     public void OnEvent(IEvent e)
@@ -53,6 +56,27 @@ internal class EditorHotKeyService
     {
         switch (e.KeyCode)
         {
+            /*
+             * EDIT ACTIONS
+             */
+            case KeyCode.Z:
+            {
+                if (m_isControlDown)
+                {
+                    m_actionExecutor.Undo();
+                    return true;
+                }
+                break;
+            }
+            case KeyCode.Y:
+            {
+                if (m_isControlDown)
+                {
+                    m_actionExecutor.Redo();
+                    return true;
+                }
+                break;
+            }
             /*
              *   NODE ACTIONS
              */
