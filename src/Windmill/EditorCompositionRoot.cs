@@ -27,6 +27,10 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton<ModalStack>();
         serviceRegistry.RegisterSingleton<ActionExecutor>();
         
+        serviceRegistry.Register<EditorHotKeyService>();
+
+        serviceRegistry.Register(_ => new AppConfiguration("Akytos.ini"));
+
         RegisterPanels(serviceRegistry);
         RegisterModals(serviceRegistry);
     }

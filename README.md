@@ -1,6 +1,8 @@
 # Akytos
 A simple 2D game engine created with .NET 6 using OpenGL and ImGui. The design of the engine is largely based on Godot, as I felt that the Mono version of Godot barely takes advantage of the capabilities of C# and its design philosophy.
 
+Full disclaimer, this is probably not a game engine you would want to use at this point :) It is merely for educational purposes.
+
 # Features (so far)
  - Engine features
    - Node-oriented architecture

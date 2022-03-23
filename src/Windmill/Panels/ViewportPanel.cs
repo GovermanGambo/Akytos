@@ -9,6 +9,7 @@ using Akytos.Graphics.Buffers;
 using ImGuiNET;
 using Windmill.Modals;
 using Windmill.Services;
+using Math = System.Math;
 
 namespace Windmill.Panels;
 
@@ -48,19 +49,6 @@ internal class ViewportPanel : IEditorPanel
     {
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
         ImGui.Begin(DisplayName);
-        
-        if (ImGui.BeginPopupContextWindow())
-        {
-            if (ImGui.Selectable("Add node...")) m_modalStack.PushModal<CreateNodeModal>();
-
-            // Only allow deletion of node if we are hovering over a node
-            if (m_hoveredNode != null && ImGui.Selectable("Delete node"))
-            {
-                m_sceneEditorContext.RemoveNode(m_hoveredNode);
-            }
-            
-            ImGui.EndPopup();
-        }
 
         m_isFocused = ImGui.IsWindowFocused();
 
@@ -79,6 +67,8 @@ internal class ViewportPanel : IEditorPanel
         if (m_sceneEditorContext.SelectedNode is Node2D node2D)
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 m_gizmoService.DrawGizmos(m_editorViewport.Camera, node2D);
+        
+        DrawGrid();
 
         ImGui.End();
         ImGui.PopStyleVar();
@@ -149,6 +139,31 @@ internal class ViewportPanel : IEditorPanel
         }
 
         return false;
+    }
+
+    private void DrawGrid()
+    {
+        var drawList = ImGui.GetWindowDrawList();
+        drawList.PushClipRect(m_viewportBounds[0], m_viewportBounds[1], true);
+
+        var camPosition = new Vector2(m_editorViewport.Camera.Position.X * m_editorViewport.Camera.ScaleFactor + m_editorViewport.Width / 2f,
+            m_editorViewport.Camera.Position.Y * m_editorViewport.Camera.ScaleFactor + m_editorViewport.Height / 2f);
+
+        float gridStep = 128f * m_editorViewport.Camera.ScaleFactor;
+        for (float x = camPosition.X % gridStep; x < m_editorViewport.Size.X; x += gridStep)
+        {
+            uint color = Math.Abs(x - camPosition.X) < 0.001f ? 0x88ff0000 : 0x88ffffff;
+            drawList.AddLine(new Vector2(m_viewportBounds[1].X - x, m_viewportBounds[0].Y), new Vector2(m_viewportBounds[1].X - x, m_viewportBounds[1].Y), color);
+        }
+
+        for (float y = camPosition.Y % gridStep; y < m_editorViewport.Size.Y; y += gridStep)
+        {
+            uint color = Math.Abs(y - camPosition.Y) < 0.001f ? 0x880000ff : 0x88ffffff;
+            drawList.AddLine(new Vector2(m_viewportBounds[0].X, m_viewportBounds[0].Y + y), new Vector2(m_viewportBounds[1].X, m_viewportBounds[0].Y + y), color);
+        }
+            
+            
+        drawList.PopClipRect();
     }
 
     private bool OnMouseScrolled(MouseScrolledEvent e)

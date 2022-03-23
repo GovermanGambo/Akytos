@@ -37,13 +37,14 @@ internal class GizmoService
         var cameraView = camera.ViewMatrix;
 
         var transform = node2D.GetTransform();
+        var transformCopy = transform;
         var deltaMatrix = Matrix4x4.Identity;
 
         float snapValue;
 
         if (IsSnapping)
         {
-            snapValue = 0.25f;
+            snapValue = 32f;
 
             if (GizmoMode == GizmoMode.Rotate) snapValue = 22.5f;
         }
@@ -51,20 +52,20 @@ internal class GizmoService
         {
             snapValue = 1.0f;
         }
-
-        // TODO: Fix snapping
+        
         float[] snapValues = {snapValue, snapValue, snapValue};
 
+        // TODO: Something is making this method spit out a NaN transform when using axis handles
         ImGuizmo.Manipulate(ref cameraView.M11, ref cameraProjection.M11, (OPERATION) GizmoMode - 1, MODE.WORLD,
-            ref transform.M11, ref deltaMatrix.M11, ref snapValues[0]);
+            ref transformCopy.M11, ref deltaMatrix.M11, ref snapValues[0]);
 
         if (ImGuizmo.IsUsing())
         {
-            Matrix4x4.Decompose(transform, out var scale, out var rotation, out var translation);
+            Matrix4x4.Decompose(transformCopy, out var scale, out var rotation, out var translation);
             float rotationZ = ToEulerAngles(rotation).Z;
 
             node2D.GlobalPosition = new Vector2(translation.X, translation.Y);
-            node2D.GlobalRotation = rotationZ;
+            node2D.GlobalRotation = 0f;
             node2D.GlobalScale = new Vector2(scale.X, scale.Y);
         }
     }
