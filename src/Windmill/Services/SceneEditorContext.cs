@@ -1,6 +1,7 @@
 using System;
 using Akytos;
 using Akytos.Assets;
+using Akytos.Configuration;
 
 namespace Windmill.Services;
 

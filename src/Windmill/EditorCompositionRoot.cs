@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Akytos.Configuration;
 using Akytos.Editor;
 using Akytos.Windowing;
 using LightInject;

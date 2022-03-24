@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using Akytos;
 using Akytos.Assets;
+using Akytos.Configuration;
 using Akytos.Editor;
 using Akytos.Events;
 using Akytos.Graphics;
 using Akytos.Graphics.Buffers;
 using Akytos.Layers;
+using Akytos.ProjectManagement;
 using ImGuiNET;
+using Microsoft.VisualBasic.CompilerServices;
 using Windmill.Panels;
 using Windmill.Services;
 
@@ -25,6 +28,7 @@ internal class EditorLayer : ILayer
     private readonly ModalStack m_modalStack;
     private readonly EditorHotKeyService m_editorHotKeyService;
     private readonly SceneEditorContext m_sceneEditorContext;
+    private readonly ProjectManager m_projectManager;
 
     private IFramebuffer m_framebuffer = null!;
     private ITexture2D m_texture2D = null!;
@@ -33,7 +37,7 @@ internal class EditorLayer : ILayer
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager,
-        MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService, AppConfiguration appConfiguration, SceneEditorContext sceneEditorContext)
+        MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService, AppConfiguration appConfiguration, SceneEditorContext sceneEditorContext, ProjectManager projectManager)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
@@ -45,6 +49,7 @@ internal class EditorLayer : ILayer
         m_modalStack = modalStack;
         m_editorHotKeyService = editorHotKeyService;
         m_sceneEditorContext = sceneEditorContext;
+        m_projectManager = projectManager;
 
         m_initialScene = appConfiguration.ReadString("initialScene");
     }
@@ -57,6 +62,11 @@ internal class EditorLayer : ILayer
 
     public void OnAttach()
     {
+        if (!m_projectManager.LoadLastOpenedProject())
+        {
+            m_projectManager.CreateNewProject("TestProject", "C:/Akytos/TestProject");
+        }
+        
         var framebufferSpecification = new FrameBufferSpecification
         {
             Width = (uint)m_editorViewport.Width,

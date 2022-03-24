@@ -1,4 +1,5 @@
 using System.Reflection;
+using Akytos.ProjectManagement;
 
 namespace Akytos.Assets;
 
@@ -14,11 +15,11 @@ public static class Asset
         return Path.GetRelativePath(AssetsDirectory, path);
     }
 
-    public static string AssetsDirectory => GetExecutingPath("assets");
+    public static string AssetsDirectory => GetWorkingDirectory("assets");
     
-    private static string GetExecutingPath(string path)
+    private static string GetWorkingDirectory(string path)
     {
-        string? directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string? directoryName = AkytosProject.CurrentProject?.ProjectDirectory;
 
         if (directoryName == null)
             return "";
