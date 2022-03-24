@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Akytos.Configuration;
 using Akytos.Editor;
+using Akytos.ProjectManagement;
 using Akytos.Windowing;
 using LightInject;
 using Windmill.Actions;
@@ -27,10 +28,11 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.Register<GizmoService>();
         serviceRegistry.RegisterSingleton<ModalStack>();
         serviceRegistry.RegisterSingleton<ActionExecutor>();
+        serviceRegistry.Register<ProjectManager>();
         
         serviceRegistry.Register<EditorHotKeyService>();
 
-        serviceRegistry.Register(_ => new AppConfiguration("Akytos.ini"));
+        serviceRegistry.RegisterSingleton(_ => new AppConfiguration("Akytos.ini"), "appConfiguration");
 
         RegisterPanels(serviceRegistry);
         RegisterModals(serviceRegistry);

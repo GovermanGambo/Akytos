@@ -34,6 +34,9 @@ public class ProjectManager
         AkytosProject.CurrentProject = project;
         
         m_appConfiguration.WriteString("LastProjectDirectory", projectDirectory);
+        m_appConfiguration.Save();
+
+        Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.AssetsSubDirectory));
     }
     
 }

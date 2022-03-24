@@ -42,6 +42,13 @@ internal class OpenGLGraphicsResourceFactory : IGraphicsResourceFactory
         return shader;
     }
 
+    public IShaderProgram CreateShader(string name, Stream fileStream)
+    {
+        var shader = new OpenGLShaderProgram(m_gl, name, fileStream);
+        m_graphicsResourceRegistry.Register(shader);
+        return shader;
+    }
+
     public ITexture2D CreateTexture2D(string filePath)
     {
         var texture = new OpenGLTexture2D(m_gl, filePath);

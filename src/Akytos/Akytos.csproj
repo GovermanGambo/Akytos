@@ -114,4 +114,8 @@
             <TargetPath>cimnodes.dll</TargetPath>
         </ContentWithTargetPath>
     </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\Shaders\Sprites_Default.glsl" />
+    </ItemGroup>
 </Project>

@@ -27,11 +27,11 @@ internal class AkytosProject
 
     public static AkytosProject Load(string projectDirectory)
     {
-        string? file = Directory.GetFiles(projectDirectory, ProjectExtension).FirstOrDefault();
+        string? file = Directory.GetFiles(projectDirectory, $"*{ProjectExtension}").FirstOrDefault();
 
         if (file == null)
         {
-            throw new FileNotFoundException();
+            throw new FileNotFoundException($"Could not find any file with the {ProjectExtension} extension.");
         }
 
         string projectName = Path.GetFileNameWithoutExtension(file);

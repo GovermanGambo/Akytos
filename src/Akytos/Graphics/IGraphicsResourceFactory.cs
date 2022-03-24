@@ -31,6 +31,7 @@ internal interface IGraphicsResourceFactory
     /// <param name="filePath">Path to the file containing the shader source code.</param>
     /// <returns></returns>
     IShaderProgram CreateShader(string filePath);
+    IShaderProgram CreateShader(string name, Stream fileStream);
     /// <summary>
     ///     Creates a new Texture2D from an image file.
     /// </summary>

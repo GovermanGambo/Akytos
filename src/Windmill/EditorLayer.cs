@@ -32,9 +32,7 @@ internal class EditorLayer : ILayer
 
     private IFramebuffer m_framebuffer = null!;
     private ITexture2D m_texture2D = null!;
-
-    private string? m_initialScene = null;
-
+    
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager,
         MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService, AppConfiguration appConfiguration, SceneEditorContext sceneEditorContext, ProjectManager projectManager)
@@ -50,8 +48,6 @@ internal class EditorLayer : ILayer
         m_editorHotKeyService = editorHotKeyService;
         m_sceneEditorContext = sceneEditorContext;
         m_projectManager = projectManager;
-
-        m_initialScene = appConfiguration.ReadString("initialScene");
     }
 
     public void Dispose()
@@ -92,9 +88,11 @@ internal class EditorLayer : ILayer
 
         // TODO: Temporary Scene Setup
 
-        if (m_initialScene != null)
+        string? initialScene = AkytosProject.CurrentProject?.Configuration.ReadString("InitialScene");
+
+        if (initialScene != null)
         {
-            m_sceneEditorContext.LoadScene(m_initialScene);
+            m_sceneEditorContext.LoadScene(initialScene);
         }
         else
         {

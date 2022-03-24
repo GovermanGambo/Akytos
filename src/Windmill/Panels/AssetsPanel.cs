@@ -11,7 +11,7 @@ namespace Windmill.Panels;
 
 internal class AssetsPanel : IEditorPanel
 {
-    private static readonly string RootDirectory = Asset.AssetsDirectory;
+    private static string RootDirectory => Asset.AssetsDirectory;
     public string CurrentDirectory { get; private set; } = RootDirectory;
 
     public void Dispose()

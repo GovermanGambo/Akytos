@@ -58,6 +58,11 @@ public class AppConfiguration
 
     private string GetFileContent()
     {
+        if (!File.Exists(m_filePath))
+        {
+            File.Create(m_filePath);
+        }
+        
         return File.ReadAllText(m_filePath);
     }
 }

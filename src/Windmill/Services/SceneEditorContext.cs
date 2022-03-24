@@ -2,6 +2,7 @@ using System;
 using Akytos;
 using Akytos.Assets;
 using Akytos.Configuration;
+using Akytos.ProjectManagement;
 
 namespace Windmill.Services;
 
@@ -50,8 +51,8 @@ internal class SceneEditorContext
         m_spriteRendererSystem.Context = SceneTree.CurrentScene;
         CurrentSceneFilename = filePath;
         
-        m_appConfiguration.WriteString("initialScene", filePath);
-        m_appConfiguration.Save();
+        AkytosProject.CurrentProject?.Configuration.WriteString("InitialScene", filePath);
+        AkytosProject.CurrentProject?.Configuration.Save();
         
         Debug.LogInformation("Loaded scene: {0}", filePath);
     }
@@ -62,8 +63,8 @@ internal class SceneEditorContext
         CurrentSceneFilename = filePath;
         HasUnsavedChanges = false;
         
-        m_appConfiguration.WriteString("initialScene", filePath);
-        m_appConfiguration.Save();
+        AkytosProject.CurrentProject?.Configuration.WriteString("InitialScene", filePath);
+        AkytosProject.CurrentProject?.Configuration.Save();
         
         Debug.LogInformation("Saved scene: {0}", filePath);
     }

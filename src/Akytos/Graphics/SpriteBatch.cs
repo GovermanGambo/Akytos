@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Reflection;
 using Akytos.Assets;
 using Akytos.Graphics.Buffers;
 
@@ -57,7 +58,13 @@ internal class SpriteBatch
             samplers[i] = i;
         }
 
-        m_textureShader = graphicsResourceFactory.CreateShader(Asset.GetAssetPath("shaders/Sprites_Default.glsl"));
+        using (var stream = Assembly.GetExecutingAssembly()
+                   .GetManifestResourceStream("Akytos.Resources.Shaders.Sprites_Default.glsl"))
+        {
+            m_textureShader = graphicsResourceFactory.CreateShader("Sprites_Default.glsl", stream);
+        }
+        
+        
         m_textureShader.Bind();
         m_textureShader.SetIntArray("u_Textures", samplers);
 

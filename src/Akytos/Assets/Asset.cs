@@ -15,7 +15,7 @@ public static class Asset
         return Path.GetRelativePath(AssetsDirectory, path);
     }
 
-    public static string AssetsDirectory => GetWorkingDirectory("assets");
+    public static string AssetsDirectory => GetWorkingDirectory(SystemConstants.FileSystem.AssetsSubDirectory);
     
     private static string GetWorkingDirectory(string path)
     {
@@ -25,7 +25,7 @@ public static class Asset
             return "";
             
         string fullPath = Path.Combine(directoryName,
-            Path.GetFullPath(path));
+            path);
         return fullPath;
     }
 }

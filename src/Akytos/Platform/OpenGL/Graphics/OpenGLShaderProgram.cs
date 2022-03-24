@@ -8,6 +8,45 @@ internal class OpenGLShaderProgram : IShaderProgram
 {
     private readonly GL m_gl;
 
+    public OpenGLShaderProgram(GL gl, string name, Stream fileStream)
+    {
+        m_gl = gl;
+
+        Name = name;
+
+        var shaderIds = new List<uint>();
+
+        string shaderSource;
+        
+        using (var streamReader = new StreamReader(fileStream))
+        {
+            shaderSource = streamReader.ReadToEnd();
+        }
+        
+        var processedSources = PreProcessShaderSource(shaderSource);
+
+        Handle = new GraphicsHandle(m_gl.CreateProgram());
+            
+        foreach ((var key, string value) in processedSources)
+        {
+            uint shaderId = CompileShader(value, key);
+            m_gl.AttachShader(Handle, shaderId);
+            shaderIds.Add(shaderId);
+        }
+
+        m_gl.LinkProgram(Handle);
+        m_gl.ValidateProgram(Handle);
+        
+        m_gl.GetProgram(Handle, GLEnum.LinkStatus, out int status);
+        Assert.IsFalse(status == 0, $"Program failed to link with error: {m_gl.GetProgramInfoLog(Handle)}");
+
+        foreach (uint shaderId in shaderIds)
+        {
+            m_gl.DetachShader(Handle, shaderId);
+            m_gl.DeleteShader(shaderId);
+        }
+    }
+    
     public OpenGLShaderProgram(GL gl, string filePath)
     {
         m_gl = gl;
@@ -15,7 +54,7 @@ internal class OpenGLShaderProgram : IShaderProgram
         Name = Path.GetFileNameWithoutExtension(filePath);
 
         var shaderIds = new List<uint>();
-        
+
         string shaderSource = File.ReadAllText(filePath);
         var processedSources = PreProcessShaderSource(shaderSource);
 
