@@ -4,6 +4,7 @@ using System.Linq;
 using Akytos;
 using Akytos.Events;
 using ImGuiNET;
+using Windmill.Actions;
 using Windmill.Services;
 using Math = System.Math;
 
@@ -13,15 +14,17 @@ internal class CreateNodeModal : IModal
 {
     private readonly Type[] m_nodeTypes;
     private readonly SceneEditorContext m_sceneEditorContext;
+    private readonly ActionExecutor m_actionExecutor;
 
     private string m_searchTerm = "";
     private Type? m_selectedNodeType;
     private bool m_isOpen;
     private bool m_shouldOpen;
 
-    public CreateNodeModal(SceneEditorContext sceneEditorContext)
+    public CreateNodeModal(SceneEditorContext sceneEditorContext, ActionExecutor actionExecutor)
     {
         m_sceneEditorContext = sceneEditorContext;
+        m_actionExecutor = actionExecutor;
         m_nodeTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
             .Where(t => t.IsSubclassOf(typeof(Node)) || typeof(Node).IsAssignableFrom(t))
@@ -199,7 +202,8 @@ internal class CreateNodeModal : IModal
         }
 
         var rootNode = m_sceneEditorContext.SelectedNode ?? m_sceneEditorContext.SceneTree.CurrentScene;
-        rootNode.AddChild(node, true);
+        var addNodeAction = new AddNodeAction(node, rootNode, m_sceneEditorContext);
+        m_actionExecutor.Execute(addNodeAction);
 
         return Result.Ok;
     }

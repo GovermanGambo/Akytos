@@ -26,22 +26,6 @@ internal class SceneEditorContext
 
     public SceneTree SceneTree { get; }
 
-    public bool RemoveNode(Node node)
-    {
-        if (node.Owner == null)
-        {
-            return false;
-        }
-        
-        var result = node.Owner.RemoveChild(node, true);
-        if (SelectedNode == node)
-        {
-            SelectedNode = null;
-        }
-
-        return result == Result.Ok;
-    }
-
     public void CreateNewScene<TNode>() where TNode : Node, new()
     {
         var rootNode = new TNode

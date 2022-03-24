@@ -84,7 +84,10 @@ internal class EditorHotKeyService
             {
                 if (m_sceneEditorContext.SelectedNode != null)
                 {
-                    m_sceneEditorContext.RemoveNode(m_sceneEditorContext.SelectedNode);
+                    var deleteNodeAction =
+                        new DeleteNodeAction(m_sceneEditorContext, m_sceneEditorContext.SelectedNode);
+                    
+                    m_actionExecutor.Execute(deleteNodeAction);
                 }
                 
                 return true;
