@@ -16,12 +16,13 @@ internal class Texture2DAssetRenderer : IGuiControlRenderer<Texture2DAsset?>
         m_assetManager = assetManager;
     }
 
-    public unsafe Texture2DAsset DrawControl(string label, Texture2DAsset? value, object? arguments = null)
+    public unsafe bool DrawControl(string label, ref Texture2DAsset? value, object? arguments = null)
     {
-        var result = value;
         AkGui.BeginField(label);
 
         string text = value?.FilePath ?? StringConstants.None;
+
+        bool result = false;
 
         ImGui.InputText("", ref text, 200, ImGuiInputTextFlags.ReadOnly);
         // TODO: Check payload before trying this?
@@ -34,8 +35,11 @@ internal class Texture2DAssetRenderer : IGuiControlRenderer<Texture2DAsset?>
 
                 if (handle.Target is string filePath && Path.GetExtension(filePath) == ".png")
                 {
-                    var asset = m_assetManager.Load<ITexture2D>(filePath) as Texture2DAsset;
-                    result = asset ?? result;
+                    if (m_assetManager.Load<ITexture2D>(filePath) is Texture2DAsset asset)
+                    {
+                        value = asset;
+                        result = true;
+                    }
                 }
             }
             
@@ -52,9 +56,17 @@ internal class Texture2DAssetRenderer : IGuiControlRenderer<Texture2DAsset?>
         return result;
     }
 
-    public object DrawControl(string label, object value, object? arguments = null)
+    public bool DrawControl(string label, ref object? value, object? arguments = null)
     {
-        return DrawControl(label, (Texture2DAsset)value, arguments);
+        var textureAsset = value as Texture2DAsset;
+
+        if (DrawControl(label, ref textureAsset, arguments))
+        {
+            value = textureAsset;
+            return true;
+        }
+
+        return false;
     }
 }
 

@@ -4,19 +4,28 @@ namespace Akytos.Editor.Renderers;
 
 internal class TextControlRenderer : IGuiControlRenderer<string>
 {
-    public string DrawControl(string label, string value, object? arguments = null)
+    public bool DrawControl(string label, ref string value, object? arguments = null)
     {
-        if (AkGui.InputText(label, ref value, 50))
-        {
-            return value;
-        }
-
-        return value;
+        return AkGui.InputText(label, ref value, 50);
     }
 
-    public object DrawControl(string label, object value, object? arguments = null)
+    public bool DrawControl(string label, ref object? value, object? arguments = null)
     {
-        return DrawControl(label, (string)value);
+        if (value == null)
+        {
+            Debug.LogError("String values cannot be null!");
+            return false;
+        }
+
+        string stringValue = (string) value;
+
+        if (DrawControl(label, ref stringValue, arguments))
+        {
+            value = stringValue;
+            return true;
+        }
+
+        return false;
     }
 }
 

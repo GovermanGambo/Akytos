@@ -1,6 +1,6 @@
 namespace Akytos.Editor.Renderers;
 
-public class BoolControlRenderer : IControlRendererNew<bool>
+public class BoolControlRenderer : IGuiControlRenderer<bool>
 {
     public bool DrawControl(string label, ref bool value, object? arguments = null)
     {

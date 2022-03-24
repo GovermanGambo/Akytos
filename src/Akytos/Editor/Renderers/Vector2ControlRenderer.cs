@@ -4,18 +4,27 @@ namespace Akytos.Editor.Renderers;
 
 public class Vector2ControlRenderer : IGuiControlRenderer<Vector2>
 {
-    public Vector2 DrawControl(string label, Vector2 value, object? arguments = null)
+    public bool DrawControl(string label, ref Vector2 value, object? arguments = null)
     {
-        if (AkGui.InputVector2(label, ref value))
-        {
-            return value;
-        }
-
-        return value;
+        return AkGui.InputVector2(label, ref value);
     }
 
-    public object DrawControl(string label, object value, object? arguments = null)
+    public bool DrawControl(string label, ref object? value, object? arguments = null)
     {
-        return DrawControl(label, (Vector2)value);
+        if (value == null)
+        {
+            Debug.LogError("Vector2 values cannot be null!");
+            return false;
+        }
+
+        var vector2 = (Vector2) value;
+
+        if (DrawControl(label, ref vector2, arguments))
+        {
+            value = vector2;
+            return true;
+        }
+
+        return false;
     }
 }

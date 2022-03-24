@@ -4,26 +4,33 @@ namespace Akytos.Editor.Renderers;
 
 public class IntControlRenderer : IGuiControlRenderer<int>
 {
-    public int DrawControl(string label, int value, object? arguments = null)
+    public bool DrawControl(string label, ref int value, object? arguments = null)
     {
         if (arguments is IntSliderAttribute attribute)
         {
-            if (AkGui.SliderInt(label, ref value, 1, attribute.Min, attribute.Max))
-            {
-                return value;
-            }
-        }
-        else if (AkGui.InputInteger(label, ref value))
-        {
-            return value;
+            return AkGui.SliderInt(label, ref value, 1, attribute.Min, attribute.Max);
         }
 
-        return value;
+        return AkGui.InputInteger(label, ref value);
     }
 
-    public object DrawControl(string label, object value, object? arguments = null)
+    public bool DrawControl(string label, ref object? value, object? arguments = null)
     {
-        return DrawControl(label, (int)value, arguments);
+        if (value == null)
+        {
+            Debug.LogError("Int values cannot be null!");
+            return false;
+        }
+
+        int intValue = (int) value;
+
+        if (DrawControl(label, ref intValue, arguments))
+        {
+            value = intValue;
+            return true;
+        }
+
+        return false;
     }
 }
 

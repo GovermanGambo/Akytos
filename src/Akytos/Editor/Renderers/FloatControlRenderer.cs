@@ -4,19 +4,28 @@ namespace Akytos.Editor.Renderers;
 
 internal class FloatControlRenderer : IGuiControlRenderer<float>
 {
-    public float DrawControl(string label, float value, object? arguments = null)
+    public bool DrawControl(string label, ref float value, object? arguments = null)
     {
-        if (AkGui.InputFloat(label, ref value))
-        {
-            return value;
-        }
-
-        return value;
+        return AkGui.InputFloat(label, ref value);
     }
 
-    public object DrawControl(string label, object value, object? arguments = null)
+    public bool DrawControl(string label, ref object? value, object? arguments = null)
     {
-        return DrawControl(label, (float)value);
+        if (value == null)
+        {
+            Debug.LogError("Float values cannot be null!");
+            return false;
+        }
+
+        float floatValue = (float) value;
+
+        if (DrawControl(label, ref floatValue, arguments))
+        {
+            value = floatValue;
+            return true;
+        }
+
+        return false;
     }
 }
 

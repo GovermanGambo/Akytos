@@ -4,12 +4,12 @@ namespace Akytos.Editor;
 
 public interface IGuiControlRenderer<T> : IGuiControlRenderer
 {
-    T DrawControl(string label, T value, object? arguments = null);
+    bool DrawControl(string label, ref T value, object? arguments = null);
 }
 
 public interface IGuiControlRenderer
 {
-    object DrawControl(string label, object value, object? arguments = null);
+    bool DrawControl(string label, ref object? value, object? arguments = null);
 }
 
 #endif
