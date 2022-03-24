@@ -21,10 +21,13 @@ internal class SceneLoader
         m_deserializer = new YamlDeserializer();
         var vector2Serializer = new Vector2SerializationSurrogate();
         var texture2DAssetSerializer = new Texture2DAssetSerializationSurrogate(assetManager);
+        var colorSerializer = new ColorSerializationSurrogate();
         m_serializer.AddSurrogate(texture2DAssetSerializer);
         m_serializer.AddSurrogate(vector2Serializer);
+        m_serializer.AddSurrogate(colorSerializer);
         m_deserializer.AddSurrogate(texture2DAssetSerializer);
         m_deserializer.AddSurrogate(vector2Serializer);
+        m_deserializer.AddSurrogate(colorSerializer);
     }
 
     /// <summary>

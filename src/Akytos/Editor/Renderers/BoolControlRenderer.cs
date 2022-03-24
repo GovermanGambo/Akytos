@@ -11,7 +11,8 @@ public class BoolControlRenderer : IGuiControlRenderer<bool>
     {
         if (value == null)
         {
-            throw new ArgumentException();
+            Debug.LogError("Bool value cannot be null!");
+            return false;
         }
         
         bool boolValue = (bool) value;

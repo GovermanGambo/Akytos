@@ -26,13 +26,13 @@ internal class SpriteRendererSystem
         m_spriteBatch.Begin(Camera);
         foreach (var spriteNode in nodes)
         {
-            if (!spriteNode.IsEnabled || spriteNode.Texture == null)
+            if (!spriteNode.IsEnabled || !spriteNode.IsVisible || spriteNode.Texture == null)
             {
                 continue;
             }
             
             m_spriteBatch.Draw(spriteNode.Texture, spriteNode.GlobalPosition, spriteNode.GlobalScale, 
-                spriteNode.GlobalRotation, Color.White, spriteNode.Id, spriteNode.IsCentered);
+                spriteNode.GlobalRotation, spriteNode.Modulate, spriteNode.Id, spriteNode.IsCentered);
         }
         m_spriteBatch.End();
     }

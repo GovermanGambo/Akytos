@@ -69,10 +69,10 @@ internal class SpriteBatch
         m_centeredQuadVertexPositions[2] = new Vector3(0.5f, 0.5f, 0.0f);
         m_centeredQuadVertexPositions[3] = new Vector3(-0.5f, 0.5f, 0.0f);
         
-        m_quadVertexPositions[0] = new Vector3(-1.0f, -1.0f, 0.0f);
-        m_quadVertexPositions[1] = new Vector3(0.0f, -1.0f, 0.0f);
-        m_quadVertexPositions[2] = new Vector3(0.0f, 0.0f, 0.0f);
-        m_quadVertexPositions[3] = new Vector3(-1.0f, 0.0f, 0.0f);
+        m_quadVertexPositions[0] = new Vector3(0.0f, -1.0f, 0.0f);
+        m_quadVertexPositions[1] = new Vector3(1.0f, -1.0f, 0.0f);
+        m_quadVertexPositions[2] = new Vector3(1.0f, 0.0f, 0.0f);
+        m_quadVertexPositions[3] = new Vector3(0.0f, 0.0f, 0.0f);
     }
 
     public void Begin(ICamera camera)
@@ -135,7 +135,7 @@ internal class SpriteBatch
 
         for (int i = 0; i < 4; i++)
         {
-            var vertex = CreateQuadVertex(i, transform, color, textureIndex, uv, objectId);
+            var vertex = CreateQuadVertex(i, transform, color, textureIndex, uv, objectId, centered);
             m_quadVertices[m_quadVertexCount] = vertex;
             m_quadVertexCount++;
         }
@@ -156,7 +156,7 @@ internal class SpriteBatch
     }
 
     private QuadVertex CreateQuadVertex(int index, Matrix4x4 transform, Color color, int textureIndex, Vector2[] uv,
-        int objectId, bool centered = false)
+        int objectId, bool centered)
     {
         var basePosition = centered ? m_centeredQuadVertexPositions[index] : m_quadVertexPositions[index];
         

@@ -16,6 +16,8 @@ internal class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.Register<IGuiControlRenderer<float>, FloatControlRenderer>();
         serviceRegistry.Register<IGuiControlRenderer<Vector2>, Vector2ControlRenderer>();
         serviceRegistry.Register<IGuiControlRenderer<Texture2DAsset>, Texture2DAssetRenderer>();
+        serviceRegistry.Register<IGuiControlRenderer<bool>, BoolControlRenderer>();
+        serviceRegistry.Register<IGuiControlRenderer<Color>, ColorControlRenderer>();
     }
 }
 

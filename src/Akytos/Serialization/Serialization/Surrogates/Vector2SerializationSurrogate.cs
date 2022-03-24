@@ -17,13 +17,16 @@ public class Vector2SerializationSurrogate : ISerializationSurrogate<Vector2>
     public Vector2 Deserialize(Scanner scanner)
     {
         scanner.Read<BlockMappingStart>();
+        
+        var ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+        ci.NumberFormat.CurrencyDecimalSeparator = ".";
 
         string x = scanner.ReadScalar("x");
         string y = scanner.ReadScalar("y");
         
         scanner.Read<BlockEnd>();
 
-        return new Vector2(float.Parse(x), float.Parse(y));
+        return new Vector2(float.Parse(x, NumberStyles.Any, ci), float.Parse(y, NumberStyles.Any, ci));
     }
 
     object ISerializationSurrogate.Deserialize(Scanner value)

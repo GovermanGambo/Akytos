@@ -126,8 +126,6 @@ internal class EditorLayer : ILayer
         m_panelManager.OnDrawGui();
 
         m_modalStack.OnDrawGui();
-        
-        ImGui.ShowDemoWindow();
 
         Dockspace.End();
     }

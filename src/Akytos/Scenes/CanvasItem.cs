@@ -2,8 +2,8 @@ namespace Akytos;
 
 public class CanvasItem : Node
 {
-    [SerializeField] private Color m_modulate;
-    [SerializeField] private bool m_isVisible;
+    [SerializeField] private Color m_modulate = Color.White;
+    [SerializeField] private bool m_isVisible = true;
     
     public CanvasItem() : base("NewCanvasItem")
     {

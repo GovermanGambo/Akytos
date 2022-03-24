@@ -96,14 +96,14 @@ internal class PropertyPanel : IEditorPanel
             if (guiControlRenderer != null)
             {
                 var attribute = serializedField.GetCustomAttribute<SerializeFieldAttribute>();
-                bool currentValue =
+                bool didChange =
                     guiControlRenderer.DrawControl(attribute.Name ?? serializedField.Name.SplitCamelCase(), ref fieldValue, attribute);
                 
                 //serializedField.SetValue(o, currentValue);
 
-                if (currentValue)
+                if (didChange)
                 {
-                    var action = new SetNodeFieldAction(o, serializedField, currentValue);
+                    var action = new SetNodeFieldAction(o, serializedField, fieldValue);
                     m_actionExecutor.Execute(action);
                 }
             }

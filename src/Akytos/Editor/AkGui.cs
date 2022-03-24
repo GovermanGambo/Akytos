@@ -29,7 +29,7 @@ public static class AkGui
     {
         BeginField(label);   
         
-        bool didChange = ImGui.InputText(string.Empty, ref value, (uint) maxLength);
+        bool didChange = ImGui.InputText(string.Empty, ref value, (uint) maxLength, ImGuiInputTextFlags.EnterReturnsTrue);
         
         EndField();
 
@@ -40,7 +40,7 @@ public static class AkGui
     {
         BeginField(label);
 
-        bool didChange = ImGui.Checkbox(label, ref value);
+        bool didChange = ImGui.Checkbox(string.Empty, ref value);
         
         EndField();
 
@@ -56,6 +56,24 @@ public static class AkGui
         EndField();
         
         return didChange;
+    }
+
+    public static bool InputColor(string label, ref Color value)
+    {
+        BeginField(label);
+
+        var vector4 = (Vector4)value;
+        bool didChange = ImGui.ColorEdit4(string.Empty, ref vector4, ImGuiColorEditFlags.NoInputs);
+        
+        EndField();
+
+        if (didChange)
+        {
+            value = new Color(vector4);
+            return true;
+        }
+
+        return false;
     }
 
     public static bool SliderInt(string label, ref int value, int speed = 1, int min = 0, int max = 10)
