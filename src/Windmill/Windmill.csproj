@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <Configurations>Debug;Release;Debug_Editor;Release_Editor</Configurations>
         <Platforms>AnyCPU</Platforms>
+        <ApplicationIcon>Resources/Akytos.ico</ApplicationIcon>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
@@ -134,5 +135,10 @@
 
     <ItemGroup>
       <Folder Include="assets\fonts\open_sans" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\Akytos.ico" />
+      <EmbeddedResource Include="Resources\Akytos.ico" />
     </ItemGroup>
 </Project>

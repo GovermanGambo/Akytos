@@ -205,6 +205,8 @@ internal class CreateNodeModal : IModal
         var addNodeAction = new AddNodeAction(node, rootNode, m_sceneEditorContext);
         m_actionExecutor.Execute(addNodeAction);
 
+        m_sceneEditorContext.SelectedNode = node;
+        
         return Result.Ok;
     }
 
