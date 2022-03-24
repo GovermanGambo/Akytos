@@ -13,6 +13,7 @@ public class Node
     [SerializeField] private string m_name;
 
     private SceneTree? m_sceneTree;
+    private NodePath? m_currentPath;
 
     public Node()
         : this("NewNode")
@@ -120,7 +121,12 @@ public class Node
 
         string pathString = Owner != null ? $"{ownerPath}/{Name}" : $"/{Name}";
 
-        return new NodePath(pathString);
+        if (pathString != m_currentPath)
+        {
+            m_currentPath = new NodePath(pathString);
+        }
+
+        return m_currentPath;
     }
 
     /// <summary>

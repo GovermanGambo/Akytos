@@ -31,7 +31,8 @@ internal class SpriteRendererSystem
                 continue;
             }
             
-            m_spriteBatch.Draw(spriteNode.Texture, spriteNode.GlobalPosition, spriteNode.GlobalScale, spriteNode.GlobalRotation, Color.White, spriteNode.Id);
+            m_spriteBatch.Draw(spriteNode.Texture, spriteNode.GlobalPosition, spriteNode.GlobalScale, 
+                spriteNode.GlobalRotation, Color.White, spriteNode.Id, spriteNode.IsCentered);
         }
         m_spriteBatch.End();
     }

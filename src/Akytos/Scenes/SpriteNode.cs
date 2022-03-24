@@ -7,6 +7,7 @@ namespace Akytos;
 public class SpriteNode : Node2D
 {
     [SerializeField("Texture")] private Texture2DAsset? m_textureAsset;
+    [SerializeField] private bool m_isCentered;
 
     public SpriteNode() : base("NewSpriteNode")
     {
@@ -16,7 +17,12 @@ public class SpriteNode : Node2D
     {
     }
 
-    public bool IsCentered { get; set; }
+    public bool IsCentered
+    {
+        get => m_isCentered;
+        set => m_isCentered = value;
+    }
+
     public bool FlipHorizontal { get; set; }
     public bool FlipVertical { get; set; }
     public int Frame { get; set; }

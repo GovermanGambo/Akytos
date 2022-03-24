@@ -36,6 +36,17 @@ public static class AkGui
         return didChange;
     }
 
+    public static bool InputBool(string label, ref bool value)
+    {
+        BeginField(label);
+
+        bool didChange = ImGui.Checkbox(label, ref value);
+        
+        EndField();
+
+        return didChange;
+    }
+
     public static bool InputFloat(string label, ref float value, float step = 0.1f)
     {
         BeginField(label);

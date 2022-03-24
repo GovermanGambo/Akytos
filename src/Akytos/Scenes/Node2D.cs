@@ -2,7 +2,7 @@
 
 namespace Akytos
 {
-    public class Node2D : Node
+    public class Node2D : CanvasItem
     {
         [SerializeField] private Vector2 position;
         [SerializeField] private Vector2 scale = Vector2.One;

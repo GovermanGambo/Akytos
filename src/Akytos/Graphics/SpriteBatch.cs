@@ -12,14 +12,14 @@ internal class SpriteBatch
     private const int MaxTextureSlots = 32;
 
     private readonly IGraphicsDevice m_graphicsDevice;
-    private readonly IGraphicsResourceFactory m_graphicsResourceFactory;
-    
+
     private readonly QuadVertex[] m_quadVertices;
     private readonly IVertexArrayObject<float, uint> m_quadVertexArray;
     private readonly IBufferObject<float> m_quadVertexBuffer;
     private readonly IShaderProgram m_textureShader;
     private readonly ITexture2D[] m_textureSlots;
     private readonly Vector3[] m_quadVertexPositions = new Vector3[4];
+    private readonly Vector3[] m_centeredQuadVertexPositions = new Vector3[4];
 
     private int m_quadElementCount;
     private int m_quadVertexCount;
@@ -28,9 +28,8 @@ internal class SpriteBatch
     public SpriteBatch(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory)
     {
         m_graphicsDevice = graphicsDevice;
-        m_graphicsResourceFactory = graphicsResourceFactory;
 
-        m_quadVertexArray = m_graphicsResourceFactory.CreateVertexArray<float, uint>();
+        m_quadVertexArray = graphicsResourceFactory.CreateVertexArray<float, uint>();
         m_quadVertexArray.SetBufferLayout(new BufferLayout(new List<BufferElement>
         {
             new(ShaderDataType.Float3, "a_Position"),
@@ -47,10 +46,10 @@ internal class SpriteBatch
         m_quadVertices = new QuadVertex[MaxVertices];
 
         uint[] indices = CreateElements();
-        var quadElementBuffer = m_graphicsResourceFactory.CreateBuffer<uint>(BufferTarget.ElementArrayBuffer, indices);
+        var quadElementBuffer = graphicsResourceFactory.CreateBuffer<uint>(BufferTarget.ElementArrayBuffer, indices);
         m_quadVertexArray.SetElementArrayBuffer(quadElementBuffer);
 
-        var whiteTexture = m_graphicsResourceFactory.CreateTexture2D(new Span<byte>(new byte[] { 255, 255, 255, 255 }), 1, 1);
+        var whiteTexture = graphicsResourceFactory.CreateTexture2D(new Span<byte>(new byte[] { 255, 255, 255, 255 }), 1, 1);
 
         int[] samplers = new int[MaxTextureSlots];
         for (int i = 0; i < MaxTextureSlots; i++)
@@ -58,17 +57,22 @@ internal class SpriteBatch
             samplers[i] = i;
         }
 
-        m_textureShader = m_graphicsResourceFactory.CreateShader(Asset.GetAssetPath("shaders/Sprites_Default.glsl"));
+        m_textureShader = graphicsResourceFactory.CreateShader(Asset.GetAssetPath("shaders/Sprites_Default.glsl"));
         m_textureShader.Bind();
         m_textureShader.SetIntArray("u_Textures", samplers);
 
         m_textureSlots = new ITexture2D[MaxTextureSlots];
         m_textureSlots[0] = whiteTexture;
         
-        m_quadVertexPositions[0] = new Vector3(-0.5f, -0.5f, 0.0f);
-        m_quadVertexPositions[1] = new Vector3(0.5f, -0.5f, 0.0f);
-        m_quadVertexPositions[2] = new Vector3(0.5f, 0.5f, 0.0f);
-        m_quadVertexPositions[3] = new Vector3(-0.5f, 0.5f, 0.0f);
+        m_centeredQuadVertexPositions[0] = new Vector3(-0.5f, -0.5f, 0.0f);
+        m_centeredQuadVertexPositions[1] = new Vector3(0.5f, -0.5f, 0.0f);
+        m_centeredQuadVertexPositions[2] = new Vector3(0.5f, 0.5f, 0.0f);
+        m_centeredQuadVertexPositions[3] = new Vector3(-0.5f, 0.5f, 0.0f);
+        
+        m_quadVertexPositions[0] = new Vector3(-1.0f, -1.0f, 0.0f);
+        m_quadVertexPositions[1] = new Vector3(0.0f, -1.0f, 0.0f);
+        m_quadVertexPositions[2] = new Vector3(0.0f, 0.0f, 0.0f);
+        m_quadVertexPositions[3] = new Vector3(-1.0f, 0.0f, 0.0f);
     }
 
     public void Begin(ICamera camera)
@@ -91,7 +95,7 @@ internal class SpriteBatch
         Draw(texture2D, position, Vector2.One, 0f, Color.White, objectId);
     }
     
-    public void Draw(ITexture2D texture2D, Vector2 position, Vector2 scale, float rotation, Color color, int objectId)
+    public void Draw(ITexture2D texture2D, Vector2 position, Vector2 scale, float rotation, Color color, int objectId, bool centered = false)
     {
         if (m_quadElementCount > MaxElements)
         {
@@ -152,10 +156,12 @@ internal class SpriteBatch
     }
 
     private QuadVertex CreateQuadVertex(int index, Matrix4x4 transform, Color color, int textureIndex, Vector2[] uv,
-        int objectId)
+        int objectId, bool centered = false)
     {
+        var basePosition = centered ? m_centeredQuadVertexPositions[index] : m_quadVertexPositions[index];
+        
         return new QuadVertex(
-            Vector3.Transform(m_quadVertexPositions[index], transform),
+            Vector3.Transform(basePosition, transform),
             color,
             uv[index],
             textureIndex,
