@@ -14,6 +14,16 @@ public class AppConfiguration : IConfiguration
         m_configurationFile = new ConfigurationFile(filePath);
     }
 
+    public int? ReadInt(string key)
+    {
+        return m_configurationFile.ReadInt(key);
+    }
+
+    public float? ReadFloat(string key)
+    {
+        return m_configurationFile.ReadFloat(key);
+    }
+
     public string? ReadString(string key)
     {
         return m_configurationFile.ReadString(key);

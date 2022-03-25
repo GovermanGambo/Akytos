@@ -4,56 +4,78 @@ namespace Akytos.Configuration;
 
 public class ConfigurationFile : IConfiguration
 {
-    private readonly Dictionary<string, string> m_configuration;
+    private readonly Dictionary<string, Dictionary<string, string>> m_configuration;
 
     private readonly string m_filePath;
+    private readonly IniSerializer m_iniSerializer;
 
     public ConfigurationFile(string path)
     {
         m_filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, path);
-        m_configuration = LoadConfiguration()!;
+        string ini = GetFileContent();
+        m_iniSerializer = new IniSerializer();
+        m_configuration = m_iniSerializer.Deserialize(ini);
+    }
+
+    public int? ReadInt(string key)
+    {
+        string? value = ReadString(key);
+
+        return value != null ? int.Parse(value) : null;
+    }
+
+    public float? ReadFloat(string key)
+    {
+        string? value = ReadString(key);
+
+        return value != null ? float.Parse(value) : null;
     }
 
     public string? ReadString(string key)
     {
-        m_configuration.TryGetValue(key, out string? value);
+        (string categoryKey, key) = ParseKey(key);
+
+        m_configuration.TryGetValue(categoryKey, out var category);
+
+        if (category == null)
+        {
+            return null;
+        }
+        
+        category.TryGetValue(key, out string? value);
 
         return value;
     }
 
     public void WriteString(string key, string value)
     {
-        if (m_configuration.ContainsKey(key))
+        (string categoryKey, key) = ParseKey(key);
+
+        if (!m_configuration.ContainsKey(categoryKey))
         {
-            m_configuration[key] = value;
+            m_configuration[categoryKey] = new Dictionary<string, string>();
         }
-        else
-        {
-            m_configuration.Add(key, value);
-        }
+
+        m_configuration[categoryKey][key] = value;
     }
 
     public void Save()
     {
-        string fileContent = string.Join(PlatformConstants.NewLine, m_configuration.Select(c => c.Key + " = " + c.Value));
-        
+        string fileContent = m_iniSerializer.Serialize(m_configuration);
+
         File.WriteAllText(m_filePath, fileContent);
     }
 
-    private Dictionary<string, string> LoadConfiguration()
+    private static (string, string) ParseKey(string key)
     {
-        string fileContent = GetFileContent();
+        string[] segments = key.Split("/");
 
-        string[] lines = fileContent.Split(PlatformConstants.NewLine);
-
-        if (lines.Length == 1 && lines[0] == "")
+        if (segments.Length != 2)
         {
-            return new Dictionary<string, string>();
+            throw new ArgumentException("Configuration key must have exactly two levels!");
         }
 
-        var dictionary = lines.ToDictionary(s => s.Split(" ")[0], s => s.Split(" ")[2]);
-
-        return dictionary;
+        return (segments[0], segments[1]);
     }
 
     private string GetFileContent()
