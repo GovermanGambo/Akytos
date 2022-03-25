@@ -93,7 +93,7 @@ internal class ProjectManagerModal : IModal
 
             foreach (var project in projects)
             {
-                if (ImGui.Selectable(project.ProjectName))
+                if (ImGui.Selectable(project.ProjectName, m_selectedProject == project, ImGuiSelectableFlags.SpanAllColumns))
                 {
                     m_selectedProject = project;
                 }
