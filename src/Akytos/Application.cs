@@ -1,28 +1,29 @@
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using Akytos.Events;
 using Akytos.Graphics;
 using Akytos.Layers;
 using Akytos.Windowing;
 using LightInject;
-using YamlDotNet.Serialization;
 
 [assembly: InternalsVisibleTo("Windmill")]
 [assembly: InternalsVisibleTo("Akytos.Tests")]
+
 namespace Akytos;
 
 public abstract class Application : IDisposable
 {
     private static Application s_application;
-    
-    private readonly IServiceContainer m_serviceContainer;
-    private readonly IGameWindow m_window;
     private readonly ILayerStack m_layerStack;
 
-    private ImGuiLayer m_imGuiLayer = null!;
-    private IGraphicsDevice m_graphicsDevice = null!;
-    private float m_lastFrameTime;
+    private readonly IServiceContainer m_serviceContainer;
+    private readonly IGameWindow m_window;
     private bool m_disposed;
+    private IGraphicsDevice m_graphicsDevice = null!;
+
+    private ImGuiLayer m_imGuiLayer = null!;
+    private float m_lastFrameTime;
+
+    private bool m_shouldRestartOnExit;
 
     protected Application(string title, int initialWindowWidth, int initialWindowHeight)
     {
@@ -34,35 +35,44 @@ public abstract class Application : IDisposable
 
         s_application = this;
     }
-    
+
+    public void Dispose()
+    {
+        Dispose(true);
+
+        GC.SuppressFinalize(this);
+    }
+
     internal void Run()
     {
         OnInitialize();
-        
+
         Debug.LogInformation("Application {0} started successfully.", m_window.Title);
-        
+
         while (!m_window.IsClosing)
         {
             m_window.OnUpdate();
-            
-            float currentTime = (float)m_window.Time;
+
+            float currentTime = (float) m_window.Time;
             var deltaTime = new DeltaTime(currentTime - m_lastFrameTime);
             m_lastFrameTime = currentTime;
-            
+
             foreach (var layer in m_layerStack)
-            {
                 if (layer.IsEnabled)
-                {
                     layer.OnUpdate(deltaTime);
-                }
-            }
 
             UpdateImGui();
-            
+
             m_window.PollEvents();
         }
-        
+
         Dispose();
+
+        if (m_shouldRestartOnExit)
+        {
+            OnRestart();
+            m_shouldRestartOnExit = false;
+        }
     }
 
     private void UpdateImGui()
@@ -70,12 +80,8 @@ public abstract class Application : IDisposable
         if (m_imGuiLayer.IsEnabled)
         {
             foreach (var layer in m_layerStack)
-            {
                 if (layer.IsEnabled)
-                {
                     layer.OnDrawGui();
-                }
-            }
 
             m_imGuiLayer.OnRender();
         }
@@ -85,9 +91,9 @@ public abstract class Application : IDisposable
     {
         var layer = m_layerStack.PushLayer<TLayer>();
         layer.OnAttach();
-        
+
         Debug.LogInformation("Pushed layer {0}.", typeof(TLayer).Name);
-        
+
         return layer;
     }
 
@@ -103,21 +109,28 @@ public abstract class Application : IDisposable
         m_graphicsDevice = m_serviceContainer.GetInstance<IGraphicsDevice>();
     }
 
-    public void Close()
+    protected abstract void OnRestart();
+
+    private void Close()
     {
         m_window.Close();
     }
-    
+
+    /// <summary>
+    ///     Exits the application
+    /// </summary>
     public static void Exit()
     {
         s_application.Close();
     }
 
-    public void Dispose()
+    /// <summary>
+    ///     Exits the current application and attempts to start it again.
+    /// </summary>
+    public static void Restart()
     {
-        Dispose(true);
-
-        GC.SuppressFinalize(this);
+        s_application.m_shouldRestartOnExit = true;
+        s_application.Close();
     }
 
     private IGameWindow CreateWindow(string title, int initialWindowWidth, int initialWindowHeight)
@@ -136,14 +149,10 @@ public abstract class Application : IDisposable
     {
         var dispatcher = new EventDispatcher(e);
         dispatcher.Dispatch<WindowResizedEvent>(OnWindowResized);
-        
+
         foreach (var layer in m_layerStack.Reverse())
-        {
             if (layer.IsEnabled)
-            {
                 layer.OnEvent(e);
-            }
-        }
     }
 
     private bool OnWindowResized(WindowResizedEvent e)
@@ -158,10 +167,8 @@ public abstract class Application : IDisposable
         if (m_disposed) return;
 
         if (disposing)
-        {
-            // Everything registered in service container will get disposed
+            // Every singleton registered in service container will get disposed
             m_serviceContainer.Dispose();
-        }
 
         m_disposed = true;
     }

@@ -14,6 +14,11 @@ public class AppConfiguration : IConfiguration
         m_configurationFile = new ConfigurationFile(filePath);
     }
 
+    public Dictionary<string, string> GetSection(string key)
+    {
+        return m_configurationFile.GetSection(key);
+    }
+
     public int? ReadInt(string key)
     {
         return m_configurationFile.ReadInt(key);
@@ -27,6 +32,11 @@ public class AppConfiguration : IConfiguration
     public string? ReadString(string key)
     {
         return m_configurationFile.ReadString(key);
+    }
+
+    public bool Remove(string key)
+    {
+        return m_configurationFile.Remove(key);
     }
 
     public void WriteString(string key, string value)

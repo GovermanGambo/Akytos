@@ -17,6 +17,16 @@ public class ConfigurationFile : IConfiguration
         m_configuration = m_iniSerializer.Deserialize(ini);
     }
 
+    public Dictionary<string, string> GetSection(string key)
+    {
+        if (!m_configuration.ContainsKey(key))
+        {
+            return new Dictionary<string, string>();
+        }
+        
+        return m_configuration[key];
+    }
+
     public int? ReadInt(string key)
     {
         string? value = ReadString(key);
@@ -45,6 +55,20 @@ public class ConfigurationFile : IConfiguration
         category.TryGetValue(key, out string? value);
 
         return value;
+    }
+
+    public bool Remove(string key)
+    {
+        (string categoryKey, key) = ParseKey(key);
+
+        m_configuration.TryGetValue(categoryKey, out var category);
+
+        if (category == null)
+        {
+            return false;
+        }
+
+        return category.Remove(key);
     }
 
     public void WriteString(string key, string value)

@@ -28,14 +28,14 @@ internal class EditorLayer : ILayer
     private readonly ModalStack m_modalStack;
     private readonly EditorHotKeyService m_editorHotKeyService;
     private readonly SceneEditorContext m_sceneEditorContext;
-    private readonly ProjectManager m_projectManager;
+    private readonly IProjectManager m_projectManager;
 
     private IFramebuffer m_framebuffer = null!;
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager,
         MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService, 
-        SceneEditorContext sceneEditorContext, ProjectManager projectManager)
+        SceneEditorContext sceneEditorContext, IProjectManager projectManager)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
@@ -60,6 +60,7 @@ internal class EditorLayer : ILayer
     {
         if (!m_projectManager.LoadLastOpenedProject())
         {
+            // TODO: Display project manager window at once
             m_projectManager.CreateNewProject("TestProject", "C:/Akytos/TestProject");
         }
         
