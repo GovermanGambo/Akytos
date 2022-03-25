@@ -1,5 +1,8 @@
 
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Akytos;
 using Akytos.Assets;
 using Akytos.Configuration;
@@ -62,7 +65,7 @@ internal class EditorLayer : ILayer
         {
             m_projectManager.CreateNewProject("TestProject", "C:/Akytos/TestProject");
         }
-        
+
         var framebufferSpecification = new FrameBufferSpecification
         {
             Width = (uint)m_editorViewport.Width,
@@ -88,7 +91,7 @@ internal class EditorLayer : ILayer
 
         // TODO: Temporary Scene Setup
 
-        string? initialScene = AkytosProject.CurrentProject?.Configuration.ReadString("InitialScene");
+        string? initialScene = m_projectManager.CurrentProject.Configuration.ReadString("InitialScene");
 
         if (initialScene != null)
         {

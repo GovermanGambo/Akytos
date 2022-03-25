@@ -3,7 +3,7 @@ using Akytos.Configuration;
 
 namespace Akytos.ProjectManagement;
 
-public class ProjectManager
+internal class ProjectManager
 {
     private readonly AppConfiguration m_appConfiguration;
 
@@ -11,6 +11,8 @@ public class ProjectManager
     {
         m_appConfiguration = appConfiguration;
     }
+
+    public AkytosProject CurrentProject { get; private set; } = null!;
 
     public bool LoadLastOpenedProject()
     {
@@ -22,7 +24,8 @@ public class ProjectManager
         }
 
         var project = AkytosProject.Load(lastOpenedProjectDirectory);
-        AkytosProject.CurrentProject = project;
+        CurrentProject = project;
+        AkytosProject.CurrentWorkingDirectory = CurrentProject.ProjectDirectory;
 
         return true;
     }
@@ -30,8 +33,9 @@ public class ProjectManager
     public void CreateNewProject(string projectName, string projectDirectory)
     {
         var project = new AkytosProject(projectName, projectDirectory);
-
-        AkytosProject.CurrentProject = project;
+        
+        CurrentProject = project;
+        AkytosProject.CurrentWorkingDirectory = CurrentProject.ProjectDirectory;
         
         m_appConfiguration.WriteString("LastProjectDirectory", projectDirectory);
         m_appConfiguration.Save();
