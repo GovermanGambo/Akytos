@@ -3,6 +3,7 @@ using ImGuiNET;
 using Windmill.Actions;
 using Windmill.Modals;
 using Windmill.Panels;
+using Windmill.Resources;
 
 namespace Windmill.Services;
 
@@ -27,21 +28,21 @@ internal class MenuService
         {
             DrawFileMenu();
 
-            if (ImGui.BeginMenu("Edit"))
+            if (ImGui.BeginMenu(LocalizedStrings.Edit))
             {
-                if (ImGui.MenuItem("Undo", "Ctrl+Z", false, m_actionExecutor.CanUndo))
+                if (ImGui.MenuItem(LocalizedStrings.Undo, "Ctrl+Z", false, m_actionExecutor.CanUndo))
                 {
                     m_actionExecutor.Undo();
                 }
 
-                if (ImGui.MenuItem("Redo", "Ctrl+Y", false, m_actionExecutor.CanRedo))
+                if (ImGui.MenuItem(LocalizedStrings.Redo, "Ctrl+Y", false, m_actionExecutor.CanRedo))
                 {
                     m_actionExecutor.Redo();
                 }
                 ImGui.EndMenu();
             }
 
-            if (ImGui.BeginMenu("Layout"))
+            if (ImGui.BeginMenu(LocalizedStrings.Layout))
             {
                 foreach (var panel in m_panelManager)
                 {
@@ -58,21 +59,21 @@ internal class MenuService
 
     private void DrawFileMenu()
     {
-        if (ImGui.BeginMenu("File"))
+        if (ImGui.BeginMenu(LocalizedStrings.File))
         {
-            if (ImGui.MenuItem("New scene", "Ctrl+N"))
+            if (ImGui.MenuItem(LocalizedStrings.NewScene, "Ctrl+N"))
             {
                 m_editorContext.CreateNewScene<Node2D>();
             }
 
-            if (ImGui.MenuItem("Open scene...", "Ctrl+O"))
+            if (ImGui.MenuItem(LocalizedStrings.OpenScene, "Ctrl+O"))
             {
                 m_modalStack.PushModal<LoadSceneModal>();
             }
             
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Save scene", "Ctrl+S"))
+            if (ImGui.MenuItem(LocalizedStrings.SaveScene, "Ctrl+S"))
             {
                 if (m_editorContext.CurrentSceneFilename == null)
                 {
@@ -84,14 +85,14 @@ internal class MenuService
                 }
             }
 
-            if (ImGui.MenuItem("Save scene as...", "Ctrl+Shift+S"))
+            if (ImGui.MenuItem(LocalizedStrings.SaveSceneAs, "Ctrl+Shift+S"))
             {
                 m_modalStack.PushModal<SaveSceneModal>();
             }
             
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Exit", "Ctrl+X"))
+            if (ImGui.MenuItem(LocalizedStrings.Exit, "Ctrl+X"))
             {
                 Application.Exit();
             }

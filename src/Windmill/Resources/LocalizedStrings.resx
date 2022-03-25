@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="NewScene" xml:space="preserve">
+        <value>New scene</value>
+    </data>
+    <data name="OpenScene" xml:space="preserve">
+        <value>Open scene...</value>
+    </data>
+    <data name="Exit" xml:space="preserve">
+        <value>Exit</value>
+    </data>
+    <data name="SaveScene" xml:space="preserve">
+        <value>Save scene</value>
+    </data>
+    <data name="SaveSceneAs" xml:space="preserve">
+        <value>Save scene as...</value>
+    </data>
+    <data name="File" xml:space="preserve">
+        <value>File</value>
+    </data>
+    <data name="Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
+    <data name="Layout" xml:space="preserve">
+        <value>Layout</value>
+    </data>
+    <data name="Undo" xml:space="preserve">
+        <value>Undo</value>
+    </data>
+    <data name="Redo" xml:space="preserve">
+        <value>Redo</value>
+    </data>
+    <data name="Assets" xml:space="preserve">
+        <value>Assets</value>
+    </data>
+    <data name="Viewport" xml:space="preserve">
+        <value>Viewport</value>
+    </data>
+    <data name="Properties" xml:space="preserve">
+        <value>Properties</value>
+    </data>
+    <data name="Cancel" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="AddNode_Button" xml:space="preserve">
+        <value>Add node...</value>
+    </data>
+    <data name="Delete" xml:space="preserve">
+        <value>Delete</value>
+    </data>
+    <data name="AddNode" xml:space="preserve">
+        <value>Add node</value>
+    </data>
+    <data name="Open" xml:space="preserve">
+        <value>Open</value>
+    </data>
+    <data name="Save" xml:space="preserve">
+        <value>Save</value>
+    </data>
+    <data name="SceneHierarchy" xml:space="preserve">
+        <value>Scene hierarchy</value>
+    </data>
+    <data name="AddChild" xml:space="preserve">
+        <value>Add child...</value>
+    </data>
+</root>

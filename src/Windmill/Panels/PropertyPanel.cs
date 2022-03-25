@@ -8,6 +8,7 @@ using Akytos.Utilities;
 using ImGuiNET;
 using LightInject;
 using Windmill.Actions;
+using Windmill.Resources;
 using Windmill.Services;
 
 namespace Windmill.Panels;
@@ -30,7 +31,7 @@ internal class PropertyPanel : IEditorPanel
         
     }
 
-    public string DisplayName => "Properties";
+    public string DisplayName => LocalizedStrings.Properties;
     public bool IsEnabled { get; set; } = true;
 
     public void OnDrawGui()

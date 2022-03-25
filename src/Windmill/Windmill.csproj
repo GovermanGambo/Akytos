@@ -140,5 +140,17 @@
     <ItemGroup>
       <None Remove="Resources\Akytos.ico" />
       <EmbeddedResource Include="Resources\Akytos.ico" />
+      <EmbeddedResource Update="Resources\LocalizedStrings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>LocalizedStrings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources\LocalizedStrings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>LocalizedStrings.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

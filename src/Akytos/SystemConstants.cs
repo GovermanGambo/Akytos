@@ -8,5 +8,6 @@ internal static class SystemConstants
         public const string AssetsSubDirectory = "Assets";
         public const string ProjectFileExtension = ".akproj";
         public const string SceneFileExtension = ".ascn";
+        public const string AssetsDirectoryPrefix = "Assets://";
     }
 }

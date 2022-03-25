@@ -5,6 +5,7 @@ using Akytos;
 using Akytos.Events;
 using ImGuiNET;
 using Windmill.Actions;
+using Windmill.Resources;
 using Windmill.Services;
 using Math = System.Math;
 
@@ -31,7 +32,7 @@ internal class CreateNodeModal : IModal
             .ToArray();
     }
 
-    public string Name => "Create Node";
+    public string Name => LocalizedStrings.AddNode;
 
     public bool IsOpen
     {
@@ -88,7 +89,7 @@ internal class CreateNodeModal : IModal
         if (ImGui.InputText("", ref searchText, 50)) m_searchTerm = searchText;
 
         ImGui.SameLine();
-        if (ImGui.Button("Add"))
+        if (ImGui.Button(LocalizedStrings.AddNode_Button))
             if (m_selectedNodeType != null)
             {
                 var result = CreateNode(m_selectedNodeType);
