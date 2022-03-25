@@ -123,9 +123,9 @@ internal class FileDialogModal : IModal
         bool canSave = !(m_filename == string.Empty || m_filename.IndexOfAny(Path.GetInvalidFileNameChars()) != -1);
         if (ImGui.Button("Save") && canSave)
         {
-            if (!m_filename.EndsWith(".ascn"))
+            if (!m_filename.EndsWith(SystemConstants.FileSystem.SceneFileExtension))
             {
-                m_filename += ".ascn";
+                m_filename += SystemConstants.FileSystem.SceneFileExtension;
             }
             
             m_editorContext.SaveSceneAs(Path.Combine(CurrentDirectory, m_filename));

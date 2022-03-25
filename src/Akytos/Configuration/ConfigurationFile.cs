@@ -2,13 +2,13 @@ using System.Reflection;
 
 namespace Akytos.Configuration;
 
-public class ConfigurationFile : IConfiguration
+internal class ConfigurationFile : IConfiguration
 {
     private readonly Dictionary<string, Dictionary<string, string>> m_configuration;
 
     private readonly string m_filePath;
     private readonly IniSerializer m_iniSerializer;
-
+    
     public ConfigurationFile(string path)
     {
         m_filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, path);

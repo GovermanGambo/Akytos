@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using Akytos;
 using Akytos.Assets;
 using Akytos.Events;
 using ImGuiNET;
@@ -82,7 +83,7 @@ internal class LoadSceneModal : IModal
             m_currentSubDirectory = GetPathWithoutPrefix(displayFilePath);
 
         float height = ImGui.GetFrameHeight() - ImGui.GetTextLineHeightWithSpacing() * 2f - 10f;
-
+        
         if (ImGui.BeginChildFrame(ImGui.GetID("frame"),
                 new Vector2(ImGui.GetWindowWidth(), height)))
         {
@@ -102,11 +103,9 @@ internal class LoadSceneModal : IModal
 
         ImGui.NextColumn();
 
-        bool canLoad = !(m_filename == string.Empty || m_filename.IndexOfAny(Path.GetInvalidFileNameChars()) != -1);
+        bool canLoad = m_filename != string.Empty && m_filename.IndexOfAny(Path.GetInvalidFileNameChars()) == -1 && m_filename.EndsWith(SystemConstants.FileSystem.SceneFileExtension);
         if (ImGui.Button("Load") && canLoad)
         {
-            if (!m_filename.EndsWith(".ascn")) m_filename += ".ascn";
-
             m_editorContext.LoadScene(Path.Combine(m_currentDirectory, m_filename));
             IsOpen = false;
         }

@@ -5,7 +5,7 @@ namespace Akytos.ProjectManagement;
 
 internal class AkytosProject
 {
-    private const string ProjectExtension = ".akproj";
+    private const string ProjectExtension = SystemConstants.FileSystem.ProjectFileExtension;
 
     public AkytosProject(string projectName, string projectDirectory)
     {

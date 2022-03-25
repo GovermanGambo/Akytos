@@ -1,6 +1,6 @@
 namespace Akytos.Configuration;
 
-public class IniSerializer
+internal class IniSerializer
 {
     public string Serialize(Dictionary<string, Dictionary<string, string>> dictionary)
     {

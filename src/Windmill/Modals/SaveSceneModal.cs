@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using Akytos;
 using Akytos.Assets;
 using Akytos.Events;
 using ImGuiNET;
@@ -106,7 +107,7 @@ internal class SaveSceneModal : IModal
         var canSave = !(m_filename == string.Empty || m_filename.IndexOfAny(Path.GetInvalidFileNameChars()) != -1);
         if (ImGui.Button("Save") && canSave)
         {
-            if (!m_filename.EndsWith(".ascn")) m_filename += ".ascn";
+            if (!m_filename.EndsWith(SystemConstants.FileSystem.SceneFileExtension)) m_filename += SystemConstants.FileSystem.SceneFileExtension;
 
             m_editorContext.SaveSceneAs(Path.Combine(CurrentDirectory, m_filename));
             IsOpen = false;

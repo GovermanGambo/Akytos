@@ -2,11 +2,11 @@ using System.Reflection;
 
 namespace Akytos.Configuration;
 
-public class AppConfiguration : IConfiguration
+internal class AppConfiguration : IConfiguration
 {
     private const string ConfigurationFileName = "Akytos.ini";
 
-    private readonly ConfigurationFile m_configurationFile;
+    private readonly IConfiguration m_configurationFile;
 
     public AppConfiguration()
     {
