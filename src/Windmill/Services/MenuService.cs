@@ -92,6 +92,13 @@ internal class MenuService
             
             ImGui.Separator();
 
+            if (ImGui.MenuItem(LocalizedStrings.ProjectManager))
+            {
+                m_modalStack.PushModal<ProjectManagerModal>();
+            }
+            
+            ImGui.Separator();
+
             if (ImGui.MenuItem(LocalizedStrings.Exit, "Ctrl+X"))
             {
                 Application.Exit();

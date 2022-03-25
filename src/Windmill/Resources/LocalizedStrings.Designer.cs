@@ -170,5 +170,17 @@ namespace Windmill.Resources {
                 return ResourceManager.GetString("AddChild", resourceCulture);
             }
         }
+        
+        internal static string ProjectManager {
+            get {
+                return ResourceManager.GetString("ProjectManager", resourceCulture);
+            }
+        }
+        
+        internal static string PreviousProjects {
+            get {
+                return ResourceManager.GetString("PreviousProjects", resourceCulture);
+            }
+        }
     }
 }

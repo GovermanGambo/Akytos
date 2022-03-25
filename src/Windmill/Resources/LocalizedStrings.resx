@@ -81,4 +81,10 @@
     <data name="AddChild" xml:space="preserve">
         <value>Add child...</value>
     </data>
+    <data name="ProjectManager" xml:space="preserve">
+        <value>Project manager</value>
+    </data>
+    <data name="PreviousProjects" xml:space="preserve">
+        <value>Previous projects</value>
+    </data>
 </root>
