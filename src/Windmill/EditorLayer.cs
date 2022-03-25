@@ -31,11 +31,11 @@ internal class EditorLayer : ILayer
     private readonly ProjectManager m_projectManager;
 
     private IFramebuffer m_framebuffer = null!;
-    private ITexture2D m_texture2D = null!;
-    
+
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager,
-        MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService, AppConfiguration appConfiguration, SceneEditorContext sceneEditorContext, ProjectManager projectManager)
+        MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService, 
+        SceneEditorContext sceneEditorContext, ProjectManager projectManager)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;

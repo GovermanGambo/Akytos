@@ -10,7 +10,7 @@ internal class AkytosProject
     {
         ProjectName = projectName;
         ProjectDirectory = projectDirectory;
-        Configuration = new AppConfiguration(Path.Combine(projectDirectory, $"{projectName}{ProjectExtension}"));
+        Configuration = new ConfigurationFile(Path.Combine(projectDirectory, $"{projectName}{ProjectExtension}"));
 
         Configuration.WriteString("ProjectName", projectName);
         Configuration.WriteString("ProjectDirectory", projectDirectory);
@@ -23,7 +23,7 @@ internal class AkytosProject
 
     public static AkytosProject? CurrentProject { get; set; }
 
-    public AppConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; }
 
     public static AkytosProject Load(string projectDirectory)
     {
