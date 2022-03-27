@@ -1,29 +1,45 @@
+using System.Reflection;
 using Akytos.Configuration;
 
 namespace Akytos.ProjectManagement;
 
 internal class AkytosProject
 {
-    private const string ProjectExtension = ".akproj";
+    private const string ProjectExtension = SystemConstants.FileSystem.ProjectFileExtension;
 
     public AkytosProject(string projectName, string projectDirectory)
     {
         ProjectName = projectName;
         ProjectDirectory = projectDirectory;
-        Configuration = new AppConfiguration(Path.Combine(projectDirectory, $"{projectName}{ProjectExtension}"));
+        var directoryInfo = new DirectoryInfo(projectDirectory);
+        LastModifiedTime = directoryInfo.LastWriteTime;
+        Configuration = new ConfigurationFile(Path.Combine(projectDirectory, $"{projectName}{ProjectExtension}"));
 
-        Configuration.WriteString("ProjectName", projectName);
-        Configuration.WriteString("ProjectDirectory", projectDirectory);
+        Configuration.WriteString("General/ProjectName", projectName);
+        Configuration.WriteString("General/ProjectDirectory", projectDirectory);
+
+        string? appVersion = Configuration.ReadString("General/AppVersion");
+        
+        if (appVersion == null)
+        {
+            var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            appVersion = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}";
+            Configuration.WriteString("General/AppVersion", appVersion);
+        }
+
+        AppVersion = new Version(appVersion);
 
         Configuration.Save();
     }
 
     public string ProjectName { get; }
     public string ProjectDirectory { get; }
+    public DateTime LastModifiedTime { get; }
+    public Version AppVersion { get; }
 
-    public AppConfiguration Configuration { get; }
-    
-    public static string CurrentWorkingDirectory { get; set; }
+    public static AkytosProject? CurrentProject { get; set; }
+
+    public IConfiguration Configuration { get; }
 
     public static AkytosProject Load(string projectDirectory)
     {

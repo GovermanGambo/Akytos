@@ -1,3 +1,4 @@
+using System;
 using Akytos;
 using LightInject;
 
@@ -14,6 +15,15 @@ public class WindmillApp : Application
         base.OnInitialize();
         
         PushLayer<EditorLayer>();
+    }
+
+    protected override void OnRestart()
+    {
+        // Starts a new instance of the program itself
+        System.Diagnostics.Process.Start("Windmill.exe");
+
+        // Closes the current process
+        Environment.Exit(0);
     }
 
     protected override void RegisterServices(IServiceRegistry serviceRegistry)

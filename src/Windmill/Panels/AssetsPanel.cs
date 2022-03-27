@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using Akytos.Assets;
 using Akytos.Events;
 using ImGuiNET;
+using Windmill.Resources;
 
 namespace Windmill.Panels;
 
@@ -18,7 +19,7 @@ internal class AssetsPanel : IEditorPanel
     {
     }
 
-    public string DisplayName => "Assets";
+    public string DisplayName => LocalizedStrings.Assets;
     public bool IsEnabled { get; set; } = true;
 
     public void OnDrawGui()

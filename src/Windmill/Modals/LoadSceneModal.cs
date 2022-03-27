@@ -2,9 +2,11 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using Akytos;
 using Akytos.Assets;
 using Akytos.Events;
 using ImGuiNET;
+using Windmill.Resources;
 using Windmill.Services;
 
 namespace Windmill.Modals;
@@ -33,7 +35,7 @@ internal class LoadSceneModal : IModal
     {
     }
 
-    public string Name => "Load Scene";
+    public string Name => LocalizedStrings.OpenScene;
 
     public bool IsOpen
     {
@@ -82,7 +84,7 @@ internal class LoadSceneModal : IModal
             m_currentSubDirectory = GetPathWithoutPrefix(displayFilePath);
 
         float height = ImGui.GetFrameHeight() - ImGui.GetTextLineHeightWithSpacing() * 2f - 10f;
-
+        
         if (ImGui.BeginChildFrame(ImGui.GetID("frame"),
                 new Vector2(ImGui.GetWindowWidth(), height)))
         {
@@ -102,18 +104,16 @@ internal class LoadSceneModal : IModal
 
         ImGui.NextColumn();
 
-        bool canLoad = !(m_filename == string.Empty || m_filename.IndexOfAny(Path.GetInvalidFileNameChars()) != -1);
-        if (ImGui.Button("Load") && canLoad)
+        bool canLoad = m_filename != string.Empty && m_filename.IndexOfAny(Path.GetInvalidFileNameChars()) == -1 && m_filename.EndsWith(SystemConstants.FileSystem.SceneFileExtension);
+        if (ImGui.Button(LocalizedStrings.Open) && canLoad)
         {
-            if (!m_filename.EndsWith(".ascn")) m_filename += ".ascn";
-
             m_editorContext.LoadScene(Path.Combine(m_currentDirectory, m_filename));
             IsOpen = false;
         }
 
         ImGui.SameLine();
 
-        if (ImGui.Button("Cancel")) IsOpen = false;
+        if (ImGui.Button(LocalizedStrings.Cancel)) IsOpen = false;
 
         ImGui.Columns(1);
 
@@ -156,12 +156,12 @@ internal class LoadSceneModal : IModal
 
     private string GetDisplayFilePath()
     {
-        return $"assets://{m_currentSubDirectory}";
+        return $"{SystemConstants.FileSystem.AssetsDirectoryPrefix}{m_currentSubDirectory}";
     }
 
-    private string GetPathWithoutPrefix(string path)
+    private static string GetPathWithoutPrefix(string path)
     {
-        int startIndex = path.IndexOf("://", StringComparison.Ordinal) + 3;
+        int startIndex = SystemConstants.FileSystem.AssetsDirectoryPrefix.Length;
 
         startIndex = startIndex <= path.Length - 1 ? startIndex : path.Length;
 

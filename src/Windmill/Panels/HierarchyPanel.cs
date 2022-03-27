@@ -3,6 +3,7 @@ using Akytos.Events;
 using ImGuiNET;
 using Windmill.Actions;
 using Windmill.Modals;
+using Windmill.Resources;
 using Windmill.Services;
 
 namespace Windmill.Panels;
@@ -22,8 +23,8 @@ internal class HierarchyPanel : IEditorPanel
         m_actionExecutor = actionExecutor;
         IsEnabled = true;
     }
-    
-    public string DisplayName => "Scene Hierarchy";
+
+    public string DisplayName => LocalizedStrings.SceneHierarchy;
     public bool IsEnabled { get; set; }
 
     public void OnDrawGui()
@@ -36,14 +37,14 @@ internal class HierarchyPanel : IEditorPanel
             return;
         }
 
-        if (ImGui.Button("Add node"))
+        if (ImGui.Button(LocalizedStrings.AddNode_Button))
         {
             m_modalStack.PushModal<CreateNodeModal>();
         }
 
         if (ImGui.BeginPopupContextWindow())
         {
-            if (ImGui.Selectable("Add node..."))
+            if (ImGui.Selectable(LocalizedStrings.AddNode_Button))
             {
                 m_modalStack.PushModal<CreateNodeModal>();
             }
@@ -86,13 +87,13 @@ internal class HierarchyPanel : IEditorPanel
 
         if (node.Owner != null && ImGui.BeginPopupContextItem("hierarchy_node_context"))
         {
-            if (ImGui.Selectable("Add child..."))
+            if (ImGui.Selectable(LocalizedStrings.AddChild))
             {
                 m_sceneEditorContext.SelectedNode = node;
                 m_modalStack.PushModal<CreateNodeModal>();
             }
             
-            if (ImGui.Selectable("Delete node"))
+            if (ImGui.Selectable(LocalizedStrings.Delete))
             {
                 var deleteNodeAction = new DeleteNodeAction(m_sceneEditorContext, node);
                 m_actionExecutor.Execute(deleteNodeAction);

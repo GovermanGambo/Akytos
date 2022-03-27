@@ -2,9 +2,11 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using Akytos;
 using Akytos.Assets;
 using Akytos.Events;
 using ImGuiNET;
+using Windmill.Resources;
 using Windmill.Services;
 
 namespace Windmill.Modals;
@@ -104,9 +106,9 @@ internal class SaveSceneModal : IModal
         ImGui.NextColumn();
 
         var canSave = !(m_filename == string.Empty || m_filename.IndexOfAny(Path.GetInvalidFileNameChars()) != -1);
-        if (ImGui.Button("Save") && canSave)
+        if (ImGui.Button(LocalizedStrings.Save) && canSave)
         {
-            if (!m_filename.EndsWith(".ascn")) m_filename += ".ascn";
+            if (!m_filename.EndsWith(SystemConstants.FileSystem.SceneFileExtension)) m_filename += SystemConstants.FileSystem.SceneFileExtension;
 
             m_editorContext.SaveSceneAs(Path.Combine(CurrentDirectory, m_filename));
             IsOpen = false;
@@ -114,7 +116,7 @@ internal class SaveSceneModal : IModal
 
         ImGui.SameLine();
 
-        if (ImGui.Button("Cancel")) IsOpen = false;
+        if (ImGui.Button(LocalizedStrings.Cancel)) IsOpen = false;
 
         ImGui.Columns(1);
 
@@ -156,12 +158,12 @@ internal class SaveSceneModal : IModal
 
     private string GetDisplayFilePath()
     {
-        return $"assets://{m_currentSubDirectory}";
+        return $"{SystemConstants.FileSystem.AssetsDirectoryPrefix}{m_currentSubDirectory}";
     }
 
-    private string GetPathWithoutPrefix(string path)
+    private static string GetPathWithoutPrefix(string path)
     {
-        var startIndex = path.IndexOf("://", StringComparison.Ordinal) + 3;
+        int startIndex = SystemConstants.FileSystem.AssetsDirectoryPrefix.Length;
 
         startIndex = startIndex <= path.Length - 1 ? startIndex : path.Length;
 

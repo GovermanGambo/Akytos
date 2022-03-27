@@ -10,14 +10,12 @@ internal class SceneEditorContext
     private readonly SceneLoader m_sceneLoader;
     private readonly SpriteRendererSystem m_spriteRendererSystem;
 
-    public SceneEditorContext(SceneTree sceneTree, SceneLoader sceneLoader, SpriteRendererSystem spriteRendererSystem,
-        AppConfiguration appConfiguration, ProjectManager projectManager)
+    public SceneEditorContext(SceneTree sceneTree, SceneLoader sceneLoader, SpriteRendererSystem spriteRendererSystem)
     {
         SceneTree = sceneTree;
         m_sceneLoader = sceneLoader;
         // TODO: This should maybe live inside a system registry for the scene tree.
         m_spriteRendererSystem = spriteRendererSystem;
-        m_projectManager = projectManager;
     }
 
     public bool HasUnsavedChanges { get; set; }

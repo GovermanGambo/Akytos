@@ -8,6 +8,7 @@ using Akytos.Events;
 using Akytos.Graphics.Buffers;
 using ImGuiNET;
 using Windmill.Modals;
+using Windmill.Resources;
 using Windmill.Services;
 using Math = System.Math;
 
@@ -42,7 +43,7 @@ internal class ViewportPanel : IEditorPanel
     {
     }
 
-    public string DisplayName => "Viewport";
+    public string DisplayName => LocalizedStrings.Viewport;
     public bool IsEnabled { get; set; } = true;
 
     public void OnDrawGui()
