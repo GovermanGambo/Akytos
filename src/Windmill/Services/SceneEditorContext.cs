@@ -1,21 +1,21 @@
 using Akytos;
-using Akytos.Configuration;
 using Akytos.ProjectManagement;
 
 namespace Windmill.Services;
 
 internal class SceneEditorContext
 {
-    private readonly ProjectManager m_projectManager;
+    private readonly IProjectManager m_projectManager;
     private readonly SceneLoader m_sceneLoader;
     private readonly SpriteRendererSystem m_spriteRendererSystem;
 
-    public SceneEditorContext(SceneTree sceneTree, SceneLoader sceneLoader, SpriteRendererSystem spriteRendererSystem)
+    public SceneEditorContext(SceneTree sceneTree, SceneLoader sceneLoader, SpriteRendererSystem spriteRendererSystem, IProjectManager projectManager)
     {
         SceneTree = sceneTree;
         m_sceneLoader = sceneLoader;
         // TODO: This should maybe live inside a system registry for the scene tree.
         m_spriteRendererSystem = spriteRendererSystem;
+        m_projectManager = projectManager;
     }
 
     public bool HasUnsavedChanges { get; set; }
@@ -48,7 +48,7 @@ internal class SceneEditorContext
         m_spriteRendererSystem.Context = SceneTree.CurrentScene;
         CurrentSceneFilename = filePath;
 
-        m_projectManager.CurrentProject.Configuration.WriteString("InitialScene", filePath);
+        m_projectManager.CurrentProject.Configuration.WriteString("General/InitialScene", filePath);
         m_projectManager.CurrentProject.Configuration.Save();
 
         Debug.LogInformation("Loaded scene: {0}", filePath);
@@ -60,7 +60,7 @@ internal class SceneEditorContext
         CurrentSceneFilename = filePath;
         HasUnsavedChanges = false;
 
-        m_projectManager.CurrentProject.Configuration.WriteString("InitialScene", filePath);
+        m_projectManager.CurrentProject.Configuration.WriteString("General/InitialScene", filePath);
         m_projectManager.CurrentProject.Configuration.Save();
 
         Debug.LogInformation("Saved scene: {0}", filePath);

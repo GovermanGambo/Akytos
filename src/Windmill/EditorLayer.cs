@@ -92,7 +92,7 @@ internal class EditorLayer : ILayer
 
         // TODO: Temporary Scene Setup
 
-        string? initialScene = m_projectManager.CurrentProject.Configuration.ReadString("InitialScene");
+        string? initialScene = m_projectManager.CurrentProject.Configuration.ReadString("General/InitialScene");
 
         if (initialScene != null)
         {

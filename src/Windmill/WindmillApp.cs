@@ -21,9 +21,6 @@ public class WindmillApp : Application
     {
         // Starts a new instance of the program itself
         System.Diagnostics.Process.Start("Windmill.exe");
-
-        // Closes the current process
-        Environment.Exit(0);
     }
 
     protected override void RegisterServices(IServiceRegistry serviceRegistry)

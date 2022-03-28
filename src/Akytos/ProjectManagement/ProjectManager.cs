@@ -11,6 +11,8 @@ internal class ProjectManager : IProjectManager
         m_appConfiguration = appConfiguration;
     }
 
+    public AkytosProject CurrentProject { get; private set; }
+
     public IEnumerable<AkytosProject> GetPreviousProjects()
     {
         var projects = m_appConfiguration.GetSection("Projects");
