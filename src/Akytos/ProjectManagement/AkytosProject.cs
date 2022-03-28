@@ -40,6 +40,7 @@ internal class AkytosProject
     public static AkytosProject? CurrentProject { get; set; }
 
     public IConfiguration Configuration { get; }
+    public static string CurrentWorkingDirectory { get; set; }
 
     public static AkytosProject Load(string projectDirectory)
     {
@@ -53,8 +54,6 @@ internal class AkytosProject
         string projectName = Path.GetFileNameWithoutExtension(file);
 
         var project = new AkytosProject(projectName, projectDirectory);
-
-        CurrentProject = project;
 
         return project;
     }

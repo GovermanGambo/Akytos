@@ -13,7 +13,7 @@ namespace Windmill.Modals;
 
 internal class CreateNodeModal : IModal
 {
-    private readonly Type[] m_nodeTypes;
+    private Type[] m_nodeTypes;
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly ActionExecutor m_actionExecutor;
 
@@ -26,10 +26,6 @@ internal class CreateNodeModal : IModal
     {
         m_sceneEditorContext = sceneEditorContext;
         m_actionExecutor = actionExecutor;
-        m_nodeTypes = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(a => a.GetTypes())
-            .Where(t => t.IsSubclassOf(typeof(Node)) || typeof(Node).IsAssignableFrom(t))
-            .ToArray();
     }
 
     public string Name => LocalizedStrings.AddNode;
@@ -44,6 +40,13 @@ internal class CreateNodeModal : IModal
             if (!value)
             {
                 Closing?.Invoke();
+            }
+            else
+            {
+                m_nodeTypes = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(a => a.GetTypes())
+                    .Where(t => t.IsSubclassOf(typeof(Node)) || typeof(Node).IsAssignableFrom(t))
+                    .ToArray();
             }
         }
     }

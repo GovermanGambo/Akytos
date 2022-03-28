@@ -11,6 +11,8 @@ internal class ProjectManager : IProjectManager
         m_appConfiguration = appConfiguration;
     }
 
+    public AkytosProject CurrentProject { get; private set; }
+
     public IEnumerable<AkytosProject> GetPreviousProjects()
     {
         var projects = m_appConfiguration.GetSection("Projects");
@@ -29,7 +31,8 @@ internal class ProjectManager : IProjectManager
         }
         
         var project = AkytosProject.Load(lastOpenedProjectDirectory);
-        AkytosProject.CurrentProject = project;
+        CurrentProject = project;
+        AkytosProject.CurrentWorkingDirectory = CurrentProject.ProjectDirectory;
 
         return true;
     }
@@ -47,8 +50,9 @@ internal class ProjectManager : IProjectManager
     public void CreateNewProject(string projectName, string projectDirectory)
     {
         var project = new AkytosProject(projectName, projectDirectory);
-
-        AkytosProject.CurrentProject = project;
+        
+        CurrentProject = project;
+        AkytosProject.CurrentWorkingDirectory = CurrentProject.ProjectDirectory;
         
         string projectKey = $"Projects/{projectName}";
         m_appConfiguration.WriteString(projectKey, projectDirectory);
