@@ -87,4 +87,7 @@
     <data name="PreviousProjects" xml:space="preserve">
         <value>Previous projects</value>
     </data>
+    <data name="NewProject" xml:space="preserve">
+        <value>New project</value>
+    </data>
 </root>

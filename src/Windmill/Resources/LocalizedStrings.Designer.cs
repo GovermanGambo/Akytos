@@ -182,5 +182,11 @@ namespace Windmill.Resources {
                 return ResourceManager.GetString("PreviousProjects", resourceCulture);
             }
         }
+        
+        internal static string NewProject {
+            get {
+                return ResourceManager.GetString("NewProject", resourceCulture);
+            }
+        }
     }
 }
