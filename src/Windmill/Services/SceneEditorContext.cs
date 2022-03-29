@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Akytos;
 using Akytos.ProjectManagement;
 
@@ -40,18 +42,40 @@ internal class SceneEditorContext
         CurrentSceneFilename = null;
     }
 
-    public void LoadScene(string filePath)
+    public bool TryLoadPreviousScene()
     {
-        var scene = m_sceneLoader.LoadScene(filePath);
-        SceneTree.SetScene(scene);
-        SelectedNode = null;
-        m_spriteRendererSystem.Context = SceneTree.CurrentScene;
-        CurrentSceneFilename = filePath;
+        string? previousScene = m_projectManager.CurrentProject.Configuration.ReadString("General/InitialScene");
 
-        m_projectManager.CurrentProject.Configuration.WriteString("General/InitialScene", filePath);
-        m_projectManager.CurrentProject.Configuration.Save();
+        if (previousScene == null)
+        {
+            return false;
+        }
+        
+        return LoadScene(previousScene);
+    }
 
-        Debug.LogInformation("Loaded scene: {0}", filePath);
+    public bool LoadScene(string filePath)
+    {
+        try
+        {
+            var scene = m_sceneLoader.LoadScene(filePath);
+            SceneTree.SetScene(scene);
+            SelectedNode = null;
+            m_spriteRendererSystem.Context = SceneTree.CurrentScene;
+            CurrentSceneFilename = filePath;
+
+            m_projectManager.CurrentProject.Configuration.WriteString("General/InitialScene", filePath);
+            m_projectManager.CurrentProject.Configuration.Save();
+
+            Debug.LogInformation("Loaded scene: {0}", filePath);
+
+            return true;
+        }
+        catch (IOException e)
+        {
+            Debug.LogError("Failed to load scene {0}: {1}", filePath, e.Message);
+            return false;
+        }
     }
 
     public void SaveSceneAs(string filePath)

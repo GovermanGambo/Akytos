@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using Akytos.Assets;
 using Akytos.Events;
+using Akytos.ProjectManagement;
 using ImGuiNET;
 using Windmill.Resources;
 
@@ -12,11 +13,19 @@ namespace Windmill.Panels;
 
 internal class AssetsPanel : IEditorPanel
 {
-    private static string RootDirectory => Asset.AssetsDirectory;
-    public string CurrentDirectory { get; private set; } = RootDirectory;
+    private readonly IProjectManager m_projectManager;
+
+    public AssetsPanel(IProjectManager projectManager)
+    {
+        m_projectManager = projectManager;
+        m_projectManager.ProjectChanged += ProjectManagerOnProjectChanged;
+    }
+
+    public string CurrentDirectory { get; private set; } = Asset.AssetsDirectory;
 
     public void Dispose()
     {
+        m_projectManager.ProjectChanged -= ProjectManagerOnProjectChanged;
     }
 
     public string DisplayName => LocalizedStrings.Assets;
@@ -39,7 +48,7 @@ internal class AssetsPanel : IEditorPanel
 
         if (string.Compare(
                 Path.GetFullPath(CurrentDirectory).TrimEnd('\\'),
-                Path.GetFullPath(RootDirectory).TrimEnd('\\'),
+                Path.GetFullPath(Asset.AssetsDirectory).TrimEnd('\\'),
                 StringComparison.InvariantCultureIgnoreCase) != 0)
             if (ImGui.Button(".."))
                 CurrentDirectory = Path.GetFullPath(Path.Combine(CurrentDirectory, @"../"));
@@ -53,7 +62,7 @@ internal class AssetsPanel : IEditorPanel
             ImGui.Selectable(file.Name);
             if (ImGui.BeginDragDropSource())
             {
-                string relativeFilePath = Path.GetRelativePath(RootDirectory, file.FullName).Replace("\\", "/");
+                var relativeFilePath = Path.GetRelativePath(Asset.AssetsDirectory, file.FullName).Replace("\\", "/");
                 var handle = GCHandle.Alloc(relativeFilePath);
                 var payload = (IntPtr)handle;
                 ImGui.SetDragDropPayload("ASSET", payload, sizeof(char) * (uint)relativeFilePath.Length);
@@ -69,5 +78,11 @@ internal class AssetsPanel : IEditorPanel
 
     public void OnEvent(IEvent e)
     {
+    }
+
+    private void ProjectManagerOnProjectChanged()
+    {
+        // Reload the asset directory
+        CurrentDirectory = Asset.AssetsDirectory;
     }
 }

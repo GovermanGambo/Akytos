@@ -6,6 +6,7 @@ internal class ProjectManager : IProjectManager
 {
     private readonly AppConfiguration m_appConfiguration;
     private readonly ProjectGenerator m_projectGenerator;
+    private AkytosProject m_currentProject;
 
     public ProjectManager(AppConfiguration appConfiguration, ProjectGenerator projectGenerator)
     {
@@ -13,7 +14,18 @@ internal class ProjectManager : IProjectManager
         m_projectGenerator = projectGenerator;
     }
 
-    public AkytosProject CurrentProject { get; private set; }
+    public event Action? ProjectChanged;
+
+    public AkytosProject CurrentProject
+    {
+        get => m_currentProject;
+        private set
+        {
+            m_currentProject = value;
+            AkytosProject.CurrentWorkingDirectory = m_currentProject.ProjectDirectory;
+            ProjectChanged?.Invoke();
+        }
+    }
 
     public IEnumerable<AkytosProject> GetPreviousProjects()
     {
@@ -30,13 +42,16 @@ internal class ProjectManager : IProjectManager
             // TODO: Localize errors
             errors.Add("Project name cannot be empty!");
         }
-        
-        if (!Directory.Exists(projectDirectory))
+
+        if (projectDirectory == string.Empty)
+        {
+            errors.Add("Project directory cannot be empty!");
+        }
+        else if (!Directory.Exists(projectDirectory))
         {
             errors.Add("Project directory does not exist!");
         }
-
-        if (Directory.EnumerateFileSystemEntries(projectDirectory).Any())
+        else if (Directory.EnumerateFileSystemEntries(projectDirectory).Any())
         {
             errors.Add("Project directory must be empty!");
         }
@@ -55,8 +70,10 @@ internal class ProjectManager : IProjectManager
         }
         
         var project = AkytosProject.Load(lastOpenedProjectDirectory);
+
         CurrentProject = project;
-        AkytosProject.CurrentWorkingDirectory = CurrentProject.ProjectDirectory;
+        
+        Debug.LogInformation("Loaded project {0}", project.ProjectName);
 
         return true;
     }
@@ -67,8 +84,10 @@ internal class ProjectManager : IProjectManager
         m_appConfiguration.Remove(projectKey);
         m_appConfiguration.WriteString(projectKey, project.ProjectDirectory);
         m_appConfiguration.Save();
-        
-        Application.Restart();
+
+        CurrentProject = project;
+
+        Debug.LogInformation("Loaded project {0}", project.ProjectName);
     }
 
     public void CreateNewProject(string projectName, string projectDirectory)
@@ -76,13 +95,12 @@ internal class ProjectManager : IProjectManager
         var project = m_projectGenerator.GenerateProject(projectName, projectDirectory);
         
         CurrentProject = project;
-        AkytosProject.CurrentWorkingDirectory = CurrentProject.ProjectDirectory;
         
         string projectKey = $"Projects/{projectName}";
         m_appConfiguration.WriteString(projectKey, projectDirectory);
-        m_appConfiguration.Save();  
-
-        Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.AssetsSubDirectory));
+        m_appConfiguration.Save();
+        
+        Debug.LogInformation("Created project {0}", project.ProjectName);
     }
     
 }

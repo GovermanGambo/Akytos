@@ -106,7 +106,8 @@ internal class ConfigurationFile : IConfiguration
     {
         if (!File.Exists(m_filePath))
         {
-            File.Create(m_filePath);
+            var file = File.Create(m_filePath);
+            file.Dispose();
         }
         
         return File.ReadAllText(m_filePath);

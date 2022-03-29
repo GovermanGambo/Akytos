@@ -32,13 +32,14 @@ internal class EditorLayer : ILayer
     private readonly EditorHotKeyService m_editorHotKeyService;
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly IProjectManager m_projectManager;
+    private readonly AssemblyManager m_assemblyManager;
 
     private IFramebuffer m_framebuffer = null!;
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager,
         MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService, 
-        SceneEditorContext sceneEditorContext, IProjectManager projectManager)
+        SceneEditorContext sceneEditorContext, IProjectManager projectManager, AssemblyManager assemblyManager)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
@@ -51,6 +52,7 @@ internal class EditorLayer : ILayer
         m_editorHotKeyService = editorHotKeyService;
         m_sceneEditorContext = sceneEditorContext;
         m_projectManager = projectManager;
+        m_assemblyManager = assemblyManager;
     }
 
     public void Dispose()
@@ -61,11 +63,9 @@ internal class EditorLayer : ILayer
 
     public void OnAttach()
     {
-        if (!m_projectManager.LoadLastOpenedProject())
-        {
-            // TODO: Display project manager window at once
-            m_projectManager.CreateNewProject("TestProject", "C:/Akytos/TestProject");
-        }
+        LoadProject();
+        
+        m_assemblyManager.LoadAssemblies();
 
         var framebufferSpecification = new FrameBufferSpecification
         {
@@ -89,18 +89,22 @@ internal class EditorLayer : ILayer
         viewportPanel.Framebuffer = m_framebuffer;
 
         m_renderingSystem.Camera = m_editorViewport.Camera;
+    }
 
-        // TODO: Temporary Scene Setup
-
-        string? initialScene = m_projectManager.CurrentProject.Configuration.ReadString("General/InitialScene");
-
-        if (initialScene != null)
+    private void LoadProject()
+    {
+        if (!m_projectManager.LoadLastOpenedProject())
         {
-            m_sceneEditorContext.LoadScene(initialScene);
+            // TODO: Display project manager window at once
+            m_projectManager.CreateNewProject("TestProject", "C:/Akytos/TestProject");
+            m_sceneEditorContext.CreateNewScene<Node2D>();
         }
         else
         {
-            m_sceneEditorContext.CreateNewScene<Node2D>();
+            if (!m_sceneEditorContext.TryLoadPreviousScene())
+            {
+                m_sceneEditorContext.CreateNewScene<Node2D>();
+            }
         }
     }
 

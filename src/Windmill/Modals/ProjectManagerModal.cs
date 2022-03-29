@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using Akytos;
 using Akytos.Events;
 using Akytos.ProjectManagement;
 using ImGuiNET;
@@ -16,11 +17,13 @@ internal class ProjectManagerModal : IModal
     private bool m_shouldOpen;
     private AkytosProject? m_selectedProject;
     private readonly ModalStack m_modalStack;
+    private readonly SceneEditorContext m_sceneEditorContext;
 
-    public ProjectManagerModal(IProjectManager projectManager, ModalStack modalStack)
+    public ProjectManagerModal(IProjectManager projectManager, ModalStack modalStack, SceneEditorContext sceneEditorContext)
     {
         m_projectManager = projectManager;
         m_modalStack = modalStack;
+        m_sceneEditorContext = sceneEditorContext;
     }
 
     public void Dispose()
@@ -120,6 +123,12 @@ internal class ProjectManagerModal : IModal
     private void OpenProject(AkytosProject akytosProject)
     {
         m_projectManager.LoadProject(akytosProject);
+        if (!m_sceneEditorContext.TryLoadPreviousScene())
+        {
+            m_sceneEditorContext.CreateNewScene<Node2D>();
+        }
+        
+        Close();
     }
 
     public void OnEvent(IEvent e)

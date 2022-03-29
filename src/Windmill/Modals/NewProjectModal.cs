@@ -8,12 +8,14 @@ using Akytos.Events;
 using Akytos.ProjectManagement;
 using ImGuiNET;
 using Windmill.Resources;
+using Windmill.Services;
 
 namespace Windmill.Modals;
 
 internal class NewProjectModal : IModal
 {
     private readonly IProjectManager m_projectManager;
+    private readonly SceneEditorContext m_sceneEditorContext;
     
     private bool m_shouldOpen;
     private bool m_isOpen;
@@ -23,9 +25,10 @@ internal class NewProjectModal : IModal
 
     private IEnumerable<string> m_errors;
 
-    public NewProjectModal(IProjectManager projectManager)
+    public NewProjectModal(IProjectManager projectManager, SceneEditorContext sceneEditorContext)
     {
         m_projectManager = projectManager;
+        m_sceneEditorContext = sceneEditorContext;
         m_errors = Array.Empty<string>();
     }
 
@@ -103,6 +106,7 @@ internal class NewProjectModal : IModal
             if (!m_errors.Any())
             {
                 m_projectManager.CreateNewProject(m_projectName, m_projectPath);
+                m_sceneEditorContext.CreateNewScene<Node2D>();
                 Close();
             }
         }
