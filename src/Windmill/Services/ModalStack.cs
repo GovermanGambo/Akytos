@@ -11,12 +11,14 @@ internal class ModalStack
     private readonly IServiceFactory m_serviceFactory;
     private readonly Stack<IModal> m_modals;
 
+    private List<IModal> m_modalQueue;
     private bool m_shouldPop;
 
     public ModalStack(IServiceFactory serviceFactory)
     {
         m_serviceFactory = serviceFactory;
         m_modals = new Stack<IModal>();
+        m_modalQueue = new List<IModal>();
     }
 
     public IReadOnlyCollection<IModal> Modals => new ReadOnlyCollection<IModal>(m_modals.ToArray());
@@ -38,6 +40,13 @@ internal class ModalStack
             PopModal();
             m_shouldPop = false;
         }
+
+        foreach (var modal in m_modalQueue)
+        {
+            modal.Open();
+            m_modals.Push(modal);
+        }
+        m_modalQueue.Clear();
     }
 
     public TModal PushModal<TModal>() where TModal : IModal
@@ -45,12 +54,10 @@ internal class ModalStack
         var modal = m_serviceFactory.TryGetInstance<TModal>();
         
         Assert.IsNotNull(modal, $"No modal of type {typeof(TModal)} was found.");
-        
-        m_modals.Push(modal);
 
-        modal.Open();
-        
         modal.Closing += ModalOnClosing;
+        
+        m_modalQueue.Add(modal);
 
         return modal;
     }

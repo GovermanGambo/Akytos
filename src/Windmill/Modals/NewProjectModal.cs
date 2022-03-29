@@ -100,6 +100,5 @@ internal class NewProjectModal : IModal
 
     public void OnEvent(IEvent e)
     {
-        throw new NotImplementedException();
     }
 }

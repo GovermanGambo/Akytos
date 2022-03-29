@@ -4,6 +4,7 @@ using Akytos.Events;
 using Akytos.ProjectManagement;
 using ImGuiNET;
 using Windmill.Resources;
+using Windmill.Services;
 
 namespace Windmill.Modals;
 
@@ -14,10 +15,12 @@ internal class ProjectManagerModal : IModal
     private bool m_isOpen;
     private bool m_shouldOpen;
     private AkytosProject? m_selectedProject;
+    private readonly ModalStack m_modalStack;
 
-    public ProjectManagerModal(IProjectManager projectManager)
+    public ProjectManagerModal(IProjectManager projectManager, ModalStack modalStack)
     {
         m_projectManager = projectManager;
+        m_modalStack = modalStack;
     }
 
     public void Dispose()
@@ -75,6 +78,12 @@ internal class ProjectManagerModal : IModal
             return;
         }
 
+        if (ImGui.Button("New project"))
+        {
+            Close();
+            m_modalStack.PushModal<NewProjectModal>();
+        }
+        
         ImGui.Text(LocalizedStrings.PreviousProjects);
         
         DrawProjectsList();
