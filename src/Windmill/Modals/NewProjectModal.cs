@@ -1,4 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+using Akytos;
 using Akytos.Events;
 using Akytos.ProjectManagement;
 using ImGuiNET;
@@ -16,9 +21,12 @@ internal class NewProjectModal : IModal
     private string m_projectName = "";
     private string m_projectPath = "";
 
+    private IEnumerable<string> m_errors;
+
     public NewProjectModal(IProjectManager projectManager)
     {
         m_projectManager = projectManager;
+        m_errors = Array.Empty<string>();
     }
 
     public void Dispose()
@@ -77,25 +85,34 @@ internal class NewProjectModal : IModal
 
         if (ImGui.InputText("Project name", ref m_projectName, 50))
         {
-            OnProjectNameChanged();
+            OnFormDataChanged();
         }
         
         if (ImGui.InputText("Project path", ref m_projectPath, 200))
         {
-            OnProjectPathChanged();
+            OnFormDataChanged();
+        }
+        
+        foreach (string error in m_errors)
+        {
+            ImGui.TextColored((Vector4)Color.Red, error);
+        }
+
+        if (ImGui.Button("Create project"))
+        {
+            if (!m_errors.Any())
+            {
+                m_projectManager.CreateNewProject(m_projectName, m_projectPath);
+                Close();
+            }
         }
 
         ImGui.EndPopup();
     }
 
-    private void OnProjectPathChanged()
+    private void OnFormDataChanged()
     {
-        
-    }
-
-    private void OnProjectNameChanged()
-    {
-        
+        m_errors = m_projectManager.ValidateProjectParameters(m_projectName, m_projectPath);
     }
 
     public void OnEvent(IEvent e)

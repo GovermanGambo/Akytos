@@ -5,10 +5,12 @@ namespace Akytos.ProjectManagement;
 internal class ProjectManager : IProjectManager
 {
     private readonly AppConfiguration m_appConfiguration;
+    private readonly ProjectGenerator m_projectGenerator;
 
-    public ProjectManager(AppConfiguration appConfiguration)
+    public ProjectManager(AppConfiguration appConfiguration, ProjectGenerator projectGenerator)
     {
         m_appConfiguration = appConfiguration;
+        m_projectGenerator = projectGenerator;
     }
 
     public AkytosProject CurrentProject { get; private set; }
@@ -18,6 +20,28 @@ internal class ProjectManager : IProjectManager
         var projects = m_appConfiguration.GetSection("Projects");
 
         return projects.Reverse().Select(s => new AkytosProject(s.Key, s.Value));
+    }
+
+    public IEnumerable<string> ValidateProjectParameters(string projectName, string projectDirectory)
+    {
+        var errors = new List<string>();
+        if (projectName == string.Empty)
+        {
+            // TODO: Localize errors
+            errors.Add("Project name cannot be empty!");
+        }
+        
+        if (!Directory.Exists(projectDirectory))
+        {
+            errors.Add("Project directory does not exist!");
+        }
+
+        if (Directory.EnumerateFileSystemEntries(projectDirectory).Any())
+        {
+            errors.Add("Project directory must be empty!");
+        }
+
+        return errors;
     }
 
     public bool LoadLastOpenedProject()
@@ -49,14 +73,14 @@ internal class ProjectManager : IProjectManager
 
     public void CreateNewProject(string projectName, string projectDirectory)
     {
-        var project = new AkytosProject(projectName, projectDirectory);
+        var project = m_projectGenerator.GenerateProject(projectName, projectDirectory);
         
         CurrentProject = project;
         AkytosProject.CurrentWorkingDirectory = CurrentProject.ProjectDirectory;
         
         string projectKey = $"Projects/{projectName}";
         m_appConfiguration.WriteString(projectKey, projectDirectory);
-        m_appConfiguration.Save();
+        m_appConfiguration.Save();  
 
         Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.AssetsSubDirectory));
     }

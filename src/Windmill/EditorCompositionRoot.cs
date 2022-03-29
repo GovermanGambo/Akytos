@@ -29,6 +29,7 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton<ModalStack>();
         serviceRegistry.RegisterSingleton<ActionExecutor>();
         serviceRegistry.RegisterSingleton<IProjectManager, ProjectManager>();
+        serviceRegistry.Register<ProjectGenerator>();
         
         serviceRegistry.Register<EditorHotKeyService>();
 
