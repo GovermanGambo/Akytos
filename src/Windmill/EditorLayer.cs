@@ -1,44 +1,36 @@
-
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using Akytos;
-using Akytos.Assets;
-using Akytos.Configuration;
 using Akytos.Editor;
 using Akytos.Events;
 using Akytos.Graphics;
 using Akytos.Graphics.Buffers;
 using Akytos.Layers;
-using Akytos.ProjectManagement;
-using ImGuiNET;
-using Microsoft.VisualBasic.CompilerServices;
 using Windmill.Panels;
+using Windmill.ProjectManagement;
 using Windmill.Services;
 
 namespace Windmill;
 
 internal class EditorLayer : ILayer
 {
+    private readonly AssemblyManager m_assemblyManager;
+    private readonly EditorHotKeyService m_editorHotKeyService;
     private readonly IEditorViewport m_editorViewport;
     private readonly IGraphicsDevice m_graphicsDevice;
     private readonly IGraphicsResourceFactory m_graphicsResourceFactory;
     private readonly MenuService m_menuService;
-    private readonly PanelManager m_panelManager;
-    private readonly SpriteRendererSystem m_renderingSystem;
-    private readonly SceneTree m_sceneTree;
     private readonly ModalStack m_modalStack;
-    private readonly EditorHotKeyService m_editorHotKeyService;
-    private readonly SceneEditorContext m_sceneEditorContext;
+    private readonly PanelManager m_panelManager;
     private readonly IProjectManager m_projectManager;
-    private readonly AssemblyManager m_assemblyManager;
+    private readonly SpriteRendererSystem m_renderingSystem;
+    private readonly SceneEditorContext m_sceneEditorContext;
+    private readonly SceneTree m_sceneTree;
 
     private IFramebuffer m_framebuffer = null!;
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager,
-        MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService, 
+        MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService,
         SceneEditorContext sceneEditorContext, IProjectManager projectManager, AssemblyManager assemblyManager)
     {
         m_graphicsDevice = graphicsDevice;
@@ -64,13 +56,13 @@ internal class EditorLayer : ILayer
     public void OnAttach()
     {
         LoadProject();
-        
+
         m_assemblyManager.LoadAssemblies();
 
         var framebufferSpecification = new FrameBufferSpecification
         {
-            Width = (uint)m_editorViewport.Width,
-            Height = (uint)m_editorViewport.Height
+            Width = (uint) m_editorViewport.Width,
+            Height = (uint) m_editorViewport.Height
         };
 
         framebufferSpecification.Attachments = new FramebufferAttachmentSpecification(
@@ -89,23 +81,6 @@ internal class EditorLayer : ILayer
         viewportPanel.Framebuffer = m_framebuffer;
 
         m_renderingSystem.Camera = m_editorViewport.Camera;
-    }
-
-    private void LoadProject()
-    {
-        if (!m_projectManager.LoadLastOpenedProject())
-        {
-            // TODO: Display project manager window at once
-            m_projectManager.CreateNewProject("TestProject", "C:/Akytos/TestProject");
-            m_sceneEditorContext.CreateNewScene<Node2D>();
-        }
-        else
-        {
-            if (!m_sceneEditorContext.TryLoadPreviousScene())
-            {
-                m_sceneEditorContext.CreateNewScene<Node2D>();
-            }
-        }
     }
 
     public void OnDetach()
@@ -144,5 +119,19 @@ internal class EditorLayer : ILayer
         m_modalStack.OnDrawGui();
 
         Dockspace.End();
+    }
+
+    private void LoadProject()
+    {
+        if (!m_projectManager.LoadLastOpenedProject())
+        {
+            // TODO: Display project manager window at once
+            m_projectManager.CreateNewProject("TestProject", "C:/Akytos/TestProject");
+            m_sceneEditorContext.CreateNewScene<Node2D>();
+        }
+        else
+        {
+            if (!m_sceneEditorContext.TryLoadPreviousScene()) m_sceneEditorContext.CreateNewScene<Node2D>();
+        }
     }
 }

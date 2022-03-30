@@ -1,8 +1,9 @@
+using System;
 using System.Diagnostics;
 
-namespace Akytos.Utilities;
+namespace Windmill.Utilities;
 
-public class SystemCommand
+internal class SystemCommand
 {
     private readonly ProcessStartInfo m_processStartInfo;
 

@@ -1,6 +1,8 @@
-namespace Akytos.Utilities;
+using Akytos;
 
-public static class DotnetUtility
+namespace Windmill.Utilities;
+
+internal static class DotnetUtility
 {
     public static void CreateSolution(string solutionName, string targetDirectory)
     {

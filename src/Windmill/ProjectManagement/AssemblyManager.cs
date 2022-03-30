@@ -1,6 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using Akytos;
 
-namespace Akytos.ProjectManagement;
+namespace Windmill.ProjectManagement;
 
 internal class AssemblyManager
 {

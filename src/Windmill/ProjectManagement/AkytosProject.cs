@@ -1,7 +1,11 @@
+using System;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using Akytos;
 using Akytos.Configuration;
 
-namespace Akytos.ProjectManagement;
+namespace Windmill.ProjectManagement;
 
 internal class AkytosProject
 {
@@ -36,8 +40,6 @@ internal class AkytosProject
     public string ProjectDirectory { get; }
     public DateTime LastModifiedTime { get; }
     public Version AppVersion { get; }
-
-    public static AkytosProject? CurrentProject { get; set; }
 
     public IConfiguration Configuration { get; }
 

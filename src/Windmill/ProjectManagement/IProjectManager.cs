@@ -1,4 +1,7 @@
-namespace Akytos.ProjectManagement;
+using System;
+using System.Collections.Generic;
+
+namespace Windmill.ProjectManagement;
 
 internal interface IProjectManager
 {

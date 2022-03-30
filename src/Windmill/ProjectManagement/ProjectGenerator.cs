@@ -1,7 +1,12 @@
-using System.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Akytos;
 using Akytos.Utilities;
+using Windmill.Utilities;
 
-namespace Akytos.ProjectManagement;
+namespace Windmill.ProjectManagement;
 
 internal class ProjectGenerator
 {
