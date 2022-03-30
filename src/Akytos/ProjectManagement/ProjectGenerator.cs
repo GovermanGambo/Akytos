@@ -16,13 +16,11 @@ internal class ProjectGenerator
         CreateFolders(projectDirectory);
 
         string assemblyDirectory = Path.Combine(projectDirectory, SystemConstants.FileSystem.AssemblySubDirectory);
-        
-        CreateSolution(projectName, assemblyDirectory);
-        
-        CreateProject(projectName, assemblyDirectory);
-        
-        AddProject(projectName, assemblyDirectory);
 
+        DotnetUtility.CreateSolution(projectName, assemblyDirectory);
+        
+        DotnetUtility.CreateProject(projectName, assemblyDirectory);
+        
         return new AkytosProject(projectName, projectDirectory);
     }
     
@@ -51,39 +49,9 @@ internal class ProjectGenerator
         return errors;
     }
 
-    private static void AddProject(string projectName, string workingDirectory)
-    {
-        string arguments = string.Format(SystemConstants.CommandLine.AddProjectCommand, projectName);
-
-        RunDotnetCommand(arguments, workingDirectory);  
-    }
-
-    private static void CreateSolution(string projectName, string workingDirectory)
-    {
-        string arguments = string.Format(SystemConstants.CommandLine.CreateSolutionCommand, projectName);
-
-        RunDotnetCommand(arguments, workingDirectory);  
-    }
-
-    private static void CreateProject(string projectName, string workingDirectory)
-    {
-        string arguments = string.Format(SystemConstants.CommandLine.CreateProjectCommand, SystemConstants.CommandLine.ProjectTemplateShortName, projectName);
-
-        RunDotnetCommand(arguments, workingDirectory);   
-    }
-
-    private void CreateFolders(string projectDirectory)
+    private static void CreateFolders(string projectDirectory)
     {
         Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.AssemblySubDirectory));
         Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.AssetsSubDirectory));
-    }
-
-    private static void RunDotnetCommand(string workingDirectory, string arguments)
-    {
-        var command = new SystemCommand(SystemConstants.CommandLine.DotnetCommand);
-        command.AddArgument(arguments);
-        command.SetWorkingDirectory(workingDirectory);
-        
-        command.Run();
     }
 }
