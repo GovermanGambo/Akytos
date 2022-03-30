@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Akytos;
 using Akytos.Utilities;
 using Windmill.Utilities;
@@ -25,6 +26,8 @@ internal class ProjectGenerator
         DotnetUtility.CreateSolution(projectName, assemblyDirectory);
         
         DotnetUtility.CreateProject(projectName, assemblyDirectory);
+        
+        CopyDll(assemblyDirectory);
         
         return new AkytosProject(projectName, projectDirectory);
     }
@@ -58,5 +61,18 @@ internal class ProjectGenerator
     {
         Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.AssemblySubDirectory));
         Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.AssetsSubDirectory));
+    }
+
+    private static void CopyDll(string assemblyDirectory)
+    {
+        string executingAssemblyLocation = Assembly.GetExecutingAssembly().Location;
+        string depsDirectory = Path.Combine(assemblyDirectory, "Dependencies");
+
+        if (!Directory.Exists(depsDirectory))
+        {
+            Directory.CreateDirectory(depsDirectory);
+        }
+        
+        File.Copy(Path.Combine(executingAssemblyLocation, "Akytos.dll"), Path.Combine(depsDirectory, "Akytos.dll"));
     }
 }

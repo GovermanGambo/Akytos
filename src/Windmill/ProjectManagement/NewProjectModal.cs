@@ -28,6 +28,8 @@ internal class NewProjectModal : IModal
         m_projectManager = projectManager;
         m_sceneEditorContext = sceneEditorContext;
         m_errors = Array.Empty<string>();
+        
+        m_errors = m_projectManager.ValidateProjectParameters(m_projectName, m_projectPath);
     }
 
     public void Dispose()
