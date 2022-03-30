@@ -5,11 +5,10 @@ using System.Numerics;
 using Akytos;
 using Akytos.Events;
 using ImGuiNET;
-using Windmill.ProjectManagement;
 using Windmill.Resources;
 using Windmill.Services;
 
-namespace Windmill.Modals;
+namespace Windmill.ProjectManagement;
 
 internal class NewProjectModal : IModal
 {

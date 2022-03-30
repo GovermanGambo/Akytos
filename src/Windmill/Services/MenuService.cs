@@ -3,6 +3,7 @@ using ImGuiNET;
 using Windmill.Actions;
 using Windmill.Modals;
 using Windmill.Panels;
+using Windmill.ProjectManagement;
 using Windmill.Resources;
 
 namespace Windmill.Services;
