@@ -19,4 +19,9 @@ internal static class SystemConstants
         public const string CreateSolutionCommand = "new sln -n {0}";
         public const string AddProjectCommand = "sln add {0}";
     }
+
+    public static class ConfigurationKeys
+    {
+        public const string Projects = "Projects";
+    }
 }

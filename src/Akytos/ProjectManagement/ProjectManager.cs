@@ -29,7 +29,7 @@ internal class ProjectManager : IProjectManager
 
     public IEnumerable<AkytosProject> GetPreviousProjects()
     {
-        var projects = m_appConfiguration.GetSection("Projects");
+        var projects = m_appConfiguration.GetSection(SystemConstants.ConfigurationKeys.Projects);
 
         return projects.Reverse().Select(s => new AkytosProject(s.Key, s.Value));
     }

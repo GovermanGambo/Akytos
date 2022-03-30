@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Akytos.Utilities;
 
 namespace Akytos.ProjectManagement;
 
@@ -13,12 +14,14 @@ internal class ProjectGenerator
         }
         
         CreateFolders(projectDirectory);
+
+        string assemblyDirectory = Path.Combine(projectDirectory, SystemConstants.FileSystem.AssemblySubDirectory);
         
-        CreateSolution(projectName, projectDirectory);
+        CreateSolution(projectName, assemblyDirectory);
         
-        CreateProject(projectName, projectDirectory);
+        CreateProject(projectName, assemblyDirectory);
         
-        AddProject(projectName, projectDirectory);
+        AddProject(projectName, assemblyDirectory);
 
         return new AkytosProject(projectName, projectDirectory);
     }
@@ -48,59 +51,39 @@ internal class ProjectGenerator
         return errors;
     }
 
-    private void AddProject(string projectName, string projectDirectory)
+    private static void AddProject(string projectName, string workingDirectory)
     {
-        string command = string.Format(SystemConstants.CommandLine.AddProjectCommand, projectName);
-        var startInfo = new ProcessStartInfo(SystemConstants.CommandLine.DotnetCommand)
-        {
-            Arguments = command,
-            WorkingDirectory = Path.Combine(projectDirectory, SystemConstants.FileSystem.AssemblySubDirectory)
-        };
-        var process = Process.Start(startInfo);
+        string arguments = string.Format(SystemConstants.CommandLine.AddProjectCommand, projectName);
 
-        if (process == null)
-        {
-            throw new Exception();
-        }
-        
-        process.WaitForExit();
+        RunDotnetCommand(arguments, workingDirectory);  
     }
 
-    private void CreateSolution(string projectName, string projectDirectory)
+    private static void CreateSolution(string projectName, string workingDirectory)
     {
-        string command = string.Format(SystemConstants.CommandLine.CreateSolutionCommand, projectName);
-        var startInfo = new ProcessStartInfo(SystemConstants.CommandLine.DotnetCommand);
-        startInfo.Arguments = command;
-        startInfo.WorkingDirectory = Path.Combine(projectDirectory, SystemConstants.FileSystem.AssemblySubDirectory);
-        var process = Process.Start(startInfo);
+        string arguments = string.Format(SystemConstants.CommandLine.CreateSolutionCommand, projectName);
 
-        if (process == null)
-        {
-            throw new Exception();
-        }
-        
-        process.WaitForExit();
+        RunDotnetCommand(arguments, workingDirectory);  
     }
 
-    private void CreateProject(string projectName, string projectDirectory)
+    private static void CreateProject(string projectName, string workingDirectory)
     {
-        string command = string.Format(SystemConstants.CommandLine.CreateProjectCommand, SystemConstants.CommandLine.ProjectTemplateShortName, projectName);
-        var startInfo = new ProcessStartInfo(SystemConstants.CommandLine.DotnetCommand);
-        startInfo.Arguments = command;
-        startInfo.WorkingDirectory = Path.Combine(projectDirectory, SystemConstants.FileSystem.AssemblySubDirectory);
-        var process = Process.Start(startInfo);
+        string arguments = string.Format(SystemConstants.CommandLine.CreateProjectCommand, SystemConstants.CommandLine.ProjectTemplateShortName, projectName);
 
-        if (process == null)
-        {
-            throw new Exception();
-        }
-        
-        process.WaitForExit();
+        RunDotnetCommand(arguments, workingDirectory);   
     }
 
-    private void CreateFolders(string workingDirectory)
+    private void CreateFolders(string projectDirectory)
     {
-        Directory.CreateDirectory(Path.Combine(workingDirectory, SystemConstants.FileSystem.AssemblySubDirectory));
-        Directory.CreateDirectory(Path.Combine(workingDirectory, SystemConstants.FileSystem.AssetsSubDirectory));
+        Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.AssemblySubDirectory));
+        Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.AssetsSubDirectory));
+    }
+
+    private static void RunDotnetCommand(string workingDirectory, string arguments)
+    {
+        var command = new SystemCommand(SystemConstants.CommandLine.DotnetCommand);
+        command.AddArgument(arguments);
+        command.SetWorkingDirectory(workingDirectory);
+        
+        command.Run();
     }
 }
