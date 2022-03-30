@@ -43,6 +43,7 @@ internal class CreateNodeModal : IModal
             }
             else
             {
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
                 m_nodeTypes = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(a => a.GetTypes())
                     .Where(t => t.IsSubclassOf(typeof(Node)) || typeof(Node).IsAssignableFrom(t))
