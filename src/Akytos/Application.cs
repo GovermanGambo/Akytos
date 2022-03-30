@@ -10,9 +10,9 @@ using LightInject;
 
 namespace Akytos;
 
-public abstract class Application : IDisposable
+public abstract class Application
 {
-    private static Application s_application;
+    private static Application? s_application;
     private readonly ILayerStack m_layerStack;
 
     private readonly IServiceContainer m_serviceContainer;
@@ -24,6 +24,7 @@ public abstract class Application : IDisposable
     private float m_lastFrameTime;
 
     private bool m_shouldRestartOnExit;
+    private string m_workingDirectory = string.Empty;
 
     protected Application(string title, int initialWindowWidth, int initialWindowHeight)
     {
@@ -36,7 +37,37 @@ public abstract class Application : IDisposable
         s_application = this;
     }
 
-    public void Dispose()
+    /// <summary>
+    ///     The current working directory of the application.
+    /// </summary>
+    public static string WorkingDirectory
+    {
+        get
+        {
+            if (s_application == null)
+            {
+                throw new NullReferenceException("Application has not been initialized!");
+            }
+
+            if (s_application.m_workingDirectory == string.Empty)
+            {
+                throw new Exception("Working directory was accessed before it was set!");
+            }
+
+            return s_application.m_workingDirectory;
+        }
+        set
+        {
+            if (s_application == null)
+            {
+                throw new NullReferenceException("Application has not been initialized!");
+            }
+            
+            s_application.m_workingDirectory = value;
+        }
+    }
+
+    private void Dispose()
     {
         Dispose(true);
 

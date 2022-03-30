@@ -22,7 +22,7 @@ internal class ProjectManager : IProjectManager
         private set
         {
             m_currentProject = value;
-            AkytosProject.CurrentWorkingDirectory = m_currentProject.ProjectDirectory;
+            Application.WorkingDirectory = m_currentProject.ProjectDirectory;
             ProjectChanged?.Invoke();
         }
     }

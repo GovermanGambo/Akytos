@@ -31,7 +31,7 @@ internal class AssemblyManager
     private IEnumerable<string> GetAssemblyFiles()
     {
         string projectName = m_projectManager.CurrentProject.ProjectName;
-        string assembly = Path.Combine(AkytosProject.CurrentWorkingDirectory,
+        string assembly = Path.Combine(Application.WorkingDirectory,
             SystemConstants.FileSystem.AssemblySubDirectory,
             projectName, "bin", "Release", "net6.0", $"{projectName}.dll");
 

@@ -19,7 +19,7 @@ public static class Asset
     
     private static string GetWorkingDirectory(string path)
     {
-        string directoryName = AkytosProject.CurrentWorkingDirectory;
+        string directoryName = Application.WorkingDirectory;
 
         string fullPath = Path.Combine(directoryName,
             path);
