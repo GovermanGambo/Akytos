@@ -13,7 +13,7 @@ internal static class DotnetUtility
 
     public static void CreateProject(string projectName, string solutionDirectory)
     {
-        string createArguments = string.Format(SystemConstants.CommandLine.CreateProjectCommand, SystemConstants.CommandLine.ProjectTemplateShortName, projectName);
+        string createArguments = string.Format(SystemConstants.CommandLine.CreateProjectCommand, SystemConstants.CommandLine.ProjectTemplateShortName, projectName, projectName);
 
         RunCommand(solutionDirectory, createArguments);
 

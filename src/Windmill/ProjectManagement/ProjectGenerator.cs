@@ -65,7 +65,7 @@ internal class ProjectGenerator
 
     private static void CopyDll(string assemblyDirectory)
     {
-        string executingAssemblyLocation = Assembly.GetExecutingAssembly().Location;
+        string executingAssemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
         string depsDirectory = Path.Combine(assemblyDirectory, "Dependencies");
 
         if (!Directory.Exists(depsDirectory))
