@@ -1,4 +1,3 @@
-using System;
 using Akytos;
 using LightInject;
 
@@ -15,6 +14,11 @@ public class WindmillApp : Application
         base.OnInitialize();
         
         PushLayer<EditorLayer>();
+    }
+
+    internal override void Configure(AppConfigurator configurator)
+    {
+        configurator.EnableImGui = true;
     }
 
     protected override void OnRestart()

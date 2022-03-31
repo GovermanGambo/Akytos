@@ -7,6 +7,7 @@ using LightInject;
 
 [assembly: InternalsVisibleTo("Windmill")]
 [assembly: InternalsVisibleTo("Akytos.Tests")]
+[assembly: InternalsVisibleTo("Sandbox")]
 
 namespace Akytos;
 
@@ -17,10 +18,13 @@ public abstract class Application
 
     private readonly IServiceContainer m_serviceContainer;
     private readonly IGameWindow m_window;
+
+    private readonly AppConfigurator m_appConfigurator;
+    
     private bool m_disposed;
     private IGraphicsDevice m_graphicsDevice = null!;
 
-    private ImGuiLayer m_imGuiLayer = null!;
+    private ImGuiLayer? m_imGuiLayer;
     private float m_lastFrameTime;
 
     private bool m_shouldRestartOnExit;
@@ -34,9 +38,16 @@ public abstract class Application
 
         m_layerStack = new LayerStack(m_serviceContainer);
 
+        m_appConfigurator = new AppConfigurator();
+
         s_application = this;
     }
 
+    internal virtual void Configure(AppConfigurator configurator)
+    {
+        
+    }
+    
     /// <summary>
     ///     The current working directory of the application.
     /// </summary>
@@ -76,6 +87,8 @@ public abstract class Application
 
     internal void Run()
     {
+        Configure(m_appConfigurator);
+        
         OnInitialize();
 
         Debug.LogInformation("Application {0} started successfully.", m_window.Title);
@@ -108,7 +121,7 @@ public abstract class Application
 
     private void UpdateImGui()
     {
-        if (m_imGuiLayer.IsEnabled)
+        if (m_imGuiLayer != null && m_imGuiLayer.IsEnabled)
         {
             foreach (var layer in m_layerStack)
                 if (layer.IsEnabled)
@@ -136,7 +149,11 @@ public abstract class Application
     {
         m_window.Initialize();
 
-        m_imGuiLayer = PushLayer<ImGuiLayer>();
+        if (m_appConfigurator.EnableImGui)
+        {
+            m_imGuiLayer = PushLayer<ImGuiLayer>();
+        }
+        
         m_graphicsDevice = m_serviceContainer.GetInstance<IGraphicsDevice>();
     }
 

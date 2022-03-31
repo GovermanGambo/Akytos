@@ -34,7 +34,7 @@ public class EditorCompositionRoot : ICompositionRoot
         
         serviceRegistry.Register<EditorHotKeyService>();
 
-        serviceRegistry.RegisterSingleton<AppConfiguration>();
+        serviceRegistry.RegisterSingleton<EditorConfiguration>();
 
         RegisterPanels(serviceRegistry);
         RegisterModals(serviceRegistry);

@@ -23,5 +23,6 @@ internal static class SystemConstants
     public static class ConfigurationKeys
     {
         public const string Projects = "Projects";
+        public const string InitialScene = "General/InitialScene";
     }
 }

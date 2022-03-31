@@ -1,14 +1,17 @@
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using Akytos.Configuration;
 
-namespace Akytos.Configuration;
+namespace Windmill;
 
-internal class AppConfiguration : IConfiguration
+internal class EditorConfiguration : IConfiguration
 {
     private const string ConfigurationFileName = "Akytos.ini";
 
     private readonly IConfiguration m_configurationFile;
 
-    public AppConfiguration()
+    public EditorConfiguration()
     {
         string filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, ConfigurationFileName);
         m_configurationFile = new ConfigurationFile(filePath);

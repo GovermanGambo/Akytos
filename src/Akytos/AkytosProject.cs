@@ -1,11 +1,7 @@
-using System;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using Akytos;
 using Akytos.Configuration;
 
-namespace Windmill.ProjectManagement;
+namespace Akytos;
 
 internal class AkytosProject
 {

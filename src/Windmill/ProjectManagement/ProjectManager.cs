@@ -8,13 +8,13 @@ namespace Windmill.ProjectManagement;
 
 internal class ProjectManager : IProjectManager
 {
-    private readonly AppConfiguration m_appConfiguration;
+    private readonly EditorConfiguration m_editorConfiguration;
     private readonly ProjectGenerator m_projectGenerator;
     private AkytosProject m_currentProject;
 
-    public ProjectManager(AppConfiguration appConfiguration, ProjectGenerator projectGenerator)
+    public ProjectManager(EditorConfiguration editorConfiguration, ProjectGenerator projectGenerator)
     {
-        m_appConfiguration = appConfiguration;
+        m_editorConfiguration = editorConfiguration;
         m_projectGenerator = projectGenerator;
     }
 
@@ -33,7 +33,7 @@ internal class ProjectManager : IProjectManager
 
     public IEnumerable<AkytosProject> GetPreviousProjects()
     {
-        var projects = m_appConfiguration.GetSection(SystemConstants.ConfigurationKeys.Projects);
+        var projects = m_editorConfiguration.GetSection(SystemConstants.ConfigurationKeys.Projects);
 
         return projects.Reverse().Select(s => new AkytosProject(s.Key, s.Value));
     }
@@ -65,9 +65,9 @@ internal class ProjectManager : IProjectManager
     public void LoadProject(AkytosProject project)
     {
         string projectKey = $"Projects/{project.ProjectName}";
-        m_appConfiguration.Remove(projectKey);
-        m_appConfiguration.WriteString(projectKey, project.ProjectDirectory);
-        m_appConfiguration.Save();
+        m_editorConfiguration.Remove(projectKey);
+        m_editorConfiguration.WriteString(projectKey, project.ProjectDirectory);
+        m_editorConfiguration.Save();
 
         CurrentProject = project;
 
@@ -81,8 +81,8 @@ internal class ProjectManager : IProjectManager
         CurrentProject = project;
         
         string projectKey = $"Projects/{projectName}";
-        m_appConfiguration.WriteString(projectKey, projectDirectory);
-        m_appConfiguration.Save();
+        m_editorConfiguration.WriteString(projectKey, projectDirectory);
+        m_editorConfiguration.Save();
         
         Debug.LogInformation("Created project {0}", project.ProjectName);
     }
