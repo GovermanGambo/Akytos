@@ -31,11 +31,11 @@ internal class SandboxLayer : ILayer
     public bool IsEnabled { get; set; } = true;
     public void OnAttach()
     {
-        string? initialScene = m_akytosProject.Configuration.ReadString(SystemConstants.ConfigurationKeys.InitialScene);
+        string? initialScene = m_akytosProject.EditorSettings.ReadString(SystemConstants.ConfigurationKeys.LastViewedScene);
 
         if (initialScene == null)
         {
-            throw new MissingConfigurationException(SystemConstants.ConfigurationKeys.InitialScene);
+            throw new MissingConfigurationException(SystemConstants.ConfigurationKeys.LastViewedScene);
         }
 
         var rootNode = m_sceneLoader.LoadScene(initialScene);

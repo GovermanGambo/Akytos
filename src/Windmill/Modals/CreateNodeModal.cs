@@ -26,6 +26,7 @@ internal class CreateNodeModal : IModal
     {
         m_sceneEditorContext = sceneEditorContext;
         m_actionExecutor = actionExecutor;
+        m_nodeTypes = Array.Empty<Type>();
     }
 
     public string Name => LocalizedStrings.AddNode;
@@ -43,7 +44,6 @@ internal class CreateNodeModal : IModal
             }
             else
             {
-                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
                 m_nodeTypes = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(a => a.GetTypes())
                     .Where(t => t.IsSubclassOf(typeof(Node)) || typeof(Node).IsAssignableFrom(t))

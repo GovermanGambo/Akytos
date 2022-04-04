@@ -43,7 +43,7 @@ internal class SceneEditorContext
 
     public bool TryLoadPreviousScene()
     {
-        string? previousScene = m_projectManager.CurrentProject.Configuration.ReadString("General/InitialScene");
+        string? previousScene = m_projectManager.CurrentProject.EditorSettings.ReadString(SystemConstants.ConfigurationKeys.LastViewedScene);
 
         if (previousScene == null)
         {
@@ -63,8 +63,8 @@ internal class SceneEditorContext
             m_spriteRendererSystem.Context = SceneTree.CurrentScene;
             CurrentSceneFilename = filePath;
 
-            m_projectManager.CurrentProject.Configuration.WriteString("General/InitialScene", filePath);
-            m_projectManager.CurrentProject.Configuration.Save();
+            m_projectManager.CurrentProject.EditorSettings.WriteString(SystemConstants.ConfigurationKeys.LastViewedScene, filePath);
+            m_projectManager.CurrentProject.EditorSettings.Save();
 
             Debug.LogInformation("Loaded scene: {0}", filePath);
 
@@ -83,8 +83,8 @@ internal class SceneEditorContext
         CurrentSceneFilename = filePath;
         HasUnsavedChanges = false;
 
-        m_projectManager.CurrentProject.Configuration.WriteString("General/InitialScene", filePath);
-        m_projectManager.CurrentProject.Configuration.Save();
+        m_projectManager.CurrentProject.EditorSettings.WriteString(SystemConstants.ConfigurationKeys.LastViewedScene, filePath);
+        m_projectManager.CurrentProject.EditorSettings.Save();
 
         Debug.LogInformation("Saved scene: {0}", filePath);
     }

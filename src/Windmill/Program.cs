@@ -2,5 +2,5 @@
 
 using Windmill;
 
-var app = new WindmillApp("Akytos Windmill", 1920, 1080);
+var app = new WindmillApp();
 app.Run();

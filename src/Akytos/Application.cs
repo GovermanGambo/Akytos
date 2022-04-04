@@ -1,13 +1,8 @@
-using System.Runtime.CompilerServices;
 using Akytos.Events;
 using Akytos.Graphics;
 using Akytos.Layers;
 using Akytos.Windowing;
 using LightInject;
-
-[assembly: InternalsVisibleTo("Windmill")]
-[assembly: InternalsVisibleTo("Akytos.Tests")]
-[assembly: InternalsVisibleTo("Sandbox")]
 
 namespace Akytos;
 
@@ -30,15 +25,16 @@ public abstract class Application
     private bool m_shouldRestartOnExit;
     private string m_workingDirectory = string.Empty;
 
-    protected Application(string title, int initialWindowWidth, int initialWindowHeight)
+    protected Application()
     {
+        m_appConfigurator = new AppConfigurator();
+        Configure(m_appConfigurator);
+        
         m_serviceContainer = new ServiceContainer();
         m_serviceContainer.RegisterSingleton<IServiceFactory>(factory => factory);
-        m_window = CreateWindow(title, initialWindowWidth, initialWindowHeight);
+        m_window = CreateWindow(m_appConfigurator.Title, m_appConfigurator.Width, m_appConfigurator.Height);
 
         m_layerStack = new LayerStack(m_serviceContainer);
-
-        m_appConfigurator = new AppConfigurator();
 
         s_application = this;
     }
@@ -87,8 +83,6 @@ public abstract class Application
 
     internal void Run()
     {
-        Configure(m_appConfigurator);
-        
         OnInitialize();
 
         Debug.LogInformation("Application {0} started successfully.", m_window.Title);

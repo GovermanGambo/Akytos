@@ -5,8 +5,11 @@ namespace Sandbox;
 
 internal class SandboxApp : Application
 {
-    public SandboxApp(AkytosProject akytosProject) : base("Akytos Sandbox", 1280, 720)
+    private readonly AkytosProject m_akytosProject;
+    
+    public SandboxApp(AkytosProject akytosProject)
     {
+        m_akytosProject = akytosProject;
         WorkingDirectory = akytosProject.ProjectDirectory;
     }
 
@@ -20,7 +23,7 @@ internal class SandboxApp : Application
     protected override void RegisterServices(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.Register<SandboxLayer>();
-        serviceRegistry.RegisterSingleton<AkytosProject>();
+        serviceRegistry.RegisterSingleton(_ => m_akytosProject);
     }
 
     protected override void OnRestart()

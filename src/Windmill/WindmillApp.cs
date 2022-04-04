@@ -5,10 +5,6 @@ namespace Windmill;
 
 public class WindmillApp : Application
 {
-    public WindmillApp(string title, int initialWindowWidth, int initialWindowHeight) : base(title, initialWindowWidth, initialWindowHeight)
-    {
-    }
-
     protected override void OnInitialize()
     {
         base.OnInitialize();
@@ -18,6 +14,9 @@ public class WindmillApp : Application
 
     internal override void Configure(AppConfigurator configurator)
     {
+        configurator.Title = "Akytos Windmill";
+        configurator.Width = 1920;
+        configurator.Height = 1080;
         configurator.EnableImGui = true;
     }
 

@@ -14,6 +14,8 @@ internal class AkytosProject
         var directoryInfo = new DirectoryInfo(projectDirectory);
         LastModifiedTime = directoryInfo.LastWriteTime;
         Configuration = new ConfigurationFile(Path.Combine(projectDirectory, $"{projectName}{ProjectExtension}"));
+        EditorSettings = new ConfigurationFile(Path.Combine(projectDirectory,
+            SystemConstants.FileSystem.ProjectEditorSettingsFileExtension));
 
         Configuration.WriteString("General/ProjectName", projectName);
         Configuration.WriteString("General/ProjectDirectory", projectDirectory);
@@ -38,6 +40,7 @@ internal class AkytosProject
     public Version AppVersion { get; }
 
     public IConfiguration Configuration { get; }
+    public IConfiguration EditorSettings { get; }
 
     public static AkytosProject Load(string projectDirectory)
     {

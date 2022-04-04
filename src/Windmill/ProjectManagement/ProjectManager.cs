@@ -10,7 +10,7 @@ internal class ProjectManager : IProjectManager
 {
     private readonly EditorConfiguration m_editorConfiguration;
     private readonly ProjectGenerator m_projectGenerator;
-    private AkytosProject m_currentProject;
+    private AkytosProject m_currentProject = null!;
 
     public ProjectManager(EditorConfiguration editorConfiguration, ProjectGenerator projectGenerator)
     {

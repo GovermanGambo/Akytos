@@ -38,7 +38,7 @@ internal class FileDialogModal : IModal
 
     public string Name => "Save Scene";
 
-    public event Action<string> Select; 
+    public event Action<string>? Select; 
 
     public bool IsOpen
     {

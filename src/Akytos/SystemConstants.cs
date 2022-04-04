@@ -9,6 +9,7 @@ internal static class SystemConstants
         public const string ProjectFileExtension = ".akproj";
         public const string SceneFileExtension = ".ascn";
         public const string AssetsDirectoryPrefix = "Assets://";
+        public const string ProjectEditorSettingsFileExtension = ".editorsettings";
     }
 
     public static class CommandLine
@@ -23,6 +24,6 @@ internal static class SystemConstants
     public static class ConfigurationKeys
     {
         public const string Projects = "Projects";
-        public const string InitialScene = "General/InitialScene";
+        public const string LastViewedScene = "General/LastViewedScene";
     }
 }
