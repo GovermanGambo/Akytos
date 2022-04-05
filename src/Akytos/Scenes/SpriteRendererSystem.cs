@@ -2,7 +2,7 @@ using Akytos.Graphics;
 
 namespace Akytos;
 
-internal class SpriteRendererSystem
+internal class SpriteRendererSystem : ISceneSystem
 {
     private readonly SpriteBatch m_spriteBatch;
 
@@ -14,7 +14,14 @@ internal class SpriteRendererSystem
     public Node? Context { get; set; }
     public ICamera? Camera { get; set; }
 
+    public bool IsEnabled { get; set; } = true;
+
     public void OnUpdate(DeltaTime deltaTime)
+    {
+        
+    }
+
+    public void OnRender()
     {
         if (Context == null || Camera == null)
         {

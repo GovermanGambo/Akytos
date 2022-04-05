@@ -51,7 +51,7 @@ public abstract class Application
     {
         get
         {
-            if (s_application == null)
+            if (s_application is null)
             {
                 throw new NullReferenceException("Application has not been initialized!");
             }
@@ -65,7 +65,7 @@ public abstract class Application
         }
         set
         {
-            if (s_application == null)
+            if (s_application is null)
             {
                 throw new NullReferenceException("Application has not been initialized!");
             }

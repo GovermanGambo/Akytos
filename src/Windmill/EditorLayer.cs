@@ -22,29 +22,27 @@ internal class EditorLayer : ILayer
     private readonly ModalStack m_modalStack;
     private readonly PanelManager m_panelManager;
     private readonly IProjectManager m_projectManager;
-    private readonly SpriteRendererSystem m_renderingSystem;
     private readonly SceneEditorContext m_sceneEditorContext;
-    private readonly SceneTree m_sceneTree;
+    private readonly SystemsRegistry m_systemsRegistry;
 
     private IFramebuffer m_framebuffer = null!;
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
-        IEditorViewport editorViewport, SpriteRendererSystem spriteRenderingSystem, PanelManager panelManager,
-        MenuService menuService, SceneTree sceneTree, ModalStack modalStack, EditorHotKeyService editorHotKeyService,
-        SceneEditorContext sceneEditorContext, IProjectManager projectManager, AssemblyManager assemblyManager)
+        IEditorViewport editorViewport, PanelManager panelManager, MenuService menuService, ModalStack modalStack, 
+        EditorHotKeyService editorHotKeyService, SceneEditorContext sceneEditorContext, IProjectManager projectManager, 
+        AssemblyManager assemblyManager, SystemsRegistry systemsRegistry)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
         m_editorViewport = editorViewport;
-        m_renderingSystem = spriteRenderingSystem;
         m_panelManager = panelManager;
         m_menuService = menuService;
-        m_sceneTree = sceneTree;
         m_modalStack = modalStack;
         m_editorHotKeyService = editorHotKeyService;
         m_sceneEditorContext = sceneEditorContext;
         m_projectManager = projectManager;
         m_assemblyManager = assemblyManager;
+        m_systemsRegistry = systemsRegistry;
     }
 
     public void Dispose()
@@ -80,7 +78,8 @@ internal class EditorLayer : ILayer
         var viewportPanel = m_panelManager.GetPanel<ViewportPanel>();
         viewportPanel.Framebuffer = m_framebuffer;
 
-        m_renderingSystem.Camera = m_editorViewport.Camera;
+        var renderingSystem = m_systemsRegistry.Register<SpriteRendererSystem>();
+        renderingSystem.Camera = m_editorViewport.Camera;
     }
 
     public void OnDetach()
@@ -91,10 +90,14 @@ internal class EditorLayer : ILayer
     {
         m_framebuffer.Bind();
 
+        // Update
+        
         m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
         m_graphicsDevice.Clear();
-
-        m_renderingSystem.OnUpdate(time);
+        
+        // Render
+        
+        m_systemsRegistry.OnRender();
 
         m_panelManager.GetPanel<ViewportPanel>().OnRender();
 

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Akytos;
 using Akytos.Configuration;
 using Akytos.Editor;
 using Akytos.Windowing;
@@ -22,6 +23,8 @@ public class EditorCompositionRoot : ICompositionRoot
             return new EditorViewport(window.Width, window.Height);
         });
 
+        // TODO: Ensure that this override actually works
+        serviceRegistry.RegisterSingleton(_ => new SceneTree(SceneProcessMode.Editor));
         serviceRegistry.RegisterSingleton<PanelManager>();
         serviceRegistry.RegisterSingleton<SceneEditorContext>();
         serviceRegistry.Register<MenuService>();
