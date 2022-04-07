@@ -36,6 +36,7 @@ public abstract class Application
         
         m_serviceContainer = new ServiceContainer();
         m_serviceContainer.RegisterSingleton<IServiceFactory>(factory => factory);
+        m_serviceContainer.RegisterSingleton(_ => m_serviceContainer);
         m_window = CreateWindow(m_appConfigurator.Title, m_appConfigurator.Width, m_appConfigurator.Height);
 
         m_layerStack = new LayerStack(m_serviceContainer);
@@ -148,6 +149,8 @@ public abstract class Application
         m_window.Initialize();
 
         Input.Initialize(((IWindow)m_window.GetNativeWindow()).CreateInput());
+        
+        RegisterServices(m_serviceContainer);
         
         if (m_appConfigurator.EnableImGui)
         {
