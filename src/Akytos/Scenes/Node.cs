@@ -130,6 +130,21 @@ public class Node
         return m_currentPath;
     }
 
+    public int GetSiblingIndex()
+    {
+        if (!IsInsideTree)
+        {
+            return -1;
+        }
+
+        if (Owner is null)
+        {
+            return 0;
+        }
+        
+        return Owner.ImmediateChildren.IndexOf(this);
+    }
+
     /// <summary>
     ///     Finds a child Node specified by the path. Accepts absolute paths if the Node is inside a <see cref="SceneTree" />
     /// </summary>
