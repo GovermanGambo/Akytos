@@ -1,4 +1,4 @@
-namespace Akytos.Diagnostics;
+namespace Akytos.Diagnostics.Logging;
 
 [Flags]
 public enum LogLevel

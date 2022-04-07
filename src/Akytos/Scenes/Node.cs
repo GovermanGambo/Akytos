@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using Akytos.Analytics;
+using Akytos.Diagnostics.Logging;
 
 namespace Akytos;
 

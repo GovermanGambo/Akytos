@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Akytos;
-using Akytos.Analytics;
+using Akytos.Diagnostics.Logging;
 using Akytos.Events;
 using ImGuiNET;
 using Windmill.Actions;

@@ -1,4 +1,4 @@
-using Akytos.Analytics;
+using Akytos.Diagnostics.Logging;
 using Akytos.Graphics;
 
 namespace Akytos.Assets;

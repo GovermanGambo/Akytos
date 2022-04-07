@@ -2,7 +2,7 @@ using Serilog;
 using Serilog.Configuration;
 using Serilog.Events;
 
-namespace Windmill.Services;
+namespace Windmill.Diagnostics.Logging;
 
 internal static class LoggerSinkConfigurationExtensions
 {

@@ -9,9 +9,11 @@ using LightInject;
 using Serilog;
 using Serilog.Events;
 using Windmill.Actions;
+using Windmill.Diagnostics.Logging;
 using Windmill.Panels;
 using Windmill.ProjectManagement;
 using Windmill.Services;
+using Log = Akytos.Diagnostics.Logging.Log;
 
 namespace Windmill;
 
@@ -51,7 +53,7 @@ public class EditorCompositionRoot : ICompositionRoot
     private static void ConfigureLogging(IServiceRegistry serviceRegistry)
     {
         var consoleService = new ConsoleService();
-        Akytos.Analytics.Log.InitializeLogging((coreConfiguration, clientConfiguration) =>
+        Log.InitializeLogging((coreConfiguration, clientConfiguration) =>
         {
             coreConfiguration
 #if DEBUG_EDITOR || DEBUG

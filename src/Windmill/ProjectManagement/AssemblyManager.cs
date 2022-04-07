@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Akytos;
-using Akytos.Analytics;
+using Akytos.Diagnostics.Logging;
 
 namespace Windmill.ProjectManagement;
 

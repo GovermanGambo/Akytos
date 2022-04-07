@@ -1,5 +1,5 @@
 using Akytos;
-using Akytos.Analytics;
+using Akytos.Diagnostics.Logging;
 using Akytos.Events;
 using ImGuiNET;
 using Windmill.Actions;

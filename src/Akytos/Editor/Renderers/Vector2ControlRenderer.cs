@@ -1,5 +1,5 @@
 using System.Numerics;
-using Akytos.Analytics;
+using Akytos.Diagnostics.Logging;
 
 namespace Akytos.Editor.Renderers;
 

@@ -1,4 +1,4 @@
-using Log = Akytos.Analytics.Log;
+using Log = Akytos.Diagnostics.Logging.Log;
 
 namespace Akytos;
 

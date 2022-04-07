@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Akytos.Diagnostics;
+using Akytos.Diagnostics.Logging;
 
-namespace Windmill.Services;
+namespace Windmill.Diagnostics.Logging;
 
 internal class ConsoleService
 {

@@ -1,6 +1,6 @@
 using System.IO;
 using Akytos;
-using Akytos.Analytics;
+using Akytos.Diagnostics.Logging;
 using Windmill.ProjectManagement;
 
 namespace Windmill.Services;

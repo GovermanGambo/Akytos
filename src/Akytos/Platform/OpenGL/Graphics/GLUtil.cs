@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using Akytos.Analytics;
+using Akytos.Diagnostics.Logging;
 using Silk.NET.OpenGL;
 
 namespace Akytos.Graphics;

@@ -1,4 +1,4 @@
-using Akytos.Analytics;
+using Akytos.Diagnostics.Logging;
 
 #if AKYTOS_EDITOR
 

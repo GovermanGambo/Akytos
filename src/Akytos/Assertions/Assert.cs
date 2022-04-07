@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using Akytos.Analytics;
+using Akytos.Diagnostics.Logging;
 
 namespace Akytos.Assertions;
 

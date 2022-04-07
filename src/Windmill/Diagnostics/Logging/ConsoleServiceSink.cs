@@ -1,8 +1,9 @@
 using System;
-using Akytos.Diagnostics;
+using Akytos.Diagnostics.Logging;
 using Serilog.Core;
+using Windmill.Services;
 
-namespace Windmill.Services;
+namespace Windmill.Diagnostics.Logging;
 
 internal class ConsoleServiceSink : ILogEventSink
 {

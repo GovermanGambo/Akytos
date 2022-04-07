@@ -1,7 +1,7 @@
 using Serilog;
 using Serilog.Core;
 
-namespace Akytos.Analytics;
+namespace Akytos.Diagnostics.Logging;
 
 internal static class Log
 {
