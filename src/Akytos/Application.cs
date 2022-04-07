@@ -3,6 +3,9 @@ using Akytos.Graphics;
 using Akytos.Layers;
 using Akytos.Windowing;
 using LightInject;
+using Silk.NET.Input;
+using Silk.NET.SDL;
+using Silk.NET.Windowing;
 
 namespace Akytos;
 
@@ -143,6 +146,8 @@ public abstract class Application
     {
         m_window.Initialize();
 
+        Input.Initialize(((IWindow)m_window.GetNativeWindow()).CreateInput());
+        
         if (m_appConfigurator.EnableImGui)
         {
             m_imGuiLayer = PushLayer<ImGuiLayer>();

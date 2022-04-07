@@ -13,8 +13,6 @@ internal class WindowsWindowFactory : IWindowFactory
         windowOptions.Size = new Vector2D<int>(properties.Width, properties.Height);
 
         var window = Window.Create(windowOptions);
-        
-        Input.Initialize(window.CreateInput());
 
         return new WindowsWindow(window);
     }

@@ -9,7 +9,6 @@ public class ScenesCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton<SpriteRendererSystem>();
         
         // TODO: Check for custom implementation?
-        serviceRegistry.RegisterSingleton<SceneTree>();
         serviceRegistry.Register<SceneLoader>();
     }
 }
