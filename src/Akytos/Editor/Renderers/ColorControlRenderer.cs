@@ -1,3 +1,5 @@
+using Akytos.Analytics;
+
 namespace Akytos.Editor.Renderers;
 
 public class ColorControlRenderer : IGuiControlRenderer<Color>
@@ -11,7 +13,7 @@ public class ColorControlRenderer : IGuiControlRenderer<Color>
     {
         if (value == null)
         {
-            Debug.LogError("Color value cannot be null!");
+            Log.Core.Error("Color value cannot be null!");
             return false;
         }
 

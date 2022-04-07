@@ -1,3 +1,5 @@
+using Akytos.Analytics;
+
 namespace Akytos.Editor.Renderers;
 
 public class BoolControlRenderer : IGuiControlRenderer<bool>
@@ -11,7 +13,7 @@ public class BoolControlRenderer : IGuiControlRenderer<bool>
     {
         if (value == null)
         {
-            Debug.LogError("Bool value cannot be null!");
+            Log.Core.Error("Bool value cannot be null!");
             return false;
         }
         

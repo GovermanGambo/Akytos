@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Akytos;
+using Akytos.Analytics;
 using Akytos.Configuration;
 
 namespace Windmill.ProjectManagement;
@@ -57,7 +58,7 @@ internal class ProjectManager : IProjectManager
 
         CurrentProject = project;
         
-        Debug.LogInformation("Loaded project {0}", project.ProjectName);
+        Log.Core.Information("Loaded project {0}", project.ProjectName);
 
         return true;
     }
@@ -71,7 +72,7 @@ internal class ProjectManager : IProjectManager
 
         CurrentProject = project;
 
-        Debug.LogInformation("Loaded project {0}", project.ProjectName);
+        Log.Core.Information("Loaded project {0}", project.ProjectName);
     }
 
     public void CreateNewProject(string projectName, string projectDirectory)
@@ -84,7 +85,7 @@ internal class ProjectManager : IProjectManager
         m_editorConfiguration.WriteString(projectKey, projectDirectory);
         m_editorConfiguration.Save();
         
-        Debug.LogInformation("Created project {0}", project.ProjectName);
+        Log.Core.Information("Created project {0}", project.ProjectName);
     }
     
 }

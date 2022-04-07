@@ -1,4 +1,5 @@
 using System.Numerics;
+using Akytos.Analytics;
 
 namespace Akytos.Editor.Renderers;
 
@@ -13,7 +14,7 @@ public class Vector2ControlRenderer : IGuiControlRenderer<Vector2>
     {
         if (value == null)
         {
-            Debug.LogError("Vector2 values cannot be null!");
+            Log.Core.Error("Vector2 values cannot be null!");
             return false;
         }
 

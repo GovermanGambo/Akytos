@@ -2,9 +2,11 @@ using System;
 using System.Linq;
 using Akytos;
 using Akytos.Configuration;
+using Akytos.Diagnostics;
 using Akytos.Editor;
 using Akytos.Windowing;
 using LightInject;
+using Serilog;
 using Windmill.Actions;
 using Windmill.Panels;
 using Windmill.ProjectManagement;
@@ -41,6 +43,31 @@ public class EditorCompositionRoot : ICompositionRoot
 
         RegisterPanels(serviceRegistry);
         RegisterModals(serviceRegistry);
+        
+        ConfigureLogging(serviceRegistry);
+    }
+
+    private static void ConfigureLogging(IServiceRegistry serviceRegistry)
+    {
+        var consoleService = new ConsoleService();
+        Akytos.Analytics.Log.InitializeLogging((coreConfiguration, clientConfiguration) =>
+        {
+            coreConfiguration
+#if DEBUG_EDITOR || DEBUG
+                .WriteTo.Console()
+                .MinimumLevel.Debug()
+#else
+                .MinimumLevel.Information()
+#endif
+                .WriteTo.File(SystemConstants.FileSystem.LogOutputFile, rollingInterval: RollingInterval.Day,
+                    rollOnFileSizeLimit: true);
+            
+            clientConfiguration
+                .MinimumLevel.Debug()
+                .WriteTo.Console();
+        });
+
+        serviceRegistry.RegisterSingleton(_ => consoleService);
     }
 
     private static void RegisterModals(IServiceRegistry serviceRegistry)

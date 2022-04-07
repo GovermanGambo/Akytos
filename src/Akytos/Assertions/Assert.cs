@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Akytos.Analytics;
 
 namespace Akytos.Assertions;
 
@@ -57,7 +58,7 @@ public static class Assert
 #if DEBUG
         throw new AssertionException(message);
 #else
-        Debug.LogError(message);
+        Log.Core.Error(message);
 #endif
     }
 }

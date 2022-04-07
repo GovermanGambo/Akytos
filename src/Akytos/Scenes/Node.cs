@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Akytos.Analytics;
 
 namespace Akytos;
 
@@ -113,7 +114,7 @@ public class Node
     {
         if (!IsInsideTree)
         {
-            Debug.LogError($"{Name} is not part of any {nameof(SceneTree)}.");
+            Log.Core.Error($"{Name} is not part of any {nameof(SceneTree)}.");
             return null;
         }
 
@@ -170,7 +171,7 @@ public class Node
     {
         if (node.Owner != null || node.Owner == null && node.SceneTree != null)
         {
-            Debug.LogError($"{node.Name} already has an owner! Call 'RemoveChild(Node node)' first.");
+            Log.Core.Error($"{node.Name} already has an owner! Call 'RemoveChild(Node node)' first.");
             return Result.InvalidData;
         }
 
@@ -184,7 +185,7 @@ public class Node
             }
             else
             {
-                Debug.LogError($"There is already an immediate child named {node.Name}");
+                Log.Core.Error($"There is already an immediate child named {node.Name}");
                 return Result.InvalidData;
             }
         }
@@ -212,7 +213,7 @@ public class Node
     {
         if (!m_children.Contains(node))
         {
-            Debug.LogError($"{node.Name} is not a child of {Name}.");
+            Log.Core.Error($"{node.Name} is not a child of {Name}.");
             return Result.InvalidData;
         }
 

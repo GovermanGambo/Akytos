@@ -1,3 +1,4 @@
+using Akytos.Analytics;
 using Akytos.Events;
 using Akytos.Graphics;
 using Akytos.Layers;
@@ -85,7 +86,7 @@ public abstract class Application
     {
         OnInitialize();
 
-        Debug.LogInformation("Application {0} started successfully.", m_window.Title);
+        Log.Core.Information("Application {0} started successfully.", m_window.Title);
 
         while (!m_window.IsClosing)
         {
@@ -130,7 +131,7 @@ public abstract class Application
         var layer = m_layerStack.PushLayer<TLayer>();
         layer.OnAttach();
 
-        Debug.LogInformation("Pushed layer {0}.", typeof(TLayer).Name);
+        Log.Core.Information("Pushed layer {0}.", typeof(TLayer).Name);
 
         return layer;
     }

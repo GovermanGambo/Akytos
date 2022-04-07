@@ -1,3 +1,5 @@
+using Akytos.Analytics;
+
 #if AKYTOS_EDITOR
 
 namespace Akytos.Editor.Renderers;
@@ -13,7 +15,7 @@ internal class TextControlRenderer : IGuiControlRenderer<string>
     {
         if (value == null)
         {
-            Debug.LogError("String values cannot be null!");
+            Log.Core.Error("String values cannot be null!");
             return false;
         }
 

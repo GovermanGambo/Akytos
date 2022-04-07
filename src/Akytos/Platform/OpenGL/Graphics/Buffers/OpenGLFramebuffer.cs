@@ -1,3 +1,4 @@
+using Akytos.Analytics;
 using Akytos.Assertions;
 using Silk.NET.OpenGL;
 using Boolean = Silk.NET.OpenGL.Boolean;
@@ -71,7 +72,7 @@ internal class OpenGLFramebuffer : IFramebuffer
     public void Resize(uint width, uint height)
     {
         if (width == 0 || height == 0 || width > MaxFrameBufferSize || height > MaxFrameBufferSize)
-            Debug.LogWarning($"Attempted to resize frame buffer: {width}, {height}");
+            Log.Core.Error($"Attempted to resize frame buffer: {width}, {height}");
 
         Specification.Width = width;
         Specification.Height = height;
@@ -172,7 +173,7 @@ internal class OpenGLFramebuffer : IFramebuffer
         }
 
         var status = m_gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
-        if (status != GLEnum.FramebufferComplete) Debug.LogError($"FrameBuffer is incomplete! ({status})");
+        if (status != GLEnum.FramebufferComplete) Log.Core.Error($"FrameBuffer is incomplete! ({status})");
 
         m_gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
     }

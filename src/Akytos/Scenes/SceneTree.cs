@@ -10,7 +10,7 @@ public sealed class SceneTree
     internal SceneProcessMode ProcessMode { get; }
     
     public Node CurrentScene { get; private set; } = null!;
-
+    
     public int NodeCount => CurrentScene.GetChildren(true).Count();
 
     public event Action<Node>? NodeAdded;
