@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Akytos;
+using Akytos.Diagnostics.Logging;
 using Akytos.Events;
 using ImGuiNET;
 using Windmill.Actions;
@@ -202,7 +203,7 @@ internal class CreateNodeModal : IModal
 
         if (node == null)
         {
-            Debug.LogError("Failed to create Node instance of type: {0}", nodeType.FullName);
+            Log.Core.Error("Failed to create Node instance of type: {0}", nodeType.FullName);
             return Result.InvalidData;
         }
 

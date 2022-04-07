@@ -1,3 +1,5 @@
+using Akytos.Diagnostics.Logging;
+
 #if AKYTOS_EDITOR
 
 namespace Akytos.Editor.Renderers;
@@ -13,7 +15,7 @@ internal class FloatControlRenderer : IGuiControlRenderer<float>
     {
         if (value == null)
         {
-            Debug.LogError("Float values cannot be null!");
+            Log.Core.Error("Float values cannot be null!");
             return false;
         }
 

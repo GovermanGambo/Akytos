@@ -1,3 +1,5 @@
+using Akytos.Diagnostics.Logging;
+
 #if AKYTOS_EDITOR
 
 namespace Akytos.Editor.Renderers;
@@ -18,7 +20,7 @@ public class IntControlRenderer : IGuiControlRenderer<int>
     {
         if (value == null)
         {
-            Debug.LogError("Int values cannot be null!");
+            Log.Core.Error("Integer values cannot be null!");
             return false;
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Akytos;
+using Akytos.Diagnostics.Logging;
 
 namespace Windmill.ProjectManagement;
 
@@ -27,7 +28,7 @@ internal class AssemblyManager
             }
             catch (Exception e)
             {
-                Debug.LogError("Failed to load assembly {0}", assembly);
+                Log.Core.Error(e, "Failed to load assembly {0}", assembly);
             }
         }
     }

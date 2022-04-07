@@ -1,5 +1,6 @@
 using System.IO;
 using Akytos;
+using Akytos.Diagnostics.Logging;
 using Windmill.ProjectManagement;
 
 namespace Windmill.Services;
@@ -66,13 +67,13 @@ internal class SceneEditorContext
             m_projectManager.CurrentProject.EditorSettings.WriteString(SystemConstants.ConfigurationKeys.LastViewedScene, filePath);
             m_projectManager.CurrentProject.EditorSettings.Save();
 
-            Debug.LogInformation("Loaded scene: {0}", filePath);
+            Log.Core.Information("Loaded scene: {0}", filePath);
 
             return true;
         }
         catch (IOException e)
         {
-            Debug.LogError("Failed to load scene {0}: {1}", filePath, e.Message);
+             Log.Core.Error(e, "Failed to load scene {0}: {1}", filePath, e.Message);
             return false;
         }
     }
@@ -86,6 +87,6 @@ internal class SceneEditorContext
         m_projectManager.CurrentProject.EditorSettings.WriteString(SystemConstants.ConfigurationKeys.LastViewedScene, filePath);
         m_projectManager.CurrentProject.EditorSettings.Save();
 
-        Debug.LogInformation("Saved scene: {0}", filePath);
+        Log.Core.Information("Saved scene: {0}", filePath);
     }
 }

@@ -1,3 +1,4 @@
+using Akytos.Diagnostics.Logging;
 using Akytos.Graphics;
 
 namespace Akytos.Assets;
@@ -57,7 +58,7 @@ internal class AssetManager : IAssetManager
         }
         catch (Exception e)
         {
-            Debug.LogError("Failed to load file {0}: {1}", filename, e.Message);
+            Log.Core.Error(e, "Failed to load file {0}: {1}", filename, e.Message);
             return null;
         }
     }

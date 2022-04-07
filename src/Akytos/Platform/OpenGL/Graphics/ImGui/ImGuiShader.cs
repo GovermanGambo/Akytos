@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Akytos.Diagnostics.Logging;
 using Silk.NET.OpenGL;
 
 namespace Akytos.Graphics;
@@ -75,7 +76,7 @@ internal class ImGuiShader
             location = m_gl.GetUniformLocation(Program, uniform);
             m_uniformToLocation.Add(uniform, location);
 
-            if (location == -1) Debug.LogError($"The uniform '{uniform}' does not exist in the shader!");
+            if (location == -1) Log.Core.Error($"The uniform '{uniform}' does not exist in the shader!");
         }
 
         return location;
@@ -89,7 +90,7 @@ internal class ImGuiShader
             location = m_gl.GetAttribLocation(Program, attrib);
             m_attribLocation.Add(attrib, location);
 
-            if (location == -1) Debug.LogError($"The attrib '{attrib}' does not exist in the shader!");
+            if (location == -1) Log.Core.Error($"The attrib '{attrib}' does not exist in the shader!");
         }
 
         return location;
@@ -112,7 +113,7 @@ internal class ImGuiShader
         if (success == 0)
         {
             var info = m_gl.GetProgramInfoLog(program);
-            Debug.LogError($"GL.LinkProgram had info log:\n{info}");
+            Log.Core.Error($"GL.LinkProgram had info log:\n{info}");
         }
 
         foreach (var shader in shaders)
@@ -136,7 +137,7 @@ internal class ImGuiShader
         if (success == 0)
         {
             var info = m_gl.GetShaderInfoLog(shader);
-            Debug.LogError($"GL.CompileShader for shader [{type}] had info log:\n{info}");
+            Log.Core.Error($"GL.CompileShader for shader [{type}] had info log:\n{info}");
         }
 
         return shader;

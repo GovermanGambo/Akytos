@@ -1,4 +1,5 @@
 using Akytos;
+using Akytos.Diagnostics.Logging;
 using Akytos.Events;
 using ImGuiNET;
 using Windmill.Actions;
@@ -68,7 +69,7 @@ internal class HierarchyPanel : IEditorPanel
         var nodePath = node.GetPath();
         if (nodePath == null)
         {
-            Debug.LogWarning($"No path was found for node {node.Name}.");
+            Log.Core.Error("No path was found for node {0}.", node.Name);
             return;
         }
 

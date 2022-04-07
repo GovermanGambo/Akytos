@@ -10,6 +10,7 @@ internal static class SystemConstants
         public const string SceneFileExtension = ".ascn";
         public const string AssetsDirectoryPrefix = "Assets://";
         public const string ProjectEditorSettingsFileExtension = ".editorsettings";
+        public const string LogOutputFile = "log.txt";
     }
 
     public static class CommandLine
