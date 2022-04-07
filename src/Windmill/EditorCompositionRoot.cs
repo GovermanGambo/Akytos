@@ -7,6 +7,7 @@ using Akytos.Editor;
 using Akytos.Windowing;
 using LightInject;
 using Serilog;
+using Serilog.Events;
 using Windmill.Actions;
 using Windmill.Panels;
 using Windmill.ProjectManagement;
@@ -60,11 +61,13 @@ public class EditorCompositionRoot : ICompositionRoot
                 .MinimumLevel.Information()
 #endif
                 .WriteTo.File(SystemConstants.FileSystem.LogOutputFile, rollingInterval: RollingInterval.Day,
-                    rollOnFileSizeLimit: true);
-            
+                    rollOnFileSizeLimit: true)
+                .WriteTo.ConsoleService(consoleService, LogEventLevel.Error);
+
             clientConfiguration
                 .MinimumLevel.Debug()
-                .WriteTo.Console();
+                .WriteTo.Console()
+                .WriteTo.ConsoleService(consoleService);
         });
 
         serviceRegistry.RegisterSingleton(_ => consoleService);

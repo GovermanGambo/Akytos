@@ -1,6 +1,8 @@
+using System;
+using Akytos.Diagnostics;
 using Serilog.Core;
 
-namespace Akytos.Diagnostics;
+namespace Windmill.Services;
 
 internal class ConsoleServiceSink : ILogEventSink
 {
