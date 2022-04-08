@@ -14,13 +14,15 @@ internal class MenuService
     private readonly SceneEditorContext m_editorContext;
     private readonly ModalStack m_modalStack;
     private readonly ActionExecutor m_actionExecutor;
+    private readonly AssemblyManager m_assemblyManager;
     
-    public MenuService(PanelManager panelManager, SceneEditorContext editorContext, ModalStack modalStack, ActionExecutor actionExecutor)
+    public MenuService(PanelManager panelManager, SceneEditorContext editorContext, ModalStack modalStack, ActionExecutor actionExecutor, AssemblyManager assemblyManager)
     {
         m_panelManager = panelManager;
         m_editorContext = editorContext;
         m_modalStack = modalStack;
         m_actionExecutor = actionExecutor;
+        m_assemblyManager = assemblyManager;
     }
 
     public void OnDrawGui()
@@ -96,6 +98,13 @@ internal class MenuService
             if (ImGui.MenuItem(LocalizedStrings.ProjectManager))
             {
                 m_modalStack.PushModal<ProjectManagerModal>();
+            }
+            
+            ImGui.Separator();
+
+            if (ImGui.MenuItem("Build assemblies"))
+            {
+                m_assemblyManager.BuildAndLoadAssemblies();
             }
             
             ImGui.Separator();

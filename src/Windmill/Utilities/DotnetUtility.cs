@@ -4,6 +4,13 @@ namespace Windmill.Utilities;
 
 internal static class DotnetUtility
 {
+    public static void BuildSolution(string solutionDirectory, BuildConfiguration buildConfiguration)
+    {
+        string arguments = string.Format(SystemConstants.CommandLine.BuildCommand, buildConfiguration);
+        
+        RunCommand(solutionDirectory, arguments);
+    }
+    
     public static void CreateSolution(string solutionName, string targetDirectory)
     {
         string arguments = string.Format(SystemConstants.CommandLine.CreateSolutionCommand, solutionName);
@@ -29,4 +36,10 @@ internal static class DotnetUtility
         
         command.Run();
     }
+}
+
+public enum BuildConfiguration
+{
+    Debug,
+    Release
 }

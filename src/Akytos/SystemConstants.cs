@@ -20,6 +20,7 @@ internal static class SystemConstants
         public const string CreateProjectCommand = "new {0} -o {1}";
         public const string CreateSolutionCommand = "new sln -n {0}";
         public const string AddProjectCommand = "sln add {0}";
+        public const string BuildCommand = "build -c {0}";
     }
 
     public static class ConfigurationKeys
