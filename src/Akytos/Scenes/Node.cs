@@ -8,8 +8,7 @@ namespace Akytos;
 /// </summary>
 public class Node
 {
-    [SerializeField] [HideInInspector]
-    private readonly List<Node> m_children;
+    [SerializeField] [HideInInspector] private readonly List<Node> m_children;
 
     [SerializeField] private string m_name;
 
@@ -32,7 +31,7 @@ public class Node
         m_children = new List<Node>();
     }
 
-    public int Id => GetPath().GetHashCode();
+    public int Id => GetHashCode();
 
     /// <summary>
     ///     Whether this Node is enabled in the Scene Hierarchy or not.
@@ -130,7 +129,12 @@ public class Node
         return m_currentPath;
     }
 
-    public int GetSiblingIndex()
+    /// <summary>
+    ///     Gets the index of this node according to its parent.
+    /// </summary>
+    /// <param name="includeDisabled">Whether to include siblings that are disabled in the lookup.</param>
+    /// <returns>The sibling index of</returns>
+    public int GetSiblingIndex(bool includeDisabled = false)
     {
         if (!IsInsideTree)
         {
@@ -141,8 +145,8 @@ public class Node
         {
             return 0;
         }
-        
-        return Owner.ImmediateChildren.IndexOf(this);
+
+        return Owner.ImmediateChildren.Where(n => includeDisabled || n.IsEnabled).ToList().IndexOf(this);
     }
 
     /// <summary>
@@ -238,7 +242,7 @@ public class Node
             for (int i = 0; i < childCount; i++)
             {
                 var child = node.ImmediateChildren[i];
-                child.Owner.RemoveChild(child);
+                child.Owner?.RemoveChild(child);
                 AddChild(child, true);
             }
         }
@@ -309,4 +313,10 @@ public class Node
 
         return true;
     }
+
+    public override int GetHashCode()
+    {
+        return GetPath()?.GetHashCode() ?? Name.GetHashCode();
+    }
+
 }
