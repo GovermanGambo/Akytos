@@ -9,7 +9,7 @@ public class PongApp : Application
 {
     protected override void Configure(IAppConfigurator configurator)
     {
-        configurator.ConfigureLayers(layers => layers.PushLayer<GameLayer>());
+        configurator.ConfigureLayers(layers => layers.PushLayer<Game>());
         configurator.ConfigureGame(game =>
         {
             game.SetWindowTitle("Pong");

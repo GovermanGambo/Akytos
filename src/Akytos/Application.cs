@@ -1,3 +1,4 @@
+using System.Reflection;
 using Akytos.Configuration;
 using Akytos.Diagnostics.Logging;
 using Akytos.Events;
@@ -43,6 +44,8 @@ public abstract class Application : IConfigureGame, IConfigureLayers
         m_layerStack = new LayerStack(m_serviceContainer);
 
         s_application = this;
+
+        WorkingDirectory = Assembly.GetExecutingAssembly().Location;
     }
 
     /// <summary>
