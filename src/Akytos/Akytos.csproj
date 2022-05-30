@@ -122,4 +122,8 @@
     <ItemGroup>
       <EmbeddedResource Include="Resources\Shaders\Sprites_Default.glsl" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Assertions" />
+    </ItemGroup>
 </Project>

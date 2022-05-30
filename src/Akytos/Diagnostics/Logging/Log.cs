@@ -3,7 +3,7 @@ using Serilog.Core;
 
 namespace Akytos.Diagnostics.Logging;
 
-internal static class Log
+public static class Log
 {
     private static Logger? s_clientLogger;
     private static Logger? s_coreLogger;
@@ -31,7 +31,7 @@ internal static class Log
         }
     }
 
-    public static Logger Core
+    internal static Logger Core
     {
         get
         {

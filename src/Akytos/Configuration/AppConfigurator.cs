@@ -1,3 +1,5 @@
+using Serilog;
+
 namespace Akytos.Configuration;
 
 public class AppConfigurator : IAppConfigurator
@@ -13,6 +15,13 @@ public class AppConfigurator : IAppConfigurator
     {
         configure(m_application);
         
+        return this;
+    }
+
+    public IAppConfigurator ConfigureLogging(Action<LoggerConfiguration, LoggerConfiguration> configureLogs)
+    {
+        Diagnostics.Logging.Log.InitializeLogging(configureLogs);
+
         return this;
     }
 

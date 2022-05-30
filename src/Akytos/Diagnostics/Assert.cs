@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Akytos.Diagnostics.Logging;
 
-namespace Akytos.Assertions;
+namespace Akytos.Diagnostics;
 
 public static class Assert
 {

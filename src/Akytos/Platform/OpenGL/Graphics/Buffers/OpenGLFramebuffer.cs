@@ -1,4 +1,4 @@
-using Akytos.Assertions;
+using Akytos.Diagnostics;
 using Akytos.Diagnostics.Logging;
 using Silk.NET.OpenGL;
 using Boolean = Silk.NET.OpenGL.Boolean;

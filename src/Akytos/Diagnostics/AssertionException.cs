@@ -1,4 +1,4 @@
-namespace Akytos.Assertions;
+namespace Akytos.Diagnostics;
 
 public class AssertionException : Exception
 {

@@ -1,4 +1,6 @@
 using Akytos;
+using Akytos.Configuration;
+using Akytos.Graphics;
 using LightInject;
 
 namespace Sandbox;
@@ -13,16 +15,15 @@ internal class SandboxApp : Application
         WorkingDirectory = akytosProject.ProjectDirectory;
     }
 
-    protected override void OnInitialize()
+    protected override void Configure(IAppConfigurator configurator)
     {
-        base.OnInitialize();
-
-        PushLayer<SandboxLayer>();
+        configurator.ConfigureLayers(layers => layers.PushLayer<SandboxLayer>());
+        configurator.ConfigureGame(game => game.SetWindowTitle("Akytos Sandbox"));
     }
 
     protected override void RegisterServices(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.Register<SandboxLayer>();
+        serviceRegistry.AddGraphics(GraphicsBackend.OpenGL);
         serviceRegistry.RegisterSingleton(_ => m_akytosProject);
     }
 

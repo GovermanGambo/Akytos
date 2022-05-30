@@ -146,11 +146,9 @@ public abstract class Application : IConfigureGame, IConfigureLayers
         }
     }
 
-    protected virtual void RegisterServices(IServiceRegistry serviceRegistry)
-    {
-    }
+    protected abstract void RegisterServices(IServiceRegistry serviceRegistry);
 
-    protected virtual void OnInitialize()
+    private void OnInitialize()
     {
         Configure(m_appConfigurator);
         

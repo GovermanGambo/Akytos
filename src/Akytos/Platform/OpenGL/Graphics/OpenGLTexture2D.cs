@@ -1,5 +1,5 @@
 using System.Runtime.InteropServices;
-using Akytos.Assertions;
+using Akytos.Diagnostics;
 using Silk.NET.OpenGL;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;

@@ -1,5 +1,5 @@
 using System.Collections;
-using Akytos.Assertions;
+using Akytos.Diagnostics;
 using Akytos.Serialization;
 using YamlDotNet.Serialization;
 

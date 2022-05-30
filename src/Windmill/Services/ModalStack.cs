@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Akytos.Assertions;
+using Akytos.Diagnostics;
 using ImGuiNET;
 using LightInject;
 
