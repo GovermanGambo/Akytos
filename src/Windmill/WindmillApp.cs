@@ -22,7 +22,7 @@ public class WindmillApp : Application
     {
         configurator.ConfigureLayers(layers =>
         {
-            layers.PushLayer<EditorLayer>();
+            layers.AddLayer<EditorLayer>();
             layers.AddImGuiLayer();
         });
 

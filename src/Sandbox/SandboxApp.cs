@@ -17,7 +17,7 @@ internal class SandboxApp : Application
 
     protected override void Configure(IAppConfigurator configurator)
     {
-        configurator.ConfigureLayers(layers => layers.PushLayer<SandboxLayer>());
+        configurator.ConfigureLayers(layers => layers.AddLayer<SandboxLayer>());
         configurator.ConfigureGame(game => game.SetWindowTitle("Akytos Sandbox"));
     }
 

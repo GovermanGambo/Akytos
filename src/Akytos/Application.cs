@@ -19,6 +19,8 @@ public abstract class Application : IConfigureGame, IConfigureLayers
     private readonly ILayerStack m_layerStack;
     private readonly IServiceContainer m_serviceContainer;
 
+    private readonly List<Action> m_layerFuncs = new();
+
     private bool m_disposed;
     private IGraphicsDevice m_graphicsDevice = null!;
 
@@ -81,19 +83,25 @@ public abstract class Application : IConfigureGame, IConfigureLayers
         m_initialWindowTitle = title;
     }
 
-    public TLayer PushLayer<TLayer>() where TLayer : ILayer
+    public void AddLayer<TLayer>() where TLayer : ILayer
     {
-        var layer = m_layerStack.PushLayer<TLayer>();
-        layer.OnAttach();
+        m_layerFuncs.Add(() =>
+        {
+            var layer = m_layerStack.PushLayer<TLayer>();
+            layer.OnAttach();
 
-        Log.Core.Information("Pushed layer {0}.", typeof(TLayer).Name);
-
-        return layer;
+            Log.Core.Information("Pushed layer {0}.", typeof(TLayer).Name);
+        });
     }
 
     public void AddImGuiLayer()
     {
-        m_imGuiLayer = PushLayer<ImGuiLayer>();
+        m_layerFuncs.Add(() =>
+        {
+            m_imGuiLayer = m_layerStack.PushLayer<ImGuiLayer>();
+
+            Log.Core.Information("Pushed layer {0}.", nameof(ImGuiLayer));
+        });
     }
 
     protected abstract void Configure(IAppConfigurator configurator);
@@ -162,6 +170,12 @@ public abstract class Application : IConfigureGame, IConfigureLayers
         Input.Initialize(((IWindow) m_window.GetNativeWindow()).CreateInput());
 
         RegisterServices(m_serviceContainer);
+
+        foreach (var layerFunc in m_layerFuncs)
+        {
+            layerFunc();
+        }
+        m_layerFuncs.Clear();
 
         m_graphicsDevice = m_serviceContainer.GetInstance<IGraphicsDevice>();
     }

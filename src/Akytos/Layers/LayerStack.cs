@@ -6,12 +6,12 @@ namespace Akytos.Layers;
 internal class LayerStack : ILayerStack
 {
     private readonly List<ILayer> m_layers;
-    private readonly IServiceFactory m_serviceFactory;
+    private readonly IServiceContainer m_serviceContainer;
     private int m_count;
 
-    public LayerStack(IServiceFactory serviceFactory)
+    public LayerStack(IServiceContainer serviceContainer)
     {
-        m_serviceFactory = serviceFactory;
+        m_serviceContainer = serviceContainer;
 
         m_layers = new List<ILayer>();
     }
@@ -26,11 +26,12 @@ internal class LayerStack : ILayerStack
 
     public TLayer PushLayer<TLayer>() where TLayer : ILayer
     {
-        var layer = m_serviceFactory.TryGetInstance<TLayer>();
+        var layer = m_serviceContainer.TryGetInstance<TLayer>();
 
-        if (layer == null)
+        if (layer is null)
         {
-            throw new LayerNotFoundException(typeof(TLayer));
+            m_serviceContainer.Register<TLayer>();
+            layer = m_serviceContainer.GetInstance<TLayer>();
         }
         
         m_layers.Insert(m_count, layer);
@@ -41,7 +42,7 @@ internal class LayerStack : ILayerStack
 
     public TOverlay PushOverlay<TOverlay>() where TOverlay : ILayer
     {
-        var overlay = m_serviceFactory.TryGetInstance<TOverlay>();
+        var overlay = m_serviceContainer.TryGetInstance<TOverlay>();
 
         if (overlay == null)
         {

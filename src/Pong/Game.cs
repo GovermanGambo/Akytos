@@ -1,18 +1,17 @@
 using Akytos;
-using Akytos.Assets;
 using Akytos.Events;
 using Akytos.Graphics;
 using Akytos.Layers;
 
 namespace Pong;
 
-public class Game : ILayer
+internal class Game : ILayer
 {
-    private readonly IAssetManager m_assetManager;
+    private readonly IGraphicsDevice m_graphicsDevice;
 
-    public Game(IAssetManager assetManager)
+    public Game(IGraphicsDevice graphicsDevice)
     {
-        m_assetManager = assetManager;
+        m_graphicsDevice = graphicsDevice;
     }
 
     public void Dispose()
@@ -23,7 +22,6 @@ public class Game : ILayer
     public bool IsEnabled { get; set; } = true;
     public void OnAttach()
     {
-        var white = m_assetManager.Load<ITexture2D>("white.png");
     }
 
     public void OnDetach()
@@ -32,6 +30,8 @@ public class Game : ILayer
 
     public void OnUpdate(DeltaTime time)
     {
+        m_graphicsDevice.ClearColor(Color.Blue);
+        m_graphicsDevice.Clear();
     }
 
     public void OnEvent(IEvent e)
