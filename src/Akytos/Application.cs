@@ -1,3 +1,4 @@
+using Akytos.Configuration;
 using Akytos.Diagnostics.Logging;
 using Akytos.Events;
 using Akytos.Graphics;
@@ -5,50 +6,45 @@ using Akytos.Layers;
 using Akytos.Windowing;
 using LightInject;
 using Silk.NET.Input;
-using Silk.NET.SDL;
 using Silk.NET.Windowing;
 
 namespace Akytos;
 
-public abstract class Application
+public abstract class Application : IConfigureGame, IConfigureLayers
 {
     private static Application? s_application;
-    private readonly ILayerStack m_layerStack;
-
-    private readonly IServiceContainer m_serviceContainer;
-    private readonly IGameWindow m_window;
 
     private readonly AppConfigurator m_appConfigurator;
-    
+    private readonly ILayerStack m_layerStack;
+    private readonly IServiceContainer m_serviceContainer;
+
     private bool m_disposed;
     private IGraphicsDevice m_graphicsDevice = null!;
 
+    private string m_initialWindowTitle = "Akytos";
+    private int m_initialWindowWidth = 960;
+    private int m_initialWindowHeight = 640;
     private ImGuiLayer? m_imGuiLayer;
+    
     private float m_lastFrameTime;
 
     private bool m_shouldRestartOnExit;
+    private IGameWindow? m_window;
     private string m_workingDirectory = string.Empty;
 
     protected Application()
     {
-        m_appConfigurator = new AppConfigurator();
-        Configure(m_appConfigurator);
-        
+        m_appConfigurator = new AppConfigurator(this);
+
         m_serviceContainer = new ServiceContainer();
         m_serviceContainer.RegisterSingleton<IServiceFactory>(factory => factory);
         m_serviceContainer.RegisterSingleton(_ => m_serviceContainer);
-        m_window = CreateWindow(m_appConfigurator.Title, m_appConfigurator.Width, m_appConfigurator.Height);
 
         m_layerStack = new LayerStack(m_serviceContainer);
 
         s_application = this;
     }
 
-    internal virtual void Configure(AppConfigurator configurator)
-    {
-        
-    }
-    
     /// <summary>
     ///     The current working directory of the application.
     /// </summary>
@@ -56,28 +52,48 @@ public abstract class Application
     {
         get
         {
-            if (s_application is null)
-            {
-                throw new NullReferenceException("Application has not been initialized!");
-            }
+            if (s_application is null) throw new NullReferenceException("Application has not been initialized!");
 
             if (s_application.m_workingDirectory == string.Empty)
-            {
                 throw new Exception("Working directory was accessed before it was set!");
-            }
 
             return s_application.m_workingDirectory;
         }
         set
         {
-            if (s_application is null)
-            {
-                throw new NullReferenceException("Application has not been initialized!");
-            }
-            
+            if (s_application is null) throw new NullReferenceException("Application has not been initialized!");
+
             s_application.m_workingDirectory = value;
         }
     }
+
+    public void SetInitialWindowSize(int width, int height)
+    {
+        m_initialWindowWidth = width;
+        m_initialWindowHeight = height;
+    }
+
+    public void SetWindowTitle(string title)
+    {
+        m_initialWindowTitle = title;
+    }
+
+    public TLayer PushLayer<TLayer>() where TLayer : ILayer
+    {
+        var layer = m_layerStack.PushLayer<TLayer>();
+        layer.OnAttach();
+
+        Log.Core.Information("Pushed layer {0}.", typeof(TLayer).Name);
+
+        return layer;
+    }
+
+    public void AddImGuiLayer()
+    {
+        m_imGuiLayer = PushLayer<ImGuiLayer>();
+    }
+
+    protected abstract void Configure(IAppConfigurator configurator);
 
     private void Dispose()
     {
@@ -130,33 +146,22 @@ public abstract class Application
         }
     }
 
-    internal TLayer PushLayer<TLayer>() where TLayer : ILayer
-    {
-        var layer = m_layerStack.PushLayer<TLayer>();
-        layer.OnAttach();
-
-        Log.Core.Information("Pushed layer {0}.", typeof(TLayer).Name);
-
-        return layer;
-    }
-
     protected virtual void RegisterServices(IServiceRegistry serviceRegistry)
     {
     }
 
     protected virtual void OnInitialize()
     {
+        Configure(m_appConfigurator);
+        
+        m_window = CreateWindow(m_initialWindowTitle, m_initialWindowWidth, m_initialWindowHeight);
+        
         m_window.Initialize();
 
-        Input.Initialize(((IWindow)m_window.GetNativeWindow()).CreateInput());
-        
+        Input.Initialize(((IWindow) m_window.GetNativeWindow()).CreateInput());
+
         RegisterServices(m_serviceContainer);
-        
-        if (m_appConfigurator.EnableImGui)
-        {
-            m_imGuiLayer = PushLayer<ImGuiLayer>();
-        }
-        
+
         m_graphicsDevice = m_serviceContainer.GetInstance<IGraphicsDevice>();
     }
 
@@ -164,7 +169,7 @@ public abstract class Application
 
     private void Close()
     {
-        m_window.Close();
+        m_window?.Close();
     }
 
     /// <summary>

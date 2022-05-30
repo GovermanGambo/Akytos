@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akytos.Tests", "Akytos.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sandbox", "Sandbox\Sandbox.csproj", "{2C5A7A91-AB65-4821-AE67-11F4716A6027}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{16B02B00-10C7-44BE-8545-02DFEF3090A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pong", "Pong\Pong.csproj", "{45CD309B-1C0E-4631-867E-95E4353D58E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +52,16 @@ Global
 		{2C5A7A91-AB65-4821-AE67-11F4716A6027}.Debug_Editor|Any CPU.Build.0 = Debug|Any CPU
 		{2C5A7A91-AB65-4821-AE67-11F4716A6027}.Release_Editor|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C5A7A91-AB65-4821-AE67-11F4716A6027}.Release_Editor|Any CPU.Build.0 = Debug|Any CPU
+		{45CD309B-1C0E-4631-867E-95E4353D58E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45CD309B-1C0E-4631-867E-95E4353D58E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45CD309B-1C0E-4631-867E-95E4353D58E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45CD309B-1C0E-4631-867E-95E4353D58E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45CD309B-1C0E-4631-867E-95E4353D58E0}.Debug_Editor|Any CPU.ActiveCfg = Debug|Any CPU
+		{45CD309B-1C0E-4631-867E-95E4353D58E0}.Debug_Editor|Any CPU.Build.0 = Debug|Any CPU
+		{45CD309B-1C0E-4631-867E-95E4353D58E0}.Release_Editor|Any CPU.ActiveCfg = Debug|Any CPU
+		{45CD309B-1C0E-4631-867E-95E4353D58E0}.Release_Editor|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{45CD309B-1C0E-4631-867E-95E4353D58E0} = {16B02B00-10C7-44BE-8545-02DFEF3090A4}
 	EndGlobalSection
 EndGlobal

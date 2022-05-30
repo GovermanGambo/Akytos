@@ -2,7 +2,7 @@ using Akytos.Events;
 
 namespace Akytos.Layers;
 
-internal interface ILayer : IDisposable
+public interface ILayer : IDisposable
 {
     bool IsEnabled { get; set; }
     void OnAttach();
