@@ -1,6 +1,7 @@
 using Akytos;
 using Akytos.Configuration;
 using Akytos.Graphics;
+using Akytos.SceneSystems;
 using LightInject;
 using Serilog;
 using Serilog.Events;
@@ -59,6 +60,7 @@ public class WindmillApp : Application
     protected override void RegisterServices(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.AddGraphics(GraphicsBackend.OpenGL);
+        serviceRegistry.AddSceneSystems(SceneProcessMode.Editor);
         serviceRegistry.RegisterFrom<EditorCompositionRoot>();
         serviceRegistry.RegisterSingleton(_ => m_consoleService);
     }

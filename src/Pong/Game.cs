@@ -37,6 +37,8 @@ internal class Game : ILayer
     public void OnAttach()
     {
         m_sceneTree.Systems.Register<SpriteRendererSystem>();
+        m_sceneTree.Systems.Register<Physics2DSystem>();
+        
         var white = m_assetManager.Load<ITexture2D>("Sprites/white.png") as Texture2DAsset;
 
         var rootNode = new Node2D("Root");

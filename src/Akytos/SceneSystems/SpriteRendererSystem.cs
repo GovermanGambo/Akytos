@@ -4,9 +4,9 @@ namespace Akytos.SceneSystems;
 
 public class SpriteRendererSystem : ISceneSystem
 {
-    private readonly SpriteBatch m_spriteBatch;
+    private readonly ISpriteBatch m_spriteBatch;
 
-    public SpriteRendererSystem(SpriteBatch spriteBatch)
+    public SpriteRendererSystem(ISpriteBatch spriteBatch)
     {
         m_spriteBatch = spriteBatch;
     }
