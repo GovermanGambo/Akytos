@@ -1,8 +1,8 @@
 using Akytos.Graphics;
 
-namespace Akytos;
+namespace Akytos.SceneSystems;
 
-internal class SpriteRendererSystem : ISceneSystem
+public class SpriteRendererSystem : ISceneSystem
 {
     private readonly SpriteBatch m_spriteBatch;
 

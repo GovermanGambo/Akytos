@@ -1,6 +1,6 @@
 namespace Akytos.Graphics;
 
-internal interface IGraphicsDevice
+public interface IGraphicsDevice
 {
     void Clear();
     void ClearColor(Color color);

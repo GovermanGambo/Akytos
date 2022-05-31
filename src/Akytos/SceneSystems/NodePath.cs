@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Akytos
+namespace Akytos.SceneSystems
 {
     public readonly struct NodePath
     {

@@ -3,6 +3,7 @@ using Akytos.Configuration;
 using Akytos.Events;
 using Akytos.Graphics;
 using Akytos.Layers;
+using Akytos.SceneSystems;
 
 namespace Sandbox;
 

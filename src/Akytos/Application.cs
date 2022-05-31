@@ -113,7 +113,7 @@ public abstract class Application : IConfigureGame, IConfigureLayers
         GC.SuppressFinalize(this);
     }
 
-    internal void Run()
+    public void Run()
     {
         OnInitialize();
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Akytos.Assets;
 using Akytos.Graphics;
+using Akytos.SceneSystems;
 using Akytos.Serialization;
 using Akytos.Serialization.Surrogates;
 using Moq;

@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Akytos
+namespace Akytos.SceneSystems
 {
     public static class NodeExtensions
     {

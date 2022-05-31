@@ -6,6 +6,7 @@ using Akytos;
 using Akytos.Editor;
 using Akytos.Events;
 using Akytos.Graphics.Buffers;
+using Akytos.SceneSystems;
 using ImGuiNET;
 using Windmill.Modals;
 using Windmill.Resources;

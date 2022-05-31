@@ -1,6 +1,7 @@
 using Akytos;
 using Akytos.Configuration;
 using Akytos.Graphics;
+using Akytos.SceneSystems;
 using LightInject;
 using Serilog;
 
@@ -31,6 +32,7 @@ public class PongApp : Application
     protected override void RegisterServices(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.AddGraphics(GraphicsBackend.OpenGL);
+        serviceRegistry.AddSceneSystems();
     }
 
     protected override void OnRestart()

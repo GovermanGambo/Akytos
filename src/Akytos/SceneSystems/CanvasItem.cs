@@ -1,4 +1,4 @@
-namespace Akytos;
+namespace Akytos.SceneSystems;
 
 public class CanvasItem : Node
 {

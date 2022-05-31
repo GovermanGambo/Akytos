@@ -1,4 +1,5 @@
 using System.Linq;
+using Akytos.SceneSystems;
 using Xunit;
 
 namespace Akytos.Tests.Scenes;

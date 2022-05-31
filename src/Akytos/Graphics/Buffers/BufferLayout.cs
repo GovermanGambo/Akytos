@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace Akytos.Graphics.Buffers;
 
-internal class BufferLayout : IEnumerable<BufferElement>
+public class BufferLayout : IEnumerable<BufferElement>
 {
     private readonly List<BufferElement> m_bufferElements;
 

@@ -1,6 +1,6 @@
-namespace Akytos;
+namespace Akytos.SceneSystems;
 
-internal interface ISceneSystem
+public interface ISceneSystem
 {
     bool IsEnabled { get; set; }
     void OnUpdate(DeltaTime time);

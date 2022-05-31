@@ -1,3 +1,5 @@
+#if AKYTOS_EDITOR
+
 using System.Numerics;
 using Akytos.Diagnostics.Logging;
 
@@ -29,3 +31,5 @@ public class Vector2ControlRenderer : IGuiControlRenderer<Vector2>
         return false;
     }
 }
+
+#endif

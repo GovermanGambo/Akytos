@@ -17,7 +17,7 @@ public static class ServiceRegistryExtensions
         serviceRegistry.RegisterOpenGL();
         
         serviceRegistry.RegisterSingleton<GraphicsResourceRegistry>();
-        serviceRegistry.Register<SpriteBatch>();
+        serviceRegistry.Register<ISpriteBatch, SpriteBatch>();
 
         return serviceRegistry;
     }

@@ -1,4 +1,5 @@
 using System;
+using Akytos.SceneSystems;
 using Xunit;
 
 namespace Akytos.Tests.Scenes;

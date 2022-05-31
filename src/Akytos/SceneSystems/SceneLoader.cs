@@ -2,7 +2,7 @@ using Akytos.Assets;
 using Akytos.Serialization;
 using Akytos.Serialization.Surrogates;
 
-namespace Akytos;
+namespace Akytos.SceneSystems;
 
 /// <summary>
 ///     Responsible for saving and loading scenes (or Nodes) to/from disk.

@@ -1,5 +1,4 @@
-﻿
-using Pong;
+﻿using Pong;
 
 var app = new PongApp();
 app.Run();

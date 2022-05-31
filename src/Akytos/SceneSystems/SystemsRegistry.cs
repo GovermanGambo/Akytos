@@ -1,8 +1,8 @@
 using LightInject;
 
-namespace Akytos;
+namespace Akytos.SceneSystems;
 
-internal class SystemsRegistry
+public class SystemsRegistry : ISystemsRegistry
 {
     private readonly IServiceContainer m_serviceContainer;
     private readonly HashSet<ISceneSystem> m_registeredSystems;

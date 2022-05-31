@@ -5,7 +5,7 @@ using Akytos.Graphics.Buffers;
 
 namespace Akytos.Graphics;
 
-internal class SpriteBatch
+public class SpriteBatch : ISpriteBatch
 {
     private const int MaxQuads = 10000;
     private const int MaxVertices = MaxQuads * 4;
@@ -61,10 +61,12 @@ internal class SpriteBatch
         using (var stream = Assembly.GetExecutingAssembly()
                    .GetManifestResourceStream("Akytos.Resources.Shaders.Sprites_Default.glsl"))
         {
-            m_textureShader = graphicsResourceFactory.CreateShader("Sprites_Default.glsl", stream);
+            if (stream is not null)
+            {
+                m_textureShader = graphicsResourceFactory.CreateShader("Sprites_Default.glsl", stream);
+            }
         }
-        
-        
+
         m_textureShader.Bind();
         m_textureShader.SetIntArray("u_Textures", samplers);
 
@@ -97,11 +99,6 @@ internal class SpriteBatch
         
     }
 
-    public void Draw(ITexture2D texture2D, Vector2 position, int objectId)
-    {
-        Draw(texture2D, position, Vector2.One, 0f, Color.White, objectId);
-    }
-    
     public void Draw(ITexture2D texture2D, Vector2 position, Vector2 scale, float rotation, Color color, int objectId, bool centered = false)
     {
         if (m_quadElementCount > MaxElements)

@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Akytos.Diagnostics.Logging;
 
-namespace Akytos;
+namespace Akytos.SceneSystems;
 
 /// <summary>
 ///     Represents an object or part of an object in the scene.

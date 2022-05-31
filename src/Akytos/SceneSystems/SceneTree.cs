@@ -1,16 +1,19 @@
-﻿namespace Akytos;
+﻿namespace Akytos.SceneSystems;
 
 public sealed class SceneTree
 {
-    public SceneTree(SceneProcessMode processMode = SceneProcessMode.Runtime)
+    public SceneTree(ISystemsRegistry systems, SceneProcessMode processMode = SceneProcessMode.Runtime)
     {
         ProcessMode = processMode;
+        Systems = systems;
     }
 
+    public ISystemsRegistry Systems { get; }
+
     internal SceneProcessMode ProcessMode { get; }
-    
+
     public Node CurrentScene { get; private set; } = null!;
-    
+
     public int NodeCount => CurrentScene.GetChildren(true).Count();
 
     public event Action<Node>? NodeAdded;
@@ -20,18 +23,12 @@ public sealed class SceneTree
 
     public void OnNodeAdded(Node node)
     {
-        if (ProcessMode == SceneProcessMode.Runtime)
-        {
-            NodeAdded?.Invoke(node);
-        }
+        if (ProcessMode == SceneProcessMode.Runtime) NodeAdded?.Invoke(node);
     }
 
     public void OnNodeRemoved(Node node)
     {
-        if (ProcessMode == SceneProcessMode.Runtime)
-        {
-            NodeRemoved?.Invoke(node);
-        }
+        if (ProcessMode == SceneProcessMode.Runtime) NodeRemoved?.Invoke(node);
     }
 
     public void SetScene(Node scene)
@@ -40,33 +37,27 @@ public sealed class SceneTree
         {
             CurrentScene.SceneTree = null;
 
-            if (ProcessMode == SceneProcessMode.Runtime)
-            {
-                Finish();   
-            }
+            if (ProcessMode == SceneProcessMode.Runtime) Finish();
         }
 
         CurrentScene = scene;
         CurrentScene.SceneTree = this;
 
-        if (ProcessMode == SceneProcessMode.Runtime)
-        {
-            StartScene();
-        }
+        if (ProcessMode == SceneProcessMode.Runtime) StartScene();
     }
 
-    public void OnUpdate(float deltaSeconds)
+    public void OnUpdate(DeltaTime deltaSeconds)
     {
-        if (ProcessMode != SceneProcessMode.Runtime)
-        {
-            return;
-        }
-        
+        if (ProcessMode != SceneProcessMode.Runtime) return;
+
+        Systems.OnUpdate(deltaSeconds);
+
         foreach (var node in CurrentScene.GetChildren(true)) node.OnUpdate(deltaSeconds);
     }
 
-    public void OnRender(float deltaSeconds)
+    public void OnRender()
     {
+        Systems.OnRender();
     }
 
     private void Finish()
@@ -79,10 +70,7 @@ public sealed class SceneTree
     {
         NodeAdded?.Invoke(CurrentScene);
         SceneStarting?.Invoke();
-        
-        foreach (var child in CurrentScene.GetChildren(true))
-        {
-            child.OnReady();
-        }
+
+        foreach (var child in CurrentScene.GetChildren(true)) child.OnReady();
     }
 }

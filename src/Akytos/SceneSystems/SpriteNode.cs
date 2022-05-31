@@ -2,7 +2,7 @@
 using Akytos.Assets;
 using Akytos.Graphics;
 
-namespace Akytos;
+namespace Akytos.SceneSystems;
 
 public class SpriteNode : Node2D
 {

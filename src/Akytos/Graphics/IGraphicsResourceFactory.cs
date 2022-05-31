@@ -2,7 +2,7 @@ using Akytos.Graphics.Buffers;
 
 namespace Akytos.Graphics;
 
-internal interface IGraphicsResourceFactory
+public interface IGraphicsResourceFactory
 {
     /// <summary>
     ///     Creates a new IBufferObject with the specified data type.

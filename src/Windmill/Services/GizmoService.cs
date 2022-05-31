@@ -3,6 +3,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using Akytos;
 using Akytos.Editor;
+using Akytos.SceneSystems;
 using ImGuiNET;
 using Math = System.Math;
 

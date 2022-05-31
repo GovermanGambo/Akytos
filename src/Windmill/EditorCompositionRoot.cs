@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Akytos;
 using Akytos.Editor;
+using Akytos.SceneSystems;
 using Akytos.Windowing;
 using LightInject;
 using Serilog;
@@ -27,7 +28,7 @@ public class EditorCompositionRoot : ICompositionRoot
         });
 
         // TODO: Ensure that this override actually works
-        serviceRegistry.RegisterSingleton(_ => new SceneTree(SceneProcessMode.Editor));
+        serviceRegistry.RegisterSingleton(factory => new SceneTree(factory.GetInstance<SystemsRegistry>(), SceneProcessMode.Editor));
         serviceRegistry.RegisterSingleton<PanelManager>();
         serviceRegistry.RegisterSingleton<SceneEditorContext>();
         serviceRegistry.Register<MenuService>();

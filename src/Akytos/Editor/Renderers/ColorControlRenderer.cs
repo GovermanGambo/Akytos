@@ -1,3 +1,5 @@
+#if AKYTOS_EDITOR
+
 using Akytos.Diagnostics.Logging;
 
 namespace Akytos.Editor.Renderers;
@@ -28,3 +30,5 @@ public class ColorControlRenderer : IGuiControlRenderer<Color>
         return false;
     }
 }
+
+#endif
