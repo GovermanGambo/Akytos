@@ -2,6 +2,8 @@
 
 public sealed class SceneTree
 {
+    private bool m_isStarted;
+
     public SceneTree(ISystemsRegistry systems, SceneProcessMode processMode = SceneProcessMode.Runtime)
     {
         ProcessMode = processMode;
@@ -37,13 +39,13 @@ public sealed class SceneTree
         {
             CurrentScene.SceneTree = null;
 
-            if (ProcessMode == SceneProcessMode.Runtime) Finish();
+            if (ProcessMode == SceneProcessMode.Runtime && m_isStarted) Finish();
         }
 
         CurrentScene = scene;
         CurrentScene.SceneTree = this;
 
-        if (ProcessMode == SceneProcessMode.Runtime) StartScene();
+        if (ProcessMode == SceneProcessMode.Runtime && m_isStarted) StartScene();
     }
 
     public void OnUpdate(DeltaTime deltaSeconds)
@@ -64,13 +66,17 @@ public sealed class SceneTree
     {
         NodeRemoved?.Invoke(CurrentScene);
         SceneEnding?.Invoke();
+
+        m_isStarted = false;
     }
 
-    private void StartScene()
+    public void StartScene()
     {
         NodeAdded?.Invoke(CurrentScene);
         SceneStarting?.Invoke();
 
         foreach (var child in CurrentScene.GetChildren(true)) child.OnReady();
+
+        m_isStarted = true;
     }
 }

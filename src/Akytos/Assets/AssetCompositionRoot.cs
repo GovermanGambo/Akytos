@@ -6,6 +6,6 @@ public class AssetCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton<AssetManager>();
+        serviceRegistry.RegisterSingleton<IAssetManager, AssetManager>();
     }
 }

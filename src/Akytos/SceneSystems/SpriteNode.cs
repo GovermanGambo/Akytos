@@ -17,6 +17,12 @@ public class SpriteNode : Node2D
     {
     }
 
+    public SpriteNode(string name, Texture2DAsset? texture)
+        : base(name)
+    {
+        m_textureAsset = texture;
+    }
+
     public bool IsCentered
     {
         get => m_isCentered;

@@ -1,11 +1,14 @@
 using System.Linq;
 using Akytos.SceneSystems;
+using Moq;
 using Xunit;
 
 namespace Akytos.Tests.Scenes;
 
 public class NodeTests
 {
+    private readonly Mock<ISystemsRegistry> m_systemsRegistryMock = new();
+
     [Theory]
     [InlineData(null)]
     [InlineData("Node")]
@@ -63,7 +66,7 @@ public class NodeTests
         rootNode.AddChild(childNodeB);
         childNodeA.AddChild(childNodeC);
 
-        rootNode.SceneTree = new SceneTree();
+        rootNode.SceneTree = new SceneTree(m_systemsRegistryMock.Object);
         
         Assert.Null(rootNode.Owner);
         Assert.Equal(rootNode, childNodeA.Owner);
@@ -101,7 +104,7 @@ public class NodeTests
         rootNode.AddChild(childNodeB);
         childNodeA.AddChild(childNodeC);
         
-        rootNode.SceneTree = new SceneTree();
+        rootNode.SceneTree = new SceneTree(m_systemsRegistryMock.Object);
         rootNode.SceneTree = null;
         
         Assert.Null(rootNode.Owner);
@@ -117,7 +120,7 @@ public class NodeTests
     [Fact]
     public void AddChild_Should_DisallowOwnedNodes()
     {
-        var sceneTree = new SceneTree();
+        var sceneTree = new SceneTree(m_systemsRegistryMock.Object);
         
         var rootNode = new Node("RootNode");
         sceneTree.SetScene(rootNode);
@@ -169,7 +172,7 @@ public class NodeTests
     public void GetNode_Should_ReturnCorrect()
     {
         var rootNode = new Node("TestNode");
-        var sceneTree = new SceneTree();
+        var sceneTree = new SceneTree(m_systemsRegistryMock.Object);
         sceneTree.SetScene(rootNode);
         var childNode = new Node("ChildNode");
         var anotherChildNode = new Node("AnotherChild");
