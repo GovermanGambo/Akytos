@@ -25,13 +25,14 @@ internal class EditorLayer : ILayer
     private readonly IProjectManager m_projectManager;
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly SystemsRegistry m_systemsRegistry;
+    private readonly AssemblyMonitor m_assemblyMonitor;
 
     private IFramebuffer m_framebuffer = null!;
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, PanelManager panelManager, MenuService menuService, ModalStack modalStack, 
         EditorHotKeyService editorHotKeyService, SceneEditorContext sceneEditorContext, IProjectManager projectManager, 
-        AssemblyManager assemblyManager, SystemsRegistry systemsRegistry)
+        AssemblyManager assemblyManager, SystemsRegistry systemsRegistry, AssemblyMonitor assemblyMonitor)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
@@ -44,6 +45,7 @@ internal class EditorLayer : ILayer
         m_projectManager = projectManager;
         m_assemblyManager = assemblyManager;
         m_systemsRegistry = systemsRegistry;
+        m_assemblyMonitor = assemblyMonitor;
     }
 
     public void Dispose()
@@ -55,7 +57,8 @@ internal class EditorLayer : ILayer
     public void OnAttach()
     {
         LoadProject();
-
+        
+        // TODO: This may be superfluous when the assembly gets reloaded periodically by the monitor
         m_assemblyManager.BuildAndLoadAssemblies();
 
         var framebufferSpecification = new FrameBufferSpecification
@@ -89,6 +92,8 @@ internal class EditorLayer : ILayer
 
     public void OnUpdate(DeltaTime time)
     {
+        m_assemblyMonitor.Tick(time);
+        
         m_framebuffer.Bind();
 
         // Update
