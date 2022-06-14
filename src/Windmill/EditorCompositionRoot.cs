@@ -1,18 +1,13 @@
 using System;
 using System.Linq;
-using Akytos;
 using Akytos.Editor;
 using Akytos.SceneSystems;
 using Akytos.Windowing;
 using LightInject;
-using Serilog;
-using Serilog.Events;
 using Windmill.Actions;
-using Windmill.Diagnostics.Logging;
 using Windmill.Panels;
 using Windmill.ProjectManagement;
 using Windmill.Services;
-using Log = Akytos.Diagnostics.Logging.Log;
 
 namespace Windmill;
 

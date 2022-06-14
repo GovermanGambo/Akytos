@@ -23,11 +23,6 @@ internal class AssemblyMonitor : IDisposable
         m_fileSystemWatcher.Changed += FileSystemWatcherOnChanged;
     }
 
-    private void FileSystemWatcherOnChanged(object sender, FileSystemEventArgs e)
-    {
-        m_didChange = true;
-    }
-
     public void Tick(DeltaTime time)
     {
         if (m_lastTime > IntervalSeconds && m_didChange)
@@ -43,5 +38,10 @@ internal class AssemblyMonitor : IDisposable
     public void Dispose()
     {
         m_fileSystemWatcher.Dispose();
+    }
+    
+    private void FileSystemWatcherOnChanged(object sender, FileSystemEventArgs e)
+    {
+        m_didChange = true;
     }
 }

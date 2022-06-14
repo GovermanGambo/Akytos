@@ -10,8 +10,7 @@ internal class ModalStack
 {
     private readonly IServiceFactory m_serviceFactory;
     private readonly Stack<IModal> m_modals;
-
-    private List<IModal> m_modalQueue;
+    private readonly List<IModal> m_modalQueue;
     private bool m_shouldPop;
 
     public ModalStack(IServiceFactory serviceFactory)
