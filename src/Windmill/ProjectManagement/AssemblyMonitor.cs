@@ -6,8 +6,6 @@ namespace Windmill.ProjectManagement;
 
 internal class AssemblyMonitor : IDisposable
 {
-    private const float IntervalSeconds = 1.0f;
-    
     private readonly FileSystemWatcher m_fileSystemWatcher;
     private readonly AssemblyManager m_assemblyManager;
 
@@ -22,6 +20,8 @@ internal class AssemblyMonitor : IDisposable
         m_fileSystemWatcher = new FileSystemWatcher(assemblyDirectory);
         m_fileSystemWatcher.Changed += FileSystemWatcherOnChanged;
     }
+
+    public float IntervalSeconds { get; set; } = 1.0f;
 
     public void Tick(DeltaTime time)
     {

@@ -93,20 +93,24 @@ internal class EditorLayer : ILayer
 
     public void OnUpdate(DeltaTime time)
     {
+        // -- UPDATE START -- //
+        
         m_assemblyMonitor.Tick(time);
+        
+        // -- UPDATE END -- //
         
         m_framebuffer.Bind();
 
-        // Update
-        
         m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
         m_graphicsDevice.Clear();
         
-        // Render
+        // -- RENDER START -- //
         
         m_systemsRegistry.OnRender();
 
         m_panelManager.GetPanel<ViewportPanel>().OnRender();
+        
+        // -- RENDER END -- //
 
         m_framebuffer.Unbind();
     }
