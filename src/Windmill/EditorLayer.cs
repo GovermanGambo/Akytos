@@ -56,7 +56,7 @@ internal class EditorLayer : ILayer
     {
         LoadProject();
 
-        m_assemblyManager.LoadAssemblies();
+        m_assemblyManager.BuildAndLoadAssemblies();
 
         var framebufferSpecification = new FrameBufferSpecification
         {

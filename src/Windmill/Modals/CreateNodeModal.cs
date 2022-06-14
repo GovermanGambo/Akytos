@@ -7,6 +7,7 @@ using Akytos.Events;
 using Akytos.SceneSystems;
 using ImGuiNET;
 using Windmill.Actions;
+using Windmill.ProjectManagement;
 using Windmill.Resources;
 using Windmill.Services;
 using Math = System.Math;
@@ -18,16 +19,18 @@ internal class CreateNodeModal : IModal
     private Type[] m_nodeTypes;
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly ActionExecutor m_actionExecutor;
+    private readonly AssemblyContainer m_assemblyContainer;
 
     private string m_searchTerm = "";
     private Type? m_selectedNodeType;
     private bool m_isOpen;
     private bool m_shouldOpen;
 
-    public CreateNodeModal(SceneEditorContext sceneEditorContext, ActionExecutor actionExecutor)
+    public CreateNodeModal(SceneEditorContext sceneEditorContext, ActionExecutor actionExecutor, AssemblyContainer assemblyContainer)
     {
         m_sceneEditorContext = sceneEditorContext;
         m_actionExecutor = actionExecutor;
+        m_assemblyContainer = assemblyContainer;
         m_nodeTypes = Array.Empty<Type>();
     }
 
@@ -46,7 +49,7 @@ internal class CreateNodeModal : IModal
             }
             else
             {
-                m_nodeTypes = AppDomain.CurrentDomain.GetAssemblies()
+                m_nodeTypes = m_assemblyContainer.GetAssemblies()
                     .SelectMany(a => a.GetTypes())
                     .Where(t => t.IsSubclassOf(typeof(Node)) || typeof(Node).IsAssignableFrom(t))
                     .ToArray();
