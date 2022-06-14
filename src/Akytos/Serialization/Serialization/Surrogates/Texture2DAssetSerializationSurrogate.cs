@@ -9,9 +9,9 @@ namespace Akytos.Serialization.Surrogates;
 
 internal class Texture2DAssetSerializationSurrogate : ISerializationSurrogate<Texture2DAsset?>
 {
-    private readonly AssetManager m_assetManager;
+    private readonly IAssetManager m_assetManager;
 
-    public Texture2DAssetSerializationSurrogate(AssetManager assetManager)
+    public Texture2DAssetSerializationSurrogate(IAssetManager assetManager)
     {
         m_assetManager = assetManager;
     }

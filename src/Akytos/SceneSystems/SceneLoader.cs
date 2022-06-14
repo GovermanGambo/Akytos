@@ -15,7 +15,7 @@ internal class SceneLoader
     /// <summary>
     ///     Creates a new <see cref="SceneLoader"/>
     /// </summary>
-    public SceneLoader(AssetManager assetManager)
+    public SceneLoader(IAssetManager assetManager)
     {
         m_serializer = new YamlSerializer();
         m_deserializer = new YamlDeserializer();

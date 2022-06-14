@@ -57,7 +57,7 @@ internal class AssemblyManager
         var assemblyDirectory =
             Path.Combine(Application.WorkingDirectory, SystemConstants.FileSystem.AssemblySubDirectory);
         
-        DotnetUtility.BuildSolution(assemblyDirectory, BuildConfiguration.Debug);
+        //DotnetUtility.BuildSolution(assemblyDirectory, BuildConfiguration.Debug);
         
         LoadAssemblies();
     }
