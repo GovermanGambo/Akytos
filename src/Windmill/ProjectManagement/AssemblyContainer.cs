@@ -12,7 +12,7 @@ namespace Windmill.ProjectManagement;
 internal class AssemblyContainer
 {
     private readonly AssemblyLoadContext m_defaultLoadContext;
-    private readonly AssemblyLoadContext m_assemblyLoadContext;
+    private AssemblyLoadContext m_assemblyLoadContext;
     private readonly IProjectManager m_projectManager;
 
     public AssemblyContainer(IProjectManager projectManager)
@@ -22,10 +22,8 @@ internal class AssemblyContainer
         m_assemblyLoadContext = new AssemblyLoadContext("Scripts", true);
     }
 
-    public void ReloadExternalAssemblies()
+    public void LoadExternalAssemblies()
     {
-        m_assemblyLoadContext.Unload();
-        
         var assemblies = GetAssemblyFiles();
 
         foreach (string assembly in assemblies)
@@ -39,6 +37,13 @@ internal class AssemblyContainer
                 Log.Core.Error(e, "Failed to load assembly {0}", assembly);
             }
         }
+    }
+
+    public void UnloadExternalAssemblies()
+    {
+        m_assemblyLoadContext.Unload();
+
+        m_assemblyLoadContext = new AssemblyLoadContext("Scripts", true);
     }
 
     public IEnumerable<Assembly> GetAssemblies()

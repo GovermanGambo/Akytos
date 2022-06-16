@@ -17,6 +17,8 @@ internal class AssemblyManager
 
     public void BuildAndLoadAssemblies()
     {
+        m_assemblyContainer.UnloadExternalAssemblies();
+        
         // Locate the project assembly directory and build the entire solution
         string assemblyDirectory =
             Path.Combine(Application.WorkingDirectory, SystemConstants.FileSystem.AssemblySubDirectory);
@@ -30,9 +32,9 @@ internal class AssemblyManager
         }
         string projectName = m_projectManager.CurrentProject.ProjectName;
         string destination = Path.Combine(libraryPath, $"{projectName}.dll");
-        string dllLocation = Path.Combine(assemblyDirectory, "bin", "Debug", "net6.0", $"{projectName}.dll");
+        string dllLocation = Path.Combine(assemblyDirectory, $"{projectName}", "bin", "Debug", "net6.0", $"{projectName}.dll");
         File.Copy(dllLocation, destination, true);
         
-        m_assemblyContainer.ReloadExternalAssemblies();
+        m_assemblyContainer.LoadExternalAssemblies();
     }
 }

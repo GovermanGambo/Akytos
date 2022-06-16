@@ -25,14 +25,13 @@ internal class EditorLayer : ILayer
     private readonly IProjectManager m_projectManager;
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly SystemsRegistry m_systemsRegistry;
-    private readonly AssemblyMonitor m_assemblyMonitor;
 
     private IFramebuffer m_framebuffer = null!;
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, PanelManager panelManager, MenuService menuService, ModalStack modalStack, 
         EditorHotKeyService editorHotKeyService, SceneEditorContext sceneEditorContext, IProjectManager projectManager, 
-        AssemblyManager assemblyManager, SystemsRegistry systemsRegistry, AssemblyMonitor assemblyMonitor)
+        AssemblyManager assemblyManager, SystemsRegistry systemsRegistry)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
@@ -45,7 +44,6 @@ internal class EditorLayer : ILayer
         m_projectManager = projectManager;
         m_assemblyManager = assemblyManager;
         m_systemsRegistry = systemsRegistry;
-        m_assemblyMonitor = assemblyMonitor;
     }
 
     public void Dispose()
@@ -88,14 +86,12 @@ internal class EditorLayer : ILayer
 
     public void OnDetach()
     {
-        m_assemblyMonitor.Dispose();
     }
 
     public void OnUpdate(DeltaTime time)
     {
         // -- UPDATE START -- //
         
-        m_assemblyMonitor.Tick(time);
         
         // -- UPDATE END -- //
         
