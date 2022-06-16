@@ -27,9 +27,14 @@ internal class ProjectManager : IProjectManager
         private set
         {
             m_currentProject = value;
-            Application.WorkingDirectory = m_currentProject.ProjectDirectory;
-            ProjectChanged?.Invoke();
+            OnProjectChanged();
         }
+    }
+
+    private void OnProjectChanged()
+    {
+        Application.WorkingDirectory = m_currentProject.ProjectDirectory;
+        ProjectChanged?.Invoke();
     }
 
     public IEnumerable<AkytosProject> GetPreviousProjects()

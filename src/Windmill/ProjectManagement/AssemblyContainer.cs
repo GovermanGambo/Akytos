@@ -9,34 +9,42 @@ using Akytos.Diagnostics.Logging;
 
 namespace Windmill.ProjectManagement;
 
-internal class AssemblyContainer
+internal class AssemblyContainer : IDisposable
 {
     private readonly AssemblyLoadContext m_defaultLoadContext;
-    private AssemblyLoadContext m_assemblyLoadContext;
     private readonly IProjectManager m_projectManager;
+    private AssemblyLoadContext m_assemblyLoadContext;
 
     public AssemblyContainer(IProjectManager projectManager)
     {
         m_projectManager = projectManager;
         m_defaultLoadContext = AssemblyLoadContext.Default;
         m_assemblyLoadContext = new AssemblyLoadContext("Scripts", true);
+
+        m_projectManager.ProjectChanged += ProjectManager_OnProjectChanged;
+    }
+
+    public void Dispose()
+    {
+        m_assemblyLoadContext.Unload();
+        m_projectManager.ProjectChanged -= ProjectManager_OnProjectChanged;
     }
 
     public void LoadExternalAssemblies()
     {
         var assemblies = GetAssemblyFiles();
 
-        foreach (string assembly in assemblies)
-        {
+        foreach (var assembly in assemblies)
             try
             {
-                m_assemblyLoadContext.LoadFromAssemblyPath(assembly);
+                using var fs = File.OpenRead(assembly);
+
+                m_assemblyLoadContext.LoadFromStream(fs);
             }
             catch (Exception e)
             {
                 Log.Core.Error(e, "Failed to load assembly {0}", assembly);
             }
-        }
     }
 
     public void UnloadExternalAssemblies()
@@ -51,13 +59,19 @@ internal class AssemblyContainer
         return m_defaultLoadContext.Assemblies.Concat(m_assemblyLoadContext.Assemblies);
     }
     
+    private void ProjectManager_OnProjectChanged()
+    {
+        UnloadExternalAssemblies();
+        LoadExternalAssemblies();
+    }
+
     private IEnumerable<string> GetAssemblyFiles()
     {
         // TODO: Have some way to define assemblies which can be loaded here. That way, we have support for multiple assemblies per project
-        string projectName = m_projectManager.CurrentProject.ProjectName;
-        string assembly = Path.Combine(Application.WorkingDirectory,
+        var projectName = m_projectManager.CurrentProject.ProjectName;
+        var assembly = Path.Combine(Application.WorkingDirectory,
             SystemConstants.FileSystem.LibrarySubDirectory, $"{projectName}.dll");
 
-        return new[] {assembly};
+        return new[] { assembly };
     }
 }

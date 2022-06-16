@@ -30,10 +30,10 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.Register<GizmoService>();
         serviceRegistry.RegisterSingleton<ModalStack>();
         serviceRegistry.RegisterSingleton<ActionExecutor>();
+        serviceRegistry.RegisterSingleton<AssemblyContainer>();
         serviceRegistry.RegisterSingleton<IProjectManager, ProjectManager>();
         serviceRegistry.Register<ProjectGenerator>();
         serviceRegistry.Register<AssemblyManager>();
-        serviceRegistry.RegisterSingleton<AssemblyContainer>();
         serviceRegistry.Register<AssemblyMonitor>();
         serviceRegistry.Register<SystemsRegistry>();
 

@@ -61,6 +61,7 @@ internal class ProjectGenerator
     {
         Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.AssemblySubDirectory));
         Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.AssetsSubDirectory));
+        Directory.CreateDirectory(Path.Combine(projectDirectory, SystemConstants.FileSystem.LibrarySubDirectory));
     }
 
     private static void CopyDll(string assemblyDirectory)
