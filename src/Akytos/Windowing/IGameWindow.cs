@@ -4,7 +4,7 @@ namespace Akytos.Windowing;
 
 public interface IGameWindow : IDisposable
 {
-    string Title { get; }
+    string Title { get; set; }
     int Width { get; }
     int Height { get; }
     bool IsClosing { get; }

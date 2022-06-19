@@ -4,6 +4,7 @@ using System.Linq;
 using Akytos;
 using Akytos.Configuration;
 using Akytos.Diagnostics.Logging;
+using Akytos.Windowing;
 
 namespace Windmill.ProjectManagement;
 
@@ -11,12 +12,14 @@ internal class ProjectManager : IProjectManager
 {
     private readonly EditorConfiguration m_editorConfiguration;
     private readonly ProjectGenerator m_projectGenerator;
+    private readonly IGameWindow m_gameWindow;
     private AkytosProject m_currentProject = null!;
 
-    public ProjectManager(EditorConfiguration editorConfiguration, ProjectGenerator projectGenerator)
+    public ProjectManager(EditorConfiguration editorConfiguration, ProjectGenerator projectGenerator, IGameWindow gameWindow)
     {
         m_editorConfiguration = editorConfiguration;
         m_projectGenerator = projectGenerator;
+        m_gameWindow = gameWindow;
     }
 
     public event Action? ProjectChanged;
@@ -34,6 +37,7 @@ internal class ProjectManager : IProjectManager
     private void OnProjectChanged()
     {
         Application.WorkingDirectory = m_currentProject.ProjectDirectory;
+        m_gameWindow.Title = $"Akytos Windmill ({m_currentProject.ProjectName})";
         ProjectChanged?.Invoke();
     }
 
@@ -44,9 +48,9 @@ internal class ProjectManager : IProjectManager
         return projects.Reverse().Select(s => new AkytosProject(s.Key, s.Value));
     }
 
-    public IEnumerable<string> ValidateProjectParameters(string projectName, string projectDirectory)
+    public IEnumerable<string> ValidateProjectParameters(string projectName, string projectDirectory, bool ignoreNonExisting = false)
     {
-        return m_projectGenerator.ValidateProjectParameters(projectName, projectDirectory);
+        return m_projectGenerator.ValidateProjectParameters(projectName, projectDirectory, ignoreNonExisting);
     }
 
     public bool LoadLastOpenedProject()

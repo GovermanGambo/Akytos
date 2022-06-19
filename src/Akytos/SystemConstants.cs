@@ -28,5 +28,6 @@ internal static class SystemConstants
     {
         public const string Projects = "Projects";
         public const string LastViewedScene = "General/LastViewedScene";
+        public const string CurrentProjectsRoot = "General/CurrentProjectsRoot";
     }
 }

@@ -13,8 +13,12 @@ internal class WindowsWindow : IGameWindow
     {
         m_window = window;
     }
-    
-    public string Title => m_window.Title;
+
+    public string Title
+    {
+        get => m_window.Title;
+        set => m_window.Title = value;
+    }
     public int Width => m_window.Size.X;
     public int Height => m_window.Size.Y;
     public bool IsClosing => m_window.IsClosing;
