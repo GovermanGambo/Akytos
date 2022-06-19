@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -8,15 +9,20 @@ using Akytos.Events;
 using Akytos.Graphics.Buffers;
 using Akytos.SceneSystems;
 using ImGuiNET;
+using Serilog;
 using Windmill.Modals;
 using Windmill.Resources;
 using Windmill.Services;
+using Log = Akytos.Diagnostics.Logging.Log;
 using Math = System.Math;
 
 namespace Windmill.Panels;
 
 internal class ViewportPanel : IEditorPanel
 {
+    private const float MinZoomLevel = 0.1f;
+    private const float MaxZoomLevel = 3f;
+    
     private readonly IEditorViewport m_editorViewport;
     private readonly GizmoService m_gizmoService;
     private readonly ModalStack m_modalStack;
@@ -172,7 +178,8 @@ internal class ViewportPanel : IEditorPanel
     {
         if (e.Vertical == 0) return false;
 
-        m_editorViewport.Camera.ScaleFactor += e.Vertical * 0.1f;
+        float scaleFactor = m_editorViewport.Camera.ScaleFactor + e.Vertical * 0.1f;
+        m_editorViewport.Camera.ScaleFactor = Math.Clamp(scaleFactor, MinZoomLevel, MaxZoomLevel);
 
         return true;
     }
