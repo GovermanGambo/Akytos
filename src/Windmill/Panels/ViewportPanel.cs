@@ -80,7 +80,7 @@ internal class ViewportPanel : IEditorPanel
     {
         var dispatcher = new EventDispatcher(e);
         dispatcher.Dispatch<KeyDownEvent>(OnKeyDownEvent, () => m_isFocused);
-        dispatcher.Dispatch<KeyUpEvent>(OnKeyUpEvent);
+        dispatcher.Dispatch<KeyUpEvent>(OnKeyUpEvent, () => m_isFocused);
         dispatcher.Dispatch<MouseDownEvent>(OnMouseDownEvent);
         dispatcher.Dispatch<MouseUpEvent>(OnMouseUpEvent);
         dispatcher.Dispatch<MouseScrolledEvent>(OnMouseScrolled);
