@@ -128,7 +128,7 @@ internal class MenuService
             
             ImGui.Separator();
 
-            if (ImGui.MenuItem(LocalizedStrings.Exit, "Ctrl+X", !isGameRunning))
+            if (ImGui.MenuItem(LocalizedStrings.Exit, "Ctrl+X"))
             {
                 Application.Exit();
             }
