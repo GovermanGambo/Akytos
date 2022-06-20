@@ -21,7 +21,7 @@ namespace Windmill.Panels;
 internal class ViewportPanel : IEditorPanel
 {
     private const float MinZoomLevel = 0.1f;
-    private const float MaxZoomLevel = 3f;
+    private const float MaxZoomLevel = 10f;
     
     private readonly IEditorViewport m_editorViewport;
     private readonly GizmoService m_gizmoService;
@@ -157,7 +157,7 @@ internal class ViewportPanel : IEditorPanel
         var camPosition = new Vector2(m_editorViewport.Camera.Position.X * m_editorViewport.Camera.ScaleFactor + m_editorViewport.Width / 2f,
             m_editorViewport.Camera.Position.Y * m_editorViewport.Camera.ScaleFactor + m_editorViewport.Height / 2f);
 
-        float gridStep = 128f * m_editorViewport.Camera.ScaleFactor;
+        float gridStep = 16f * m_editorViewport.Camera.ScaleFactor;
         for (float x = camPosition.X % gridStep; x < m_editorViewport.Size.X; x += gridStep)
         {
             uint color = Math.Abs(x - camPosition.X) < 0.001f ? 0x88ff0000 : 0x88ffffff;

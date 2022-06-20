@@ -7,6 +7,7 @@ using LightInject;
 using Windmill.Actions;
 using Windmill.Panels;
 using Windmill.ProjectManagement;
+using Windmill.Runtime;
 using Windmill.Services;
 
 namespace Windmill;
@@ -36,6 +37,7 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.Register<AssemblyManager>();
         serviceRegistry.Register<AssemblyMonitor>();
         serviceRegistry.Register<SystemsRegistry>();
+        serviceRegistry.Register<RuntimeManager>();
 
         serviceRegistry.Register<EditorHotKeyService>();
 

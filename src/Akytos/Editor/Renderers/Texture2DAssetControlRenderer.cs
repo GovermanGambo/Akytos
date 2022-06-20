@@ -9,9 +9,9 @@ namespace Akytos.Editor.Renderers;
 
 internal class Texture2DAssetRenderer : IGuiControlRenderer<Texture2DAsset?>
 {
-    private readonly AssetManager m_assetManager;
+    private readonly IAssetManager m_assetManager;
 
-    public Texture2DAssetRenderer(AssetManager assetManager)
+    public Texture2DAssetRenderer(IAssetManager assetManager)
     {
         m_assetManager = assetManager;
     }

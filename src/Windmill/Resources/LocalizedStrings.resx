@@ -90,4 +90,10 @@
     <data name="NewProject" xml:space="preserve">
         <value>New project</value>
     </data>
+    <data name="RunGame" xml:space="preserve">
+        <value>Run game</value>
+    </data>
+    <data name="StopGame" xml:space="preserve">
+        <value>Stop game</value>
+    </data>
 </root>

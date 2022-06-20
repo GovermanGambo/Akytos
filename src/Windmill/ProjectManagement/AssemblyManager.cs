@@ -30,6 +30,7 @@ internal class AssemblyManager
         {
             Directory.CreateDirectory(libraryPath);
         }
+
         string projectName = m_projectManager.CurrentProject.ProjectName;
         string destination = Path.Combine(libraryPath, $"{projectName}.dll");
         string dllLocation = Path.Combine(assemblyDirectory, $"{projectName}", "bin", "Debug", "net6.0", $"{projectName}.dll");

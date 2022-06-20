@@ -12,7 +12,7 @@ public sealed class SceneTree
 
     public ISystemsRegistry Systems { get; }
 
-    internal SceneProcessMode ProcessMode { get; }
+    internal SceneProcessMode ProcessMode { get; set; }
 
     public Node CurrentScene { get; private set; } = null!;
 
@@ -62,7 +62,7 @@ public sealed class SceneTree
         Systems.OnRender();
     }
 
-    private void Finish()
+    public void Finish()
     {
         NodeRemoved?.Invoke(CurrentScene);
         SceneEnding?.Invoke();

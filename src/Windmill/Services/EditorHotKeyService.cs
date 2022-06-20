@@ -22,8 +22,15 @@ internal class EditorHotKeyService
         m_actionExecutor = actionExecutor;
     }
 
+    public bool IsEnabled { get; set; } = true;
+
     public void OnEvent(IEvent e)
     {
+        if (!IsEnabled)
+        {
+            return;
+        }
+        
         var dispatcher = new EventDispatcher(e);
         dispatcher.Dispatch<KeyDownEvent>(OnKeyDownEvent);
         dispatcher.Dispatch<KeyUpEvent>(OnKeyUpEvent);

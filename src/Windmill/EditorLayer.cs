@@ -24,14 +24,14 @@ internal class EditorLayer : ILayer
     private readonly PanelManager m_panelManager;
     private readonly IProjectManager m_projectManager;
     private readonly SceneEditorContext m_sceneEditorContext;
-    private readonly SystemsRegistry m_systemsRegistry;
+    private readonly SceneTree m_sceneTree;
 
     private IFramebuffer m_framebuffer = null!;
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, PanelManager panelManager, MenuService menuService, ModalStack modalStack, 
         EditorHotKeyService editorHotKeyService, SceneEditorContext sceneEditorContext, IProjectManager projectManager, 
-        AssemblyManager assemblyManager, SystemsRegistry systemsRegistry)
+        AssemblyManager assemblyManager, SceneTree sceneTree)
     {
         m_graphicsDevice = graphicsDevice;
         m_graphicsResourceFactory = graphicsResourceFactory;
@@ -43,7 +43,7 @@ internal class EditorLayer : ILayer
         m_sceneEditorContext = sceneEditorContext;
         m_projectManager = projectManager;
         m_assemblyManager = assemblyManager;
-        m_systemsRegistry = systemsRegistry;
+        m_sceneTree = sceneTree;
     }
 
     public void Dispose()
@@ -80,7 +80,7 @@ internal class EditorLayer : ILayer
         var viewportPanel = m_panelManager.GetPanel<ViewportPanel>();
         viewportPanel.Framebuffer = m_framebuffer;
 
-        var renderingSystem = m_systemsRegistry.Register<SpriteRendererSystem>();
+        var renderingSystem = m_sceneTree.Systems.Register<SpriteRendererSystem>();
         renderingSystem.Camera = m_editorViewport.Camera;
     }
 
@@ -92,6 +92,7 @@ internal class EditorLayer : ILayer
     {
         // -- UPDATE START -- //
         
+        m_sceneTree.OnUpdate(time);
         
         // -- UPDATE END -- //
         
@@ -102,7 +103,7 @@ internal class EditorLayer : ILayer
         
         // -- RENDER START -- //
         
-        m_systemsRegistry.OnRender();
+        m_sceneTree.OnRender();
 
         m_panelManager.GetPanel<ViewportPanel>().OnRender();
         

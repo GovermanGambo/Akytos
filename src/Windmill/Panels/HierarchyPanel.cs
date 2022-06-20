@@ -103,10 +103,6 @@ internal class HierarchyPanel : IEditorPanel
                 node.Name = name;
                 m_renamingNode = null;
             }
-            else
-            {
-                ImGui.SetKeyboardFocusHere();
-            }
         }
 
         if (ImGui.IsItemClicked())

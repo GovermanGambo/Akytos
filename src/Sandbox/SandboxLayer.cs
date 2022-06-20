@@ -14,7 +14,7 @@ internal class SandboxLayer : ILayer
     private readonly SceneTree m_sceneTree;
     private readonly IGraphicsDevice m_graphicsDevice;
     private readonly SpriteRendererSystem m_spriteRendererSystem;
-    
+
     public SandboxLayer(AkytosProject akytosProject, SceneLoader sceneLoader, SceneTree sceneTree, IGraphicsDevice graphicsDevice, SpriteRendererSystem spriteRendererSystem)
     {
         m_akytosProject = akytosProject;
@@ -32,11 +32,11 @@ internal class SandboxLayer : ILayer
     public bool IsEnabled { get; set; } = true;
     public void OnAttach()
     {
-        string? initialScene = m_akytosProject.EditorSettings.ReadString(SystemConstants.ConfigurationKeys.LastViewedScene);
+        string? initialScene = m_akytosProject.Configuration.ReadString(SystemConstants.ConfigurationKeys.InitialScene);
 
         if (initialScene == null)
         {
-            throw new MissingConfigurationException(SystemConstants.ConfigurationKeys.LastViewedScene);
+            throw new MissingConfigurationException(SystemConstants.ConfigurationKeys.InitialScene);
         }
 
         var rootNode = m_sceneLoader.LoadScene(initialScene);
