@@ -117,13 +117,13 @@ internal class EditorHotKeyService
             {
                 if (m_isControlDown)
                 {
-                    if (m_isShiftDown || m_sceneEditorContext.CurrentSceneFilename == null)
+                    if (m_isShiftDown || m_sceneEditorContext.CurrentSceneFilePath == null)
                     {
                         m_modalStack.PushModal<SaveSceneModal>();
                     }
                     else
                     {
-                        m_sceneEditorContext.SaveSceneAs(m_sceneEditorContext.CurrentSceneFilename);
+                        m_sceneEditorContext.SaveSceneAs(m_sceneEditorContext.CurrentSceneFilePath);
                     }
                     return true;
                 }

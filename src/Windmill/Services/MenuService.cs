@@ -85,13 +85,13 @@ internal class MenuService
 
             if (ImGui.MenuItem(LocalizedStrings.SaveScene, "Ctrl+S", false, !isGameRunning))
             {
-                if (m_editorContext.CurrentSceneFilename == null)
+                if (m_editorContext.CurrentSceneFilePath == null)
                 {
                     m_modalStack.PushModal<SaveSceneModal>();
                 }
                 else
                 {
-                    m_editorContext.SaveSceneAs(m_editorContext.CurrentSceneFilename);
+                    m_editorContext.SaveSceneAs(m_editorContext.CurrentSceneFilePath);
                 }
             }
 

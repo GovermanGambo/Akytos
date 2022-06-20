@@ -23,7 +23,7 @@ internal class SceneEditorContext
 
     public bool HasUnsavedChanges { get; set; }
 
-    public string? CurrentSceneFilename { get; private set; }
+    public string? CurrentSceneFilePath { get; private set; }
     public Node? SelectedNode { get; set; }
 
     public SceneTree SceneTree { get; }
@@ -40,7 +40,7 @@ internal class SceneEditorContext
         m_spriteRendererSystem.Context = rootNode;
         HasUnsavedChanges = true;
 
-        CurrentSceneFilename = null;
+        CurrentSceneFilePath = null;
     }
 
     public bool TryLoadPreviousScene()
@@ -55,6 +55,11 @@ internal class SceneEditorContext
         return LoadScene(previousScene);
     }
 
+    public bool ReloadCurrentScene()
+    {
+        return CurrentSceneFilePath is not null && LoadScene(CurrentSceneFilePath);
+    }
+    
     public bool LoadScene(string filePath)
     {
         try
@@ -63,7 +68,7 @@ internal class SceneEditorContext
             SceneTree.SetScene(scene);
             SelectedNode = null;
             m_spriteRendererSystem.Context = SceneTree.CurrentScene;
-            CurrentSceneFilename = filePath;
+            CurrentSceneFilePath = filePath;
 
             m_projectManager.CurrentProject.EditorSettings.WriteString(SystemConstants.ConfigurationKeys.LastViewedScene, filePath);
             m_projectManager.CurrentProject.EditorSettings.Save();
@@ -82,7 +87,7 @@ internal class SceneEditorContext
     public void SaveSceneAs(string filePath)
     {
         m_sceneLoader.SaveScene(filePath, SceneTree.CurrentScene);
-        CurrentSceneFilename = filePath;
+        CurrentSceneFilePath = filePath;
         HasUnsavedChanges = false;
 
         m_projectManager.CurrentProject.EditorSettings.WriteString(SystemConstants.ConfigurationKeys.LastViewedScene, filePath);
