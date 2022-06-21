@@ -15,7 +15,7 @@ using Math = System.Math;
 
 namespace Windmill.Panels;
 
-internal class ViewportPanel : IEditorPanel
+internal class ViewportPanel : EditorPanel
 {
     private const float MinZoomLevel = 0.1f;
     private const float MaxZoomLevel = 10f;
@@ -33,6 +33,7 @@ internal class ViewportPanel : IEditorPanel
     private Node? m_hoveredNode;
     private bool m_isDragging;
     private bool m_isFocused;
+    private bool m_isHovered;
     private bool m_shouldFocus;
 
     public ViewportPanel(IEditorViewport editorViewport, GizmoService gizmoService,
@@ -45,27 +46,10 @@ internal class ViewportPanel : IEditorPanel
         m_runtimeManager = runtimeManager;
         m_framebuffer = editorFramebuffer;
         m_runtimeManager.GameEnded += RuntimeManager_OnGameEnded;
-        Summary = new PanelSummary("general_viewport", LocalizedStrings.Viewport, typeof(ViewportPanel));
     }
 
-    public void Dispose()
+    protected override void OnDrawGui()
     {
-        m_runtimeManager.GameEnded -= RuntimeManager_OnGameEnded;
-    }
-
-    public PanelSummary Summary { get; }
-    public Action<PanelSummary>? Closed { get; set; }
-
-    public void OnDrawGui()
-    {
-        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
-        bool open = true;
-        if (!ImGui.Begin(Summary.DisplayName, ref open))
-        {
-            ImGui.End();
-            Closed?.Invoke(Summary);
-        }
-
         if (m_shouldFocus)
         {
             ImGui.SetWindowFocus();
@@ -73,6 +57,7 @@ internal class ViewportPanel : IEditorPanel
         }
         
         m_isFocused = ImGui.IsWindowFocused();
+        m_isHovered = ImGui.IsWindowHovered();
 
         var viewportPanelSize = ImGui.GetContentRegionAvail();
         if (m_editorViewport.Size != viewportPanelSize) OnViewportResized(viewportPanelSize);
@@ -91,22 +76,34 @@ internal class ViewportPanel : IEditorPanel
                 m_gizmoService.DrawGizmos(m_editorViewport.Camera, node2D);
         
         DrawGrid();
+    }
 
-        ImGui.End();
+    protected override void OnBeforeDraw()
+    {
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
+    }
+
+    protected override void OnAfterDraw()
+    {
         ImGui.PopStyleVar();
     }
-    
-    public void OnEvent(IEvent e)
+
+    protected override PanelSummary ProvideSummary()
+    {
+        return new PanelSummary("general_viewport", LocalizedStrings.Viewport, typeof(ViewportPanel));
+    }
+
+    public override void OnEvent(IEvent e)
     {
         var dispatcher = new EventDispatcher(e);
         dispatcher.Dispatch<KeyDownEvent>(OnKeyDownEvent, () => m_isFocused);
         dispatcher.Dispatch<KeyUpEvent>(OnKeyUpEvent, () => m_isFocused);
         dispatcher.Dispatch<MouseDownEvent>(OnMouseDownEvent);
         dispatcher.Dispatch<MouseUpEvent>(OnMouseUpEvent);
-        dispatcher.Dispatch<MouseScrolledEvent>(OnMouseScrolled);
+        dispatcher.Dispatch<MouseScrolledEvent>(OnMouseScrolled, () => m_isHovered);
     }
 
-    public void OnRender()
+    public override void OnRender()
     {
         var mousePos = ImGui.GetMousePos();
         mousePos.X -= m_viewportBounds[0].X;

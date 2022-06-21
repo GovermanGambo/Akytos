@@ -14,7 +14,7 @@ using Windmill.Services;
 
 namespace Windmill.Panels;
 
-internal class PropertyPanel : IEditorPanel
+internal class PropertyPanel : EditorPanel
 {
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly IServiceFactory m_serviceFactory;
@@ -25,34 +25,16 @@ internal class PropertyPanel : IEditorPanel
         m_sceneEditorContext = sceneEditorContext;
         m_serviceFactory = serviceFactory;
         m_actionExecutor = actionExecutor;
-        Summary = new PanelSummary("general_properties", LocalizedStrings.Properties, typeof(PropertyPanel));
     }
 
-    public void Dispose()
+    protected override void OnDrawGui()
     {
-        
-    }
-
-    public PanelSummary Summary { get; }
-    public Action<PanelSummary>? Closed { get; set; }
-
-    public void OnDrawGui()
-    {
-        bool open = true;
-        if (!ImGui.Begin(Summary.DisplayName, ref open))
-        {
-            ImGui.End();
-            Closed?.Invoke(Summary);
-        }
-
         DrawSerializedFields();
-        
-        ImGui.End();
     }
 
-    public void OnRender()
+    protected override PanelSummary ProvideSummary()
     {
-        
+        return new PanelSummary("general_properties", LocalizedStrings.Properties, typeof(PropertyPanel));
     }
 
     private void DrawSerializedFields()
@@ -119,9 +101,5 @@ internal class PropertyPanel : IEditorPanel
                 DrawSerializedFieldsForType(fieldValue);
             }
         }
-    }
-
-    public void OnEvent(IEvent e)
-    {
     }
 }

@@ -7,7 +7,7 @@ internal interface IEditorPanel : IDisposable
 {
     PanelSummary Summary { get; }
     Action<PanelSummary>? Closed { get; set; }
-    void OnDrawGui();
+    void DrawGui();
     void OnRender();
     void OnEvent(IEvent e);
 }

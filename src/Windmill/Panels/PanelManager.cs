@@ -12,11 +12,10 @@ internal class PanelManager
     private readonly List<IEditorPanel> m_openPanels = new();
     private readonly List<PanelSummary> m_panelSummaries;
 
-    // TODO: Panels should be created on demand and disposed when they're closed
     public PanelManager(IServiceFactory serviceFactory)
     {
         m_serviceFactory = serviceFactory;
-        m_panelSummaries = m_serviceFactory.GetAllInstances<IEditorPanel>().Select(p => p.Summary).ToList();
+        m_panelSummaries = m_serviceFactory.GetAllInstances<EditorPanel>().Select(p => p.Summary).ToList();
     }
 
     public ReadOnlyCollection<PanelSummary> GetPanelSummaries()
@@ -39,7 +38,7 @@ internal class PanelManager
         var openPanels = new List<IEditorPanel>(m_openPanels);
         foreach (var editorPanel in openPanels)
         {
-            editorPanel.OnDrawGui();
+            editorPanel.DrawGui();
         }
     }
 

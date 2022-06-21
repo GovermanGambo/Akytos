@@ -8,7 +8,7 @@ using Windmill.Runtime;
 
 namespace Windmill.Panels;
 
-internal class GamePanel : IEditorPanel
+internal class GamePanel : EditorPanel
 {
     private readonly RuntimeManager m_runtimeManager;
     private readonly IFramebuffer m_framebuffer;
@@ -20,27 +20,15 @@ internal class GamePanel : IEditorPanel
         m_runtimeManager = runtimeManager;
         m_framebuffer = gameFramebuffer;
         m_runtimeManager.GameStarted += RuntimeManager_OnGameStarted;
-        Summary = new PanelSummary("general_game", LocalizedStrings.Game, typeof(GamePanel));
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
         m_runtimeManager.GameStarted -= RuntimeManager_OnGameStarted;
     }
 
-    public PanelSummary Summary { get; }
-    public Action<PanelSummary>? Closed { get; set; }
-
-    public void OnDrawGui()
+    protected override void OnDrawGui()
     {
-        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
-        bool open = true;
-        if (!ImGui.Begin(Summary.DisplayName, ref open))
-        {
-            ImGui.End();
-            Closed?.Invoke(Summary);
-        }
-
         if (m_shouldFocus)
         {
             ImGui.SetWindowFocus();
@@ -56,20 +44,23 @@ internal class GamePanel : IEditorPanel
         
         uint textureId = m_framebuffer.GetColorAttachmentRendererId();
         ImGui.Image((IntPtr) textureId, size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
+    }
+    
+    protected override void OnBeforeDraw()
+    {
+        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
+    }
 
-        ImGui.End();
+    protected override void OnAfterDraw()
+    {
         ImGui.PopStyleVar();
     }
 
-    public void OnRender()
+    protected override PanelSummary ProvideSummary()
     {
-        
+        return new PanelSummary("general_game", LocalizedStrings.Game, typeof(GamePanel));
     }
 
-    public void OnEvent(IEvent e)
-    {
-    }
-    
     private void RuntimeManager_OnGameStarted()
     {
         m_shouldFocus = true;

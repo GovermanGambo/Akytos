@@ -12,7 +12,7 @@ using Windmill.Resources;
 
 namespace Windmill.Panels;
 
-internal class AssetsPanel : IEditorPanel
+internal class AssetsPanel : EditorPanel
 {
     private readonly IProjectManager m_projectManager;
 
@@ -20,7 +20,6 @@ internal class AssetsPanel : IEditorPanel
     {
         m_projectManager = projectManager;
         m_projectManager.ProjectChanged += ProjectManagerOnProjectChanged;
-        Summary = new PanelSummary("general_assets",LocalizedStrings.Assets, typeof(AssetsPanel));
     }
 
     public string CurrentDirectory { get; private set; } = Asset.AssetsDirectory;
@@ -33,7 +32,7 @@ internal class AssetsPanel : IEditorPanel
     public PanelSummary Summary { get; }
     public Action<PanelSummary>? Closed { get; set; }
 
-    public void OnDrawGui()
+    public void DrawGui()
     {
         bool open = true;
         if (!ImGui.Begin(Summary.DisplayName, ref open))
@@ -42,6 +41,11 @@ internal class AssetsPanel : IEditorPanel
             Closed?.Invoke(Summary);
         }
 
+        ImGui.End();
+    }
+
+    protected override void OnDrawGui()
+    {
         var directoryInfo = new DirectoryInfo(CurrentDirectory);
 
         var directories = directoryInfo.GetDirectories().ToArray();
@@ -73,17 +77,11 @@ internal class AssetsPanel : IEditorPanel
         }
 
         ImGui.PopStyleColor();
-
-        ImGui.End();
     }
 
-    public void OnRender()
+    protected override PanelSummary ProvideSummary()
     {
-        
-    }
-
-    public void OnEvent(IEvent e)
-    {
+        return new PanelSummary("general_assets",LocalizedStrings.Assets, typeof(AssetsPanel));
     }
 
     private void ProjectManagerOnProjectChanged()

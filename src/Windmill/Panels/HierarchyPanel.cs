@@ -1,7 +1,5 @@
-using System;
 using Akytos.Diagnostics.Logging;
 using Akytos.Editor;
-using Akytos.Events;
 using Akytos.SceneSystems;
 using ImGuiNET;
 using Windmill.Actions;
@@ -11,7 +9,7 @@ using Windmill.Services;
 
 namespace Windmill.Panels;
 
-internal class HierarchyPanel : IEditorPanel
+internal class HierarchyPanel : EditorPanel
 {
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly ActionExecutor m_actionExecutor;
@@ -27,21 +25,10 @@ internal class HierarchyPanel : IEditorPanel
         m_modalStack = modalStack;
         m_actionExecutor = actionExecutor;
         m_editorViewport = editorViewport;
-        Summary = new PanelSummary("general_hierarchy", LocalizedStrings.SceneHierarchy, typeof(HierarchyPanel));
     }
 
-    public PanelSummary Summary { get; }
-    public Action<PanelSummary>? Closed { get; set; }
-
-    public void OnDrawGui()
+    protected override void OnDrawGui()
     {
-        bool open = true;
-        if (!ImGui.Begin(Summary.DisplayName, ref open, ImGuiWindowFlags.NoCollapse))
-        {
-            ImGui.End();
-            Closed?.Invoke(Summary);
-        }
-
         if (ImGui.Button(LocalizedStrings.AddNode_Button))
         {
             m_modalStack.PushModal<CreateNodeModal>();
@@ -65,17 +52,11 @@ internal class HierarchyPanel : IEditorPanel
         ImGui.Separator();
 
         DrawNode(m_sceneEditorContext.SceneTree.CurrentScene);
-
-        ImGui.End();
     }
 
-    public void OnRender()
+    protected override PanelSummary ProvideSummary()
     {
-        
-    }
-
-    public void OnEvent(IEvent e)
-    {
+        return new PanelSummary("general_hierarchy", LocalizedStrings.SceneHierarchy, typeof(HierarchyPanel));
     }
 
     private void DrawNode(Node node)
@@ -164,9 +145,5 @@ internal class HierarchyPanel : IEditorPanel
     private void SelectNode(Node? node)
     {
         m_sceneEditorContext.SelectedNode = node;
-    }
-
-    public void Dispose()
-    {
     }
 }

@@ -66,10 +66,10 @@ public class EditorCompositionRoot : ICompositionRoot
 
     private static void RegisterPanels(IServiceRegistry serviceRegistry)
     {
-        var panelType = typeof(IEditorPanel);
+        var panelType = typeof(EditorPanel);
         var types = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(s => s.GetTypes())
-            .Where(p => panelType.IsAssignableFrom(p) && !p.IsInterface);
+            .Where(p => panelType.IsAssignableFrom(p) && !p.IsInterface && !p.IsAbstract);
 
         foreach (var type in types)
         {
