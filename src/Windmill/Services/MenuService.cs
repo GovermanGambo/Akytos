@@ -53,11 +53,19 @@ internal class MenuService
 
             if (ImGui.BeginMenu(LocalizedStrings.Layout))
             {
-                foreach (var panel in m_panelManager)
+                foreach (var panelSummary in m_panelManager.GetPanelSummaries())
                 {
-                    if (ImGui.MenuItem(panel.DisplayName, "", panel.IsEnabled))
+                    bool isOpen = m_panelManager.IsPanelOpen(panelSummary.Id);
+                    if (ImGui.MenuItem(panelSummary.DisplayName, "", isOpen))
                     {
-                        panel.IsEnabled = !panel.IsEnabled;
+                        if (!isOpen)
+                        {
+                            m_panelManager.Show(panelSummary);
+                        }
+                        else
+                        {
+                            m_panelManager.Hide(panelSummary);
+                        }
                     }
                 }
                 ImGui.EndMenu();

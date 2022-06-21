@@ -26,6 +26,7 @@ internal class ViewportPanel : IEditorPanel
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly Vector2[] m_viewportBounds = new Vector2[2];
     private readonly RuntimeManager m_runtimeManager;
+    private readonly IFramebuffer m_framebuffer;
     private Vector2 m_currentCursorPosition;
     private Vector2 m_dragStartPosition;
 
@@ -35,30 +36,36 @@ internal class ViewportPanel : IEditorPanel
     private bool m_shouldFocus;
 
     public ViewportPanel(IEditorViewport editorViewport, GizmoService gizmoService,
-        SceneEditorContext sceneEditorContext, ModalStack modalStack, RuntimeManager runtimeManager)
+        SceneEditorContext sceneEditorContext, ModalStack modalStack, RuntimeManager runtimeManager, IFramebuffer editorFramebuffer)
     {
         m_editorViewport = editorViewport;
         m_gizmoService = gizmoService;
         m_sceneEditorContext = sceneEditorContext;
         m_modalStack = modalStack;
         m_runtimeManager = runtimeManager;
+        m_framebuffer = editorFramebuffer;
         m_runtimeManager.GameEnded += RuntimeManager_OnGameEnded;
+        Summary = new PanelSummary("general_viewport", LocalizedStrings.Viewport, typeof(ViewportPanel));
     }
-
-    public IFramebuffer Framebuffer { get; set; } = null!;
 
     public void Dispose()
     {
         m_runtimeManager.GameEnded -= RuntimeManager_OnGameEnded;
     }
 
-    public string DisplayName => LocalizedStrings.Viewport;
-    public bool IsEnabled { get; set; } = true;
+    public PanelSummary Summary { get; }
+    public Action<PanelSummary>? Closed { get; set; }
 
     public void OnDrawGui()
     {
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
-        ImGui.Begin(DisplayName);
+        bool open = true;
+        if (!ImGui.Begin(Summary.DisplayName, ref open))
+        {
+            open = false;
+            ImGui.End();
+            Closed?.Invoke(Summary);
+        }
 
         if (m_shouldFocus)
         {
@@ -71,7 +78,7 @@ internal class ViewportPanel : IEditorPanel
         var viewportPanelSize = ImGui.GetContentRegionAvail();
         if (m_editorViewport.Size != viewportPanelSize) OnViewportResized(viewportPanelSize);
 
-        uint textureId = Framebuffer.GetColorAttachmentRendererId();
+        uint textureId = m_framebuffer.GetColorAttachmentRendererId();
         ImGui.Image((IntPtr) textureId, m_editorViewport.Size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
 
         var viewportMinRegion = ImGui.GetWindowContentRegionMin();
@@ -116,7 +123,7 @@ internal class ViewportPanel : IEditorPanel
             m_currentCursorPosition = new Vector2(mouseX - m_editorViewport.Width / 2,
                 mouseY - m_editorViewport.Height / 2);
 
-            int nodeId = Framebuffer.ReadPixel(1, mouseX, mouseY);
+            int nodeId = m_framebuffer.ReadPixel(1, mouseX, mouseY);
 
             if (nodeId == -1) return;
 
@@ -141,7 +148,7 @@ internal class ViewportPanel : IEditorPanel
 
     private void OnViewportResized(Vector2 newViewportSize)
     {
-        Framebuffer.Resize((uint) newViewportSize.X, (uint) newViewportSize.Y);
+        m_framebuffer.Resize((uint) newViewportSize.X, (uint) newViewportSize.Y);
 
         m_editorViewport.ResizeViewport((int) newViewportSize.X, (int) newViewportSize.Y);
     }

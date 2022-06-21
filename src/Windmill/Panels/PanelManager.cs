@@ -1,80 +1,107 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using Akytos.Diagnostics;
 using Akytos.Events;
 using LightInject;
 
 namespace Windmill.Panels;
 
-internal class PanelManager : IEnumerable<IEditorPanel>
+internal class PanelManager
 {
     private readonly IServiceFactory m_serviceFactory;
-    private IEditorPanel[] m_panels = null!;
-    private bool m_initialized;
+    private readonly List<IEditorPanel> m_openPanels = new();
+    private readonly List<PanelSummary> m_panelSummaries;
 
     // TODO: Panels should be created on demand and disposed when they're closed
     public PanelManager(IServiceFactory serviceFactory)
     {
         m_serviceFactory = serviceFactory;
+        m_panelSummaries = m_serviceFactory.GetAllInstances<IEditorPanel>().Select(p => p.Summary).ToList();
     }
 
-    public void Initialize()
+    public ReadOnlyCollection<PanelSummary> GetPanelSummaries()
     {
-        m_panels = m_serviceFactory.GetAllInstances<IEditorPanel>().ToArray();
-        m_initialized = true;
+        return new ReadOnlyCollection<PanelSummary>(m_panelSummaries);
+    }
+
+    public bool IsPanelOpen(string id)
+    {
+        return m_openPanels.Any(p => p.Summary.Id == id);
+    }
+    
+    public ReadOnlyCollection<IEditorPanel> GetPanels()
+    {
+        return new ReadOnlyCollection<IEditorPanel>(m_openPanels);
     }
 
     public void OnDrawGui()
     {
-        Assert.IsTrue(m_initialized, "PanelManager is not initialized!");
-        
-        foreach (var editorPanel in m_panels)
+        var openPanels = new List<IEditorPanel>(m_openPanels);
+        foreach (var editorPanel in openPanels)
         {
-            if (editorPanel.IsEnabled)
-            {
-                editorPanel.OnDrawGui();
-            }
+            editorPanel.OnDrawGui();
         }
     }
 
-    public void RegisterPanel<TPanel>(Action<TPanel>? onOpen = null)
+    public void Show(PanelSummary panelSummary)
     {
-        
+        object? panel = m_serviceFactory.GetInstance(panelSummary.Type);
+        if (panel is IEditorPanel editorPanel)
+        {
+            m_openPanels.Add(editorPanel);
+            editorPanel.Closed = OnPanelClosing;
+        }
     }
 
-    public TPanel GetPanel<TPanel>() where TPanel : IEditorPanel
+    private void OnPanelClosing(PanelSummary panelSummary)
     {
-        Assert.IsTrue(m_initialized, "PanelManager is not initialized!");
-        
-        var panel = m_panels.FirstOrDefault(p => p is TPanel);
-        
-        Assert.IsNotNull(panel, $"Panel {nameof(TPanel)} does not exist!");
+        Hide(panelSummary);
+    }
 
-        return (TPanel)panel;
+    public void Show<TPanel>() where TPanel : IEditorPanel
+    {
+        var panel = m_serviceFactory.GetInstance<TPanel>();
+        m_openPanels.Add(panel);
+    }
+
+    public void Hide(PanelSummary panelSummary)
+    {
+        var panel = m_openPanels.FirstOrDefault(p => p.Summary.Id == panelSummary.Id);
+        if (panel is null)
+        {
+            return;
+        }
+
+        m_openPanels.Remove(panel);
+        panel.Closed = null;
+        panel.Dispose();
+    }
+
+    public void Hide<TPanel>() where TPanel : IEditorPanel
+    {
+        var panel = GetPanel<TPanel>();
+
+        if (panel is null)
+        {
+            return;
+        }
+
+        m_openPanels.Remove(panel);
+        panel.Dispose();
+    }
+
+    public TPanel? GetPanel<TPanel>() where TPanel : IEditorPanel
+    {
+        var panel = m_openPanels.OfType<TPanel>().FirstOrDefault();
+        
+        return panel;
     }
 
     public void OnEvent(IEvent e)
     {
-        Assert.IsTrue(m_initialized, "PanelManager is not initialized!");
-        
-        foreach (var editorPanel in m_panels)
+        foreach (var editorPanel in m_openPanels)
         {
-            if (editorPanel.IsEnabled)
-            {
-                editorPanel.OnEvent(e);
-            }
+            editorPanel.OnEvent(e);
         }
-    }
-
-    public IEnumerator<IEditorPanel> GetEnumerator()
-    {
-        return ((IEnumerable<IEditorPanel>)m_panels).GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
     }
 }

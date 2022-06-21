@@ -5,8 +5,8 @@ namespace Windmill.Panels;
 
 internal interface IEditorPanel : IDisposable
 {
-    string DisplayName { get; }
-    bool IsEnabled { get; set; }
+    PanelSummary Summary { get; }
+    Action<PanelSummary>? Closed { get; set; }
     void OnDrawGui();
     void OnEvent(IEvent e);
 }

@@ -1,3 +1,4 @@
+using System;
 using Akytos;
 using Akytos.Diagnostics.Logging;
 using Akytos.Editor;
@@ -27,20 +28,19 @@ internal class HierarchyPanel : IEditorPanel
         m_modalStack = modalStack;
         m_actionExecutor = actionExecutor;
         m_editorViewport = editorViewport;
-        IsEnabled = true;
+        Summary = new PanelSummary("general_hierarchy", LocalizedStrings.SceneHierarchy, typeof(HierarchyPanel));
     }
 
-    public string DisplayName => LocalizedStrings.SceneHierarchy;
-    public bool IsEnabled { get; set; }
+    public PanelSummary Summary { get; }
+    public Action<PanelSummary>? Closed { get; set; }
 
     public void OnDrawGui()
     {
-        bool open = IsEnabled;
-        if (!ImGui.Begin(DisplayName, ref open, ImGuiWindowFlags.NoCollapse))
+        bool open = true;
+        if (!ImGui.Begin(Summary.DisplayName, ref open, ImGuiWindowFlags.NoCollapse))
         {
-            IsEnabled = false;
             ImGui.End();
-            return;
+            Closed?.Invoke(Summary);
         }
 
         if (ImGui.Button(LocalizedStrings.AddNode_Button))

@@ -19,7 +19,6 @@ internal class EditorLayer : ILayer
     private readonly EditorHotKeyService m_editorHotKeyService;
     private readonly IEditorViewport m_editorViewport;
     private readonly IGraphicsDevice m_graphicsDevice;
-    private readonly IGraphicsResourceFactory m_graphicsResourceFactory;
     private readonly MenuService m_menuService;
     private readonly ModalStack m_modalStack;
     private readonly PanelManager m_panelManager;
@@ -27,17 +26,15 @@ internal class EditorLayer : ILayer
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly SceneTree m_sceneTree;
     private readonly ICamera m_camera;
+    private readonly IFramebuffer m_editorFramebuffer;
+    private readonly IFramebuffer m_gameFramebuffer;
 
-    private IFramebuffer m_framebuffer = null!;
-    private IFramebuffer m_gameFramebuffer = null!;
-
-    public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
+    public EditorLayer(IGraphicsDevice graphicsDevice,
         IEditorViewport editorViewport, PanelManager panelManager, MenuService menuService, ModalStack modalStack, 
         EditorHotKeyService editorHotKeyService, SceneEditorContext sceneEditorContext, IProjectManager projectManager, 
-        AssemblyManager assemblyManager, SceneTree sceneTree)
+        AssemblyManager assemblyManager, SceneTree sceneTree, IFramebuffer editorFramebuffer, IFramebuffer gameFramebuffer)
     {
         m_graphicsDevice = graphicsDevice;
-        m_graphicsResourceFactory = graphicsResourceFactory;
         m_editorViewport = editorViewport;
         m_panelManager = panelManager;
         m_menuService = menuService;
@@ -47,6 +44,8 @@ internal class EditorLayer : ILayer
         m_projectManager = projectManager;
         m_assemblyManager = assemblyManager;
         m_sceneTree = sceneTree;
+        m_editorFramebuffer = editorFramebuffer;
+        m_gameFramebuffer = gameFramebuffer;
 
         m_camera = new OrthographicCamera(245, 135);
     }
@@ -63,46 +62,6 @@ internal class EditorLayer : ILayer
         
         // TODO: This may be superfluous when the assembly gets reloaded periodically by the monitor
         m_assemblyManager.BuildAndLoadAssemblies();
-        
-        var framebufferSpecification = new FrameBufferSpecification
-        {
-            Width = (uint) m_editorViewport.Width,
-            Height = (uint) m_editorViewport.Height
-        };
-
-        var gameSpecification = new FrameBufferSpecification()
-        {
-            Width = 1920,
-            Height = 1080
-        };
-
-        framebufferSpecification.Attachments = new FramebufferAttachmentSpecification(
-            new List<FramebufferTextureSpecification>
-            {
-                new(FramebufferTextureFormat.Rgba8),
-                new(FramebufferTextureFormat.RedInteger),
-                new(FramebufferTextureFormat.Depth)
-            });
-        
-        gameSpecification.Attachments = new FramebufferAttachmentSpecification(
-            new List<FramebufferTextureSpecification>
-            {
-                new(FramebufferTextureFormat.Rgba8),
-                new(FramebufferTextureFormat.RedInteger),
-                new(FramebufferTextureFormat.Depth)
-            });
-
-        m_framebuffer = m_graphicsResourceFactory.CreateFramebuffer(framebufferSpecification);
-
-        m_gameFramebuffer = m_graphicsResourceFactory.CreateFramebuffer(gameSpecification);
-        
-        m_panelManager.Initialize();
-
-        var viewportPanel = m_panelManager.GetPanel<ViewportPanel>();
-        viewportPanel.Framebuffer = m_framebuffer;
-
-        var gamePanel = m_panelManager.GetPanel<GamePanel>();
-        gamePanel.Initialize(m_gameFramebuffer, new Vector2(1920, 1080));
 
         m_sceneTree.Systems.Register<SpriteRendererSystem>();
     }
@@ -119,7 +78,7 @@ internal class EditorLayer : ILayer
         
         // -- UPDATE END -- //
 
-        m_framebuffer.Bind();
+        m_editorFramebuffer.Bind();
         
         m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
         m_graphicsDevice.Clear();
@@ -128,11 +87,11 @@ internal class EditorLayer : ILayer
         
         m_sceneTree.OnRender(m_editorViewport.Camera);
 
-        m_panelManager.GetPanel<ViewportPanel>().OnRender();
+        //m_panelManager.GetPanel<ViewportPanel>().OnRender();
         
         // -- RENDER END -- //
 
-        m_framebuffer.Unbind();
+        m_editorFramebuffer.Unbind();
         
         m_gameFramebuffer.Bind();
         m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));

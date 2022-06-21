@@ -19,6 +19,7 @@ internal class AssetsPanel : IEditorPanel
     {
         m_projectManager = projectManager;
         m_projectManager.ProjectChanged += ProjectManagerOnProjectChanged;
+        Summary = new PanelSummary("general_assets",LocalizedStrings.Assets, typeof(AssetsPanel));
     }
 
     public string CurrentDirectory { get; private set; } = Asset.AssetsDirectory;
@@ -27,18 +28,17 @@ internal class AssetsPanel : IEditorPanel
     {
         m_projectManager.ProjectChanged -= ProjectManagerOnProjectChanged;
     }
-
-    public string DisplayName => LocalizedStrings.Assets;
-    public bool IsEnabled { get; set; } = true;
+    
+    public PanelSummary Summary { get; }
+    public Action<PanelSummary>? Closed { get; set; }
 
     public void OnDrawGui()
     {
-        var open = IsEnabled;
-        if (!ImGui.Begin(DisplayName, ref open))
+        bool open = true;
+        if (!ImGui.Begin(Summary.DisplayName, ref open))
         {
-            IsEnabled = false;
             ImGui.End();
-            return;
+            Closed?.Invoke(Summary);
         }
 
         var directoryInfo = new DirectoryInfo(CurrentDirectory);

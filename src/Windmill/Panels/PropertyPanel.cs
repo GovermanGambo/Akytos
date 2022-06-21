@@ -25,6 +25,7 @@ internal class PropertyPanel : IEditorPanel
         m_sceneEditorContext = sceneEditorContext;
         m_serviceFactory = serviceFactory;
         m_actionExecutor = actionExecutor;
+        Summary = new PanelSummary("general_properties", LocalizedStrings.Properties, typeof(PropertyPanel));
     }
 
     public void Dispose()
@@ -32,17 +33,16 @@ internal class PropertyPanel : IEditorPanel
         
     }
 
-    public string DisplayName => LocalizedStrings.Properties;
-    public bool IsEnabled { get; set; } = true;
+    public PanelSummary Summary { get; }
+    public Action<PanelSummary>? Closed { get; set; }
 
     public void OnDrawGui()
     {
-        bool open = IsEnabled;
-        if (!ImGui.Begin(DisplayName, ref open))
+        bool open = true;
+        if (!ImGui.Begin(Summary.DisplayName, ref open))
         {
-            IsEnabled = false;
             ImGui.End();
-            return;
+            Closed?.Invoke(Summary);
         }
 
         DrawSerializedFields();

@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Akytos.Editor;
+using Akytos.Graphics;
+using Akytos.Graphics.Buffers;
 using Akytos.SceneSystems;
 using Akytos.Windowing;
 using LightInject;
@@ -45,6 +48,7 @@ public class EditorCompositionRoot : ICompositionRoot
 
         RegisterPanels(serviceRegistry);
         RegisterModals(serviceRegistry);
+        RegisterFrameBuffers(serviceRegistry);
     }
 
     private static void RegisterModals(IServiceRegistry serviceRegistry)
@@ -69,7 +73,50 @@ public class EditorCompositionRoot : ICompositionRoot
 
         foreach (var type in types)
         {
-            serviceRegistry.RegisterSingleton(panelType, type, type.Name);
+            serviceRegistry.Register(type);
         }
+    }
+
+    private static void RegisterFrameBuffers(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.RegisterSingleton<IFramebuffer>(factory =>
+        {
+            var editorViewport = factory.GetInstance<IEditorViewport>();
+            var framebufferSpecification = new FrameBufferSpecification
+            {
+                Width = (uint) editorViewport.Width,
+                Height = (uint) editorViewport.Height
+            };
+            framebufferSpecification.Attachments = new FramebufferAttachmentSpecification(
+                new List<FramebufferTextureSpecification>
+                {
+                    new(FramebufferTextureFormat.Rgba8),
+                    new(FramebufferTextureFormat.RedInteger),
+                    new(FramebufferTextureFormat.Depth)
+                });
+
+            var graphicsResourceFactory = factory.GetInstance<IGraphicsResourceFactory>();
+            return graphicsResourceFactory.CreateFramebuffer(framebufferSpecification);
+        }, "editorFramebuffer");
+        
+        
+        serviceRegistry.RegisterSingleton<IFramebuffer>(factory =>
+        {
+            var framebufferSpecification = new FrameBufferSpecification
+            {
+                Width = 1920,
+                Height = 1080
+            };
+            framebufferSpecification.Attachments = new FramebufferAttachmentSpecification(
+                new List<FramebufferTextureSpecification>
+                {
+                    new(FramebufferTextureFormat.Rgba8),
+                    new(FramebufferTextureFormat.RedInteger),
+                    new(FramebufferTextureFormat.Depth)
+                });
+
+            var graphicsResourceFactory = factory.GetInstance<IGraphicsResourceFactory>();
+            return graphicsResourceFactory.CreateFramebuffer(framebufferSpecification);
+        }, "gameFramebuffer");
     }
 }
