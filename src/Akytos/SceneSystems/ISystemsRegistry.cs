@@ -1,3 +1,5 @@
+using Akytos.Graphics;
+
 namespace Akytos.SceneSystems;
 
 public interface ISystemsRegistry
@@ -6,5 +8,5 @@ public interface ISystemsRegistry
 
     void OnUpdate(DeltaTime deltaTime);
 
-    void OnRender();
+    void OnRender(ICamera camera);
 }

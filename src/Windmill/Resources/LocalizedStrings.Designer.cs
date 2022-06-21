@@ -142,6 +142,15 @@ namespace Windmill.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Game.
+        /// </summary>
+        internal static string Game {
+            get {
+                return ResourceManager.GetString("Game", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Layout.
         /// </summary>
         internal static string Layout {

@@ -96,4 +96,7 @@
     <data name="StopGame" xml:space="preserve">
         <value>Stop game</value>
     </data>
+    <data name="Game" xml:space="preserve">
+        <value>Game</value>
+    </data>
 </root>

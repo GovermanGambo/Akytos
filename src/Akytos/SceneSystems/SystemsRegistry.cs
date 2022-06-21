@@ -1,3 +1,4 @@
+using Akytos.Graphics;
 using LightInject;
 
 namespace Akytos.SceneSystems;
@@ -41,13 +42,13 @@ public class SystemsRegistry : ISystemsRegistry
         }
     }
 
-    public void OnRender()
+    public void OnRender(ICamera camera)
     {
         foreach (var sceneSystem in m_registeredSystems)
         {
             if (sceneSystem.IsEnabled)
             {
-                sceneSystem.OnRender();
+                sceneSystem.OnRender(camera);
             }
         }
     }

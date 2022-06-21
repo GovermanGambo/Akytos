@@ -12,7 +12,6 @@ public class SpriteRendererSystem : ISceneSystem
     }
 
     public Node? Context { get; set; }
-    public ICamera? Camera { get; set; }
 
     public bool IsEnabled { get; set; } = true;
 
@@ -21,16 +20,16 @@ public class SpriteRendererSystem : ISceneSystem
         
     }
 
-    public void OnRender()
+    public void OnRender(ICamera camera)
     {
-        if (Context == null || Camera == null)
+        if (Context == null)
         {
             return;
         }
         
         var nodes = Context.GetChildren<SpriteNode>(true);
         
-        m_spriteBatch.Begin(Camera);
+        m_spriteBatch.Begin(camera);
         foreach (var spriteNode in nodes)
         {
             if (!spriteNode.IsEnabled || !spriteNode.IsVisible || spriteNode.Texture == null)

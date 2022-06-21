@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Numerics;
 using Akytos;
 using Akytos.Editor;
 using Akytos.Events;
@@ -25,8 +26,10 @@ internal class EditorLayer : ILayer
     private readonly IProjectManager m_projectManager;
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly SceneTree m_sceneTree;
+    private readonly ICamera m_camera;
 
     private IFramebuffer m_framebuffer = null!;
+    private IFramebuffer m_gameFramebuffer = null!;
 
     public EditorLayer(IGraphicsDevice graphicsDevice, IGraphicsResourceFactory graphicsResourceFactory,
         IEditorViewport editorViewport, PanelManager panelManager, MenuService menuService, ModalStack modalStack, 
@@ -44,6 +47,8 @@ internal class EditorLayer : ILayer
         m_projectManager = projectManager;
         m_assemblyManager = assemblyManager;
         m_sceneTree = sceneTree;
+
+        m_camera = new OrthographicCamera(490, 270);
     }
 
     public void Dispose()
@@ -58,11 +63,17 @@ internal class EditorLayer : ILayer
         
         // TODO: This may be superfluous when the assembly gets reloaded periodically by the monitor
         m_assemblyManager.BuildAndLoadAssemblies();
-
+        
         var framebufferSpecification = new FrameBufferSpecification
         {
             Width = (uint) m_editorViewport.Width,
             Height = (uint) m_editorViewport.Height
+        };
+
+        var gameSpecification = new FrameBufferSpecification()
+        {
+            Width = 490,
+            Height = 270
         };
 
         framebufferSpecification.Attachments = new FramebufferAttachmentSpecification(
@@ -72,16 +83,28 @@ internal class EditorLayer : ILayer
                 new(FramebufferTextureFormat.RedInteger),
                 new(FramebufferTextureFormat.Depth)
             });
+        
+        gameSpecification.Attachments = new FramebufferAttachmentSpecification(
+            new List<FramebufferTextureSpecification>
+            {
+                new(FramebufferTextureFormat.Rgba8),
+                new(FramebufferTextureFormat.RedInteger),
+                new(FramebufferTextureFormat.Depth)
+            });
 
         m_framebuffer = m_graphicsResourceFactory.CreateFramebuffer(framebufferSpecification);
 
+        m_gameFramebuffer = m_graphicsResourceFactory.CreateFramebuffer(gameSpecification);
+        
         m_panelManager.Initialize();
 
         var viewportPanel = m_panelManager.GetPanel<ViewportPanel>();
         viewportPanel.Framebuffer = m_framebuffer;
 
-        var renderingSystem = m_sceneTree.Systems.Register<SpriteRendererSystem>();
-        renderingSystem.Camera = m_editorViewport.Camera;
+        var gamePanel = m_panelManager.GetPanel<GamePanel>();
+        gamePanel.Initialize(m_gameFramebuffer, new Vector2(490, 270));
+
+        m_sceneTree.Systems.Register<SpriteRendererSystem>();
     }
 
     public void OnDetach()
@@ -95,21 +118,27 @@ internal class EditorLayer : ILayer
         m_sceneTree.OnUpdate(time);
         
         // -- UPDATE END -- //
-        
-        m_framebuffer.Bind();
 
+        m_framebuffer.Bind();
+        
         m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
         m_graphicsDevice.Clear();
-        
+
         // -- RENDER START -- //
         
-        m_sceneTree.OnRender();
+        m_sceneTree.OnRender(m_editorViewport.Camera);
 
         m_panelManager.GetPanel<ViewportPanel>().OnRender();
         
         // -- RENDER END -- //
 
         m_framebuffer.Unbind();
+        
+        m_gameFramebuffer.Bind();
+        m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
+        m_graphicsDevice.Clear();
+        m_sceneTree.OnRender(m_camera);
+        m_gameFramebuffer.Unbind();
     }
 
     public void OnEvent(IEvent e)

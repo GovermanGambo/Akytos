@@ -1,4 +1,6 @@
-﻿namespace Akytos.SceneSystems;
+﻿using Akytos.Graphics;
+
+namespace Akytos.SceneSystems;
 
 public sealed class SceneTree
 {
@@ -57,9 +59,9 @@ public sealed class SceneTree
         foreach (var node in CurrentScene.GetChildren(true)) node.OnUpdate(deltaSeconds);
     }
 
-    public void OnRender()
+    public void OnRender(ICamera camera)
     {
-        Systems.OnRender();
+        Systems.OnRender(camera);
     }
 
     public void Finish()

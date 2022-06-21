@@ -1,3 +1,5 @@
+using Akytos.Graphics;
+
 namespace Akytos.SceneSystems;
 
 public class Physics2DSystem : ISceneSystem
@@ -42,7 +44,7 @@ public class Physics2DSystem : ISceneSystem
         }
     }
 
-    public void OnRender()
+    public void OnRender(ICamera camera)
     {
     }
 }
