@@ -1,4 +1,5 @@
 using System;
+using Akytos.Diagnostics.Logging;
 using Akytos.SceneSystems;
 using Windmill.Modals;
 using Windmill.Services;
@@ -23,6 +24,7 @@ internal class RuntimeManager
     public bool IsGameRunning { get; private set; }
 
     public event Action? GameStarted;
+    public event Action? GameEnded;
 
     public void StartGame()
     {
@@ -45,6 +47,8 @@ internal class RuntimeManager
         IsGameRunning = true;
         m_sceneTree.StartScene();
         GameStarted?.Invoke();
+        
+        Log.Core.Information("Entered game state");
     }
 
     public void StopGame()
@@ -54,5 +58,9 @@ internal class RuntimeManager
         m_sceneTree.ProcessMode = SceneProcessMode.Editor;
         m_sceneTree.Finish();
         m_sceneEditorContext.ReloadCurrentScene();
+        
+        GameEnded?.Invoke();
+        
+        Log.Core.Information("Exited game state");
     }
 }

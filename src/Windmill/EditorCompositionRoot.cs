@@ -37,7 +37,7 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.Register<AssemblyManager>();
         serviceRegistry.Register<AssemblyMonitor>();
         serviceRegistry.Register<SystemsRegistry>();
-        serviceRegistry.Register<RuntimeManager>();
+        serviceRegistry.RegisterSingleton<RuntimeManager>();
 
         serviceRegistry.Register<EditorHotKeyService>();
 

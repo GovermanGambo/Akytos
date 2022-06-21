@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -9,11 +8,9 @@ using Akytos.Events;
 using Akytos.Graphics.Buffers;
 using Akytos.SceneSystems;
 using ImGuiNET;
-using Serilog;
-using Windmill.Modals;
 using Windmill.Resources;
+using Windmill.Runtime;
 using Windmill.Services;
-using Log = Akytos.Diagnostics.Logging.Log;
 using Math = System.Math;
 
 namespace Windmill.Panels;
@@ -28,26 +25,31 @@ internal class ViewportPanel : IEditorPanel
     private readonly ModalStack m_modalStack;
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly Vector2[] m_viewportBounds = new Vector2[2];
+    private readonly RuntimeManager m_runtimeManager;
     private Vector2 m_currentCursorPosition;
     private Vector2 m_dragStartPosition;
 
     private Node? m_hoveredNode;
     private bool m_isDragging;
     private bool m_isFocused;
+    private bool m_shouldFocus;
 
     public ViewportPanel(IEditorViewport editorViewport, GizmoService gizmoService,
-        SceneEditorContext sceneEditorContext, ModalStack modalStack)
+        SceneEditorContext sceneEditorContext, ModalStack modalStack, RuntimeManager runtimeManager)
     {
         m_editorViewport = editorViewport;
         m_gizmoService = gizmoService;
         m_sceneEditorContext = sceneEditorContext;
         m_modalStack = modalStack;
+        m_runtimeManager = runtimeManager;
+        m_runtimeManager.GameEnded += RuntimeManager_OnGameEnded;
     }
 
     public IFramebuffer Framebuffer { get; set; } = null!;
 
     public void Dispose()
     {
+        m_runtimeManager.GameEnded -= RuntimeManager_OnGameEnded;
     }
 
     public string DisplayName => LocalizedStrings.Viewport;
@@ -58,6 +60,12 @@ internal class ViewportPanel : IEditorPanel
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
         ImGui.Begin(DisplayName);
 
+        if (m_shouldFocus)
+        {
+            ImGui.SetWindowFocus();
+            m_shouldFocus = false;
+        }
+        
         m_isFocused = ImGui.IsWindowFocused();
 
         var viewportPanelSize = ImGui.GetContentRegionAvail();
@@ -217,6 +225,11 @@ internal class ViewportPanel : IEditorPanel
         }
 
         return false;
+    }
+    
+    private void RuntimeManager_OnGameEnded()
+    {
+        m_shouldFocus = true;
     }
 
     private bool OnKeyUpEvent(KeyUpEvent e)

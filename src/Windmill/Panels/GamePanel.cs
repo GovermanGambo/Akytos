@@ -4,17 +4,27 @@ using Akytos.Events;
 using Akytos.Graphics.Buffers;
 using ImGuiNET;
 using Windmill.Resources;
+using Windmill.Runtime;
 
 namespace Windmill.Panels;
 
-public class GamePanel : IEditorPanel
+internal class GamePanel : IEditorPanel
 {
+    private readonly RuntimeManager m_runtimeManager;
+    
     private IFramebuffer m_framebuffer;
     private Vector2 m_size;
-    
+    private bool m_shouldFocus;
+
+    public GamePanel(RuntimeManager runtimeManager)
+    {
+        m_runtimeManager = runtimeManager;
+        m_runtimeManager.GameStarted += RuntimeManager_OnGameStarted;
+    }
+
     public void Dispose()
     {
-        
+        m_runtimeManager.GameStarted -= RuntimeManager_OnGameStarted;
     }
 
     public string DisplayName => LocalizedStrings.Game;
@@ -30,6 +40,12 @@ public class GamePanel : IEditorPanel
     {
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
         ImGui.Begin(DisplayName);
+
+        if (m_shouldFocus)
+        {
+            ImGui.SetWindowFocus();
+            m_shouldFocus = false;
+        }
         
         var gamePanelSize = ImGui.GetContentRegionAvail();
         float ratio = gamePanelSize.X / m_size.X;
@@ -46,5 +62,10 @@ public class GamePanel : IEditorPanel
 
     public void OnEvent(IEvent e)
     {
+    }
+    
+    private void RuntimeManager_OnGameStarted()
+    {
+        m_shouldFocus = true;
     }
 }
