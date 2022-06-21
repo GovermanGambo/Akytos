@@ -62,7 +62,6 @@ internal class ViewportPanel : IEditorPanel
         bool open = true;
         if (!ImGui.Begin(Summary.DisplayName, ref open))
         {
-            open = false;
             ImGui.End();
             Closed?.Invoke(Summary);
         }

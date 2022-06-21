@@ -61,6 +61,11 @@ internal class GamePanel : IEditorPanel
         ImGui.PopStyleVar();
     }
 
+    public void OnRender()
+    {
+        
+    }
+
     public void OnEvent(IEvent e)
     {
     }

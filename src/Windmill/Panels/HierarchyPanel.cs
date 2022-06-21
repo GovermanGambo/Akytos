@@ -1,5 +1,4 @@
 using System;
-using Akytos;
 using Akytos.Diagnostics.Logging;
 using Akytos.Editor;
 using Akytos.Events;
@@ -68,6 +67,11 @@ internal class HierarchyPanel : IEditorPanel
         DrawNode(m_sceneEditorContext.SceneTree.CurrentScene);
 
         ImGui.End();
+    }
+
+    public void OnRender()
+    {
+        
     }
 
     public void OnEvent(IEvent e)

@@ -43,6 +43,15 @@ internal class PanelManager
         }
     }
 
+    public void OnRender()
+    {
+        var openPanels = new List<IEditorPanel>(m_openPanels);
+        foreach (var editorPanel in openPanels)
+        {
+            editorPanel.OnRender();
+        }
+    }
+
     public void Show(PanelSummary panelSummary)
     {
         object? panel = m_serviceFactory.GetInstance(panelSummary.Type);

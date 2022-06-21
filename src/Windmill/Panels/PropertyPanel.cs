@@ -50,6 +50,11 @@ internal class PropertyPanel : IEditorPanel
         ImGui.End();
     }
 
+    public void OnRender()
+    {
+        
+    }
+
     private void DrawSerializedFields()
     {
         if (m_sceneEditorContext.SelectedNode == null)

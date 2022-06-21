@@ -64,6 +64,12 @@ internal class EditorLayer : ILayer
         m_assemblyManager.BuildAndLoadAssemblies();
 
         m_sceneTree.Systems.Register<SpriteRendererSystem>();
+        
+        m_panelManager.Show<ViewportPanel>();
+        m_panelManager.Show<GamePanel>();
+        m_panelManager.Show<PropertyPanel>();
+        m_panelManager.Show<HierarchyPanel>();
+        m_panelManager.Show<AssetsPanel>();
     }
 
     public void OnDetach()
@@ -87,7 +93,7 @@ internal class EditorLayer : ILayer
         
         m_sceneTree.OnRender(m_editorViewport.Camera);
 
-        //m_panelManager.GetPanel<ViewportPanel>().OnRender();
+        m_panelManager.OnRender();
         
         // -- RENDER END -- //
 
