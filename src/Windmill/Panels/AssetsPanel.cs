@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using Akytos;
 using Akytos.Assets;
 using Akytos.Events;
 using ImGuiNET;
@@ -65,7 +66,7 @@ internal class AssetsPanel : IEditorPanel
                 var relativeFilePath = Path.GetRelativePath(Asset.AssetsDirectory, file.FullName).Replace("\\", "/");
                 var handle = GCHandle.Alloc(relativeFilePath);
                 var payload = (IntPtr)handle;
-                ImGui.SetDragDropPayload("ASSET", payload, sizeof(char) * (uint)relativeFilePath.Length);
+                ImGui.SetDragDropPayload(SystemConstants.DragAndDropIdentifiers.Asset, payload, sizeof(char) * (uint)relativeFilePath.Length);
                 handle.Free();
                 ImGui.EndDragDropSource();
             }

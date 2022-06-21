@@ -31,4 +31,9 @@ internal static class SystemConstants
         public const string CurrentProjectsRoot = "General/CurrentProjectsRoot";
         public const string InitialScene = "Build/InitialScene";
     }
+
+    public static class DragAndDropIdentifiers
+    {
+        public const string Asset = "ASSET";
+    }
 }

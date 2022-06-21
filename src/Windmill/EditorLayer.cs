@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Numerics;
 using Akytos;
 using Akytos.Editor;
 using Akytos.Events;

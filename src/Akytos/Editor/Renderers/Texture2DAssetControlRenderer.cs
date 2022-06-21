@@ -28,7 +28,7 @@ internal class Texture2DAssetRenderer : IGuiControlRenderer<Texture2DAsset?>
         // TODO: Check payload before trying this?
         if (ImGui.BeginDragDropTarget())
         {
-            var payload = ImGui.AcceptDragDropPayload("ASSET");
+            var payload = ImGui.AcceptDragDropPayload(SystemConstants.DragAndDropIdentifiers.Asset);
             if (payload.NativePtr != null)
             {
                 var handle = (GCHandle)payload.Data;
