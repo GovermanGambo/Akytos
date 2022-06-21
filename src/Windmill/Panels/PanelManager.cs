@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,11 @@ internal class PanelManager : IEnumerable<IEditorPanel>
                 editorPanel.OnDrawGui();
             }
         }
+    }
+
+    public void RegisterPanel<TPanel>(Action<TPanel>? onOpen = null)
+    {
+        
     }
 
     public TPanel GetPanel<TPanel>() where TPanel : IEditorPanel

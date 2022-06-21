@@ -62,6 +62,22 @@ internal class MenuService
                 }
                 ImGui.EndMenu();
             }
+
+            string label = isGameRunning ? LocalizedStrings.StopGame : LocalizedStrings.RunGame;
+            float textWidth = ImGui.CalcTextSize(label).X;
+            ImGui.SetCursorPosX(ImGui.GetWindowSize().X / 2f - textWidth / 2f);
+            if (ImGui.MenuItem(label))
+            {
+                if (isGameRunning)
+                {
+                    m_runtimeManager.StopGame();
+                }
+                else
+                {
+                    m_runtimeManager.StartGame();
+                }
+            }
+            
             ImGui.EndMenuBar();
         }
     }
@@ -114,18 +130,6 @@ internal class MenuService
                 m_assemblyManager.BuildAndLoadAssemblies();
             }
 
-            if (ImGui.MenuItem(isGameRunning ? LocalizedStrings.StopGame : LocalizedStrings.RunGame))
-            {
-                if (isGameRunning)
-                {
-                    m_runtimeManager.StopGame();
-                }
-                else
-                {
-                    m_runtimeManager.StartGame();
-                }
-            }
-            
             ImGui.Separator();
 
             if (ImGui.MenuItem(LocalizedStrings.Exit, "Ctrl+X"))

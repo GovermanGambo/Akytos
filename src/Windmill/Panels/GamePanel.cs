@@ -18,7 +18,7 @@ public class GamePanel : IEditorPanel
     }
 
     public string DisplayName => LocalizedStrings.Game;
-    public bool IsEnabled { get; set; }
+    public bool IsEnabled { get; set; } = true;
 
     public void Initialize(IFramebuffer framebuffer, Vector2 size)
     {
@@ -34,6 +34,8 @@ public class GamePanel : IEditorPanel
         var gamePanelSize = ImGui.GetContentRegionAvail();
         float ratio = gamePanelSize.X / m_size.X;
         m_size *= ratio;
+        
+        ImGui.SetCursorPosY(gamePanelSize.Y / 2f - m_size.Y / 2f);
         
         uint textureId = m_framebuffer.GetColorAttachmentRendererId();
         ImGui.Image((IntPtr) textureId, m_size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));

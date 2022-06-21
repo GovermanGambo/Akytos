@@ -48,7 +48,7 @@ internal class EditorLayer : ILayer
         m_assemblyManager = assemblyManager;
         m_sceneTree = sceneTree;
 
-        m_camera = new OrthographicCamera(490, 270);
+        m_camera = new OrthographicCamera(245, 135);
     }
 
     public void Dispose()
@@ -72,8 +72,8 @@ internal class EditorLayer : ILayer
 
         var gameSpecification = new FrameBufferSpecification()
         {
-            Width = 490,
-            Height = 270
+            Width = 1920,
+            Height = 1080
         };
 
         framebufferSpecification.Attachments = new FramebufferAttachmentSpecification(
@@ -102,7 +102,7 @@ internal class EditorLayer : ILayer
         viewportPanel.Framebuffer = m_framebuffer;
 
         var gamePanel = m_panelManager.GetPanel<GamePanel>();
-        gamePanel.Initialize(m_gameFramebuffer, new Vector2(490, 270));
+        gamePanel.Initialize(m_gameFramebuffer, new Vector2(1920, 1080));
 
         m_sceneTree.Systems.Register<SpriteRendererSystem>();
     }
