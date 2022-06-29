@@ -70,15 +70,19 @@ public class YamlDeserializer
         if (surrogate != null)
             result = surrogate.Deserialize(scanner);
 
-        // Case B: Value is primitive. If so, read value, and create instance while passing in the value directly.
+        // Case B: Value is an enum
+        else if (objectType.IsEnum)
+            result = CreateEnumObject(scanner, objectType);
+        
+        // Case C: Value is primitive. If so, read value, and create instance while passing in the value directly.
         else if (objectType.IsPrimitive || typeof(string).IsAssignableFrom(objectType) || objectType.IsValueType)
             result = CreatePrimitiveObject(scanner, objectType);
 
-        // Case C: Value is enumerable. Get the type, then parse fields
+        // Case D: Value is enumerable. Get the type, then parse fields
         else if (typeof(IEnumerable).IsAssignableFrom(objectType))
             result = CreateEnumerableObject(scanner, objectType);
 
-        // Case D: If none of the above, deserialize fields directly and set each of them.
+        // Case E: If none of the above, deserialize fields directly and set each of them.
         else
             result = CreateSerializedObject(scanner, objectType);
 
@@ -127,6 +131,14 @@ public class YamlDeserializer
     {
         string value = scanner.Read<Scalar>().Value;
         object obj = Convert.ChangeType(value, type);
+
+        return obj;
+    }
+    
+    private object CreateEnumObject(Scanner scanner, Type type)
+    {
+        string value = scanner.Read<Scalar>().Value;
+        object obj = Enum.Parse(type, value);
 
         return obj;
     }

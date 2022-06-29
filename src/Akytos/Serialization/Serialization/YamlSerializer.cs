@@ -117,8 +117,13 @@ public class YamlSerializer
     private void SerializeObjectData(IEmitter emitter, object obj)
     {
         var objectType = obj.GetType();
-        
-        if (objectType.IsPrimitive || typeof(string).IsAssignableFrom(objectType) || objectType.IsValueType)
+
+        if (objectType.IsEnum)
+        {
+            int index = (int) obj;
+            emitter.Emit(new Scalar(index.ToString()));
+        }
+        else if (objectType.IsPrimitive || typeof(string).IsAssignableFrom(objectType) || objectType.IsValueType)
         {
             emitter.Emit(new Scalar(obj.ToString() ?? string.Empty));
         }

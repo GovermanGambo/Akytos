@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Numerics;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Core.Tokens;

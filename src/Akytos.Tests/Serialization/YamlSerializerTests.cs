@@ -141,6 +141,28 @@ value:
         Assert.Equal(expected, yaml);
     }
 
+    [Theory]
+    [InlineData(TestEnum.OneValue, "type: Akytos.Tests.Serialization.TestEnum\nvalue: 0\n")]
+    [InlineData(TestEnum.TwoValue, "type: Akytos.Tests.Serialization.TestEnum\nvalue: 1\n")]
+    public void Serialize_Should_WorkWithEnums(TestEnum testEnum, string expected)
+    {
+        var serializer = new YamlSerializer();
+        string yaml = serializer.Serialize(testEnum);
+        
+        Assert.Equal(expected, yaml);
+    }
+    
+    [Theory]
+    [InlineData("type: Akytos.Tests.Serialization.TestEnum\nvalue: 0\n", TestEnum.OneValue)]
+    [InlineData("type: Akytos.Tests.Serialization.TestEnum\nvalue: 1\n", TestEnum.TwoValue)]
+    public void Deserialize_Should_WorkWithEnums(string yaml, TestEnum expected)
+    {
+        var serializer = new YamlDeserializer();
+        var result = serializer.Deserialize(yaml);
+        
+        Assert.Equal(expected, result);
+    }
+
     [Fact]
     public void SerializeNode_Should_Work()
     {
@@ -155,26 +177,37 @@ value:
 
         var serializer = new YamlSerializer();
         serializer.AddSurrogate(new Vector2SerializationSurrogate());
+        serializer.AddSurrogate(new ColorSerializationSurrogate());
 
         string yaml = serializer.Serialize(rootNode);
 
-        const string expected = @"type: Akytos.Node2D
+        const string expected = @"type: Akytos.SceneSystems.Node2D
 value:
   m_children:
-    type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+    type: System.Collections.Generic.List`1[[Akytos.SceneSystems.Node, Akytos, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null]]
     value:
       length: 2
       elements:
-      - type: Akytos.Node2D
+      - type: Akytos.SceneSystems.Node2D
         value:
           m_children:
-            type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+            type: System.Collections.Generic.List`1[[Akytos.SceneSystems.Node, Akytos, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null]]
             value:
               length: 0
               elements: []
           m_name:
             type: System.String
             value: Node2D
+          m_modulate:
+            type: Akytos.Color
+            value:
+              r: 1
+              g: 1
+              b: 1
+              a: 1
+          m_isVisible:
+            type: System.Boolean
+            value: True
           position:
             type: System.Numerics.Vector2
             value:
@@ -188,17 +221,17 @@ value:
           rotation:
             type: System.Int32
             value: 0
-      - type: Akytos.SpriteNode
+      - type: Akytos.SceneSystems.SpriteNode
         value:
           m_children:
-            type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+            type: System.Collections.Generic.List`1[[Akytos.SceneSystems.Node, Akytos, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null]]
             value:
               length: 1
               elements:
-              - type: Akytos.Node
+              - type: Akytos.SceneSystems.Node
                 value:
                   m_children:
-                    type: System.Collections.Generic.List`1[[Akytos.Node, Akytos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+                    type: System.Collections.Generic.List`1[[Akytos.SceneSystems.Node, Akytos, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null]]
                     value:
                       length: 0
                       elements: []
@@ -208,6 +241,16 @@ value:
           m_name:
             type: System.String
             value: SpriteNode
+          m_modulate:
+            type: Akytos.Color
+            value:
+              r: 1
+              g: 1
+              b: 1
+              a: 1
+          m_isVisible:
+            type: System.Boolean
+            value: True
           position:
             type: System.Numerics.Vector2
             value:
@@ -222,9 +265,22 @@ value:
             type: System.Int32
             value: 0
           m_textureAsset: ''
+          m_isCentered:
+            type: System.Boolean
+            value: False
   m_name:
     type: System.String
     value: RootNode
+  m_modulate:
+    type: Akytos.Color
+    value:
+      r: 1
+      g: 1
+      b: 1
+      a: 1
+  m_isVisible:
+    type: System.Boolean
+    value: True
   position:
     type: System.Numerics.Vector2
     value:
@@ -316,6 +372,12 @@ value:
 
         var spriteNode = new SpriteNode();
     }
+}
+
+public enum TestEnum
+{
+    OneValue,
+    TwoValue
 }
 
 public class Person

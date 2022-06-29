@@ -79,7 +79,7 @@ public class EditorCompositionRoot : ICompositionRoot
 
     private static void RegisterFrameBuffers(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton<IFramebuffer>(factory =>
+        serviceRegistry.RegisterSingleton(factory =>
         {
             var editorViewport = factory.GetInstance<IEditorViewport>();
             var framebufferSpecification = new FrameBufferSpecification
@@ -100,7 +100,7 @@ public class EditorCompositionRoot : ICompositionRoot
         }, "editorFramebuffer");
         
         
-        serviceRegistry.RegisterSingleton<IFramebuffer>(factory =>
+        serviceRegistry.RegisterSingleton(factory =>
         {
             var framebufferSpecification = new FrameBufferSpecification
             {
