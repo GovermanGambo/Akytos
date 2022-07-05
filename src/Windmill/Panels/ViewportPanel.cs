@@ -142,6 +142,11 @@ internal class ViewportPanel : EditorPanel
         }
     }
 
+    public override void Dispose()
+    {
+        m_runtimeManager.GameEnded -= RuntimeManager_OnGameEnded;
+    }
+
     private void OnViewportResized(Vector2 newViewportSize)
     {
         m_framebuffer.Resize((uint) newViewportSize.X, (uint) newViewportSize.Y);
