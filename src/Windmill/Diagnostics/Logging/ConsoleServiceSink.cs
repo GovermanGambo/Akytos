@@ -1,7 +1,6 @@
 using System;
 using Akytos.Diagnostics.Logging;
 using Serilog.Core;
-using Windmill.Services;
 
 namespace Windmill.Diagnostics.Logging;
 
