@@ -16,5 +16,5 @@ public interface IAssetManager
     /// <param name="filename">The file path relative to the assets folder.</param>
     /// <typeparam name="T">The type of asset to load.</typeparam>
     /// <returns>An instance of <see cref="IAsset"/> containing the requested asset.</returns>
-    IAsset<T>? Load<T>(string filename);
+    Asset<T>? Load<T>(string filename);
 }

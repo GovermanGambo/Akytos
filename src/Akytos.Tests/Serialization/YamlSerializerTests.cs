@@ -360,18 +360,6 @@ value:
         
         Assert.Equal(rootNode, node);
     }
-
-    [Fact]
-    public void SerializingSpriteNode_Should_Work()
-    {
-        const string filePath = "textures/Test.png";
-        var textureMock = new Mock<ITexture2D>();
-        var asset = new Texture2DAsset(textureMock.Object, filePath);
-        var assetManagerMock = new Mock<IAssetManager>();
-        assetManagerMock.Setup(am => am.Load<ITexture2D>(filePath)).Returns(asset);
-
-        var spriteNode = new SpriteNode();
-    }
 }
 
 public enum TestEnum

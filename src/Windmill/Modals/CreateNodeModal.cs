@@ -122,15 +122,14 @@ internal class CreateNodeModal : IModal
 
     private void DrawNodeType(Type nodeType)
     {
-        var name = nodeType.Name;
+        string name = nodeType.Name;
 
-        var isSelected = m_selectedNodeType?.Name == name;
+        bool isSelected = m_selectedNodeType?.Name == name;
         var flags = (isSelected ? ImGuiTreeNodeFlags.Selected : 0) |
                     ImGuiTreeNodeFlags.OpenOnArrow |
-                    ImGuiTreeNodeFlags.SpanAvailWidth |
                     ImGuiTreeNodeFlags.DefaultOpen;
 
-        var opened = ImGui.TreeNodeEx(nodeType.GUID.ToString(), flags, name);
+        bool opened = ImGui.TreeNodeEx(nodeType.GUID.ToString(), flags, name);
 
         if (ImGui.IsItemClicked()) m_selectedNodeType = nodeType;
         

@@ -5,13 +5,14 @@ using System.Runtime.InteropServices;
 using Akytos;
 using Akytos.Editor;
 using Akytos.Events;
-using Akytos.Graphics.Buffers;
 using Akytos.SceneSystems;
 using ImGuiNET;
+using Veldrid;
 using Windmill.Resources;
 using Windmill.Runtime;
 using Windmill.Services;
 using Math = System.Math;
+using MouseButton = Akytos.MouseButton;
 
 namespace Windmill.Panels;
 
@@ -26,7 +27,9 @@ internal class ViewportPanel : EditorPanel
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly Vector2[] m_viewportBounds = new Vector2[2];
     private readonly RuntimeManager m_runtimeManager;
-    private readonly IFramebuffer m_framebuffer;
+    private readonly Framebuffer m_framebuffer;
+    private readonly ImGuiRenderer m_imGuiRenderer;
+    private readonly GraphicsDevice m_graphicsDevice;
     private Vector2 m_currentCursorPosition;
     private Vector2 m_dragStartPosition;
 
@@ -37,7 +40,7 @@ internal class ViewportPanel : EditorPanel
     private bool m_shouldFocus;
 
     public ViewportPanel(IEditorViewport editorViewport, GizmoService gizmoService,
-        SceneEditorContext sceneEditorContext, ModalStack modalStack, RuntimeManager runtimeManager, IFramebuffer editorFramebuffer)
+        SceneEditorContext sceneEditorContext, ModalStack modalStack, RuntimeManager runtimeManager, Framebuffer editorFramebuffer, GraphicsDevice graphicsDevice, ImGuiRenderer imGuiRenderer)
     {
         m_editorViewport = editorViewport;
         m_gizmoService = gizmoService;
@@ -45,6 +48,8 @@ internal class ViewportPanel : EditorPanel
         m_modalStack = modalStack;
         m_runtimeManager = runtimeManager;
         m_framebuffer = editorFramebuffer;
+        m_graphicsDevice = graphicsDevice;
+        m_imGuiRenderer = imGuiRenderer;
         m_runtimeManager.GameEnded += RuntimeManager_OnGameEnded;
     }
 
@@ -62,8 +67,9 @@ internal class ViewportPanel : EditorPanel
         var viewportPanelSize = ImGui.GetContentRegionAvail();
         if (m_editorViewport.Size != viewportPanelSize) OnViewportResized(viewportPanelSize);
 
-        uint textureId = m_framebuffer.GetColorAttachmentRendererId();
-        ImGui.Image((IntPtr) textureId, m_editorViewport.Size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
+        var texture = m_framebuffer.ColorTargets[0].Target;
+        var textureId = m_imGuiRenderer.GetOrCreateImGuiBinding(m_graphicsDevice.ResourceFactory, texture);
+        ImGui.Image(textureId, m_editorViewport.Size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
 
         var viewportMinRegion = ImGui.GetWindowContentRegionMin();
         var viewportMaxRegion = ImGui.GetWindowContentRegionMax();

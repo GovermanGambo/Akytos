@@ -1,17 +1,18 @@
 using Akytos.Diagnostics.Logging;
 using Akytos.Graphics;
+using Veldrid;
 
 namespace Akytos.Assets;
 
 internal class AssetManager : IAssetManager
 {
-    private readonly Dictionary<string, IAsset> m_loadedAssets;
-    private readonly IGraphicsResourceFactory m_graphicsResourceFactory;
+    private readonly Dictionary<string, Asset> m_loadedAssets;
+    private readonly IResourceFactory m_resourceFactory;
     
-    public AssetManager(IGraphicsResourceFactory graphicsResourceFactory)
+    public AssetManager(IResourceFactory resourceFactory)
     {
-        m_graphicsResourceFactory = graphicsResourceFactory;
-        m_loadedAssets = new Dictionary<string, IAsset>();
+        m_resourceFactory = resourceFactory;
+        m_loadedAssets = new Dictionary<string, Asset>();
     }
 
     public IEnumerable<string> LoadedAssets => m_loadedAssets.Keys;
@@ -27,31 +28,31 @@ internal class AssetManager : IAssetManager
         }
     }
 
-    public IAsset<T>? Load<T>(string filename)
+    public Asset<T>? Load<T>(string filename)
     {
         try
         {
             if (m_loadedAssets.TryGetValue(filename, out var asset))
             {
-                return asset as IAsset<T>;
+                return asset as Asset<T>;
             }
 
-            if (typeof(ITexture2D).IsAssignableFrom(typeof(T)))
+            if (typeof(Texture).IsAssignableFrom(typeof(T)))
             {
                 string path = Asset.GetAssetPath(filename);
-                var texture = m_graphicsResourceFactory.CreateTexture2D(path);
-                asset = new Texture2DAsset(texture, filename);
+                var texture = m_resourceFactory.CreateTexture(path);
+                asset = new Asset<Texture>(filename, texture);
                 m_loadedAssets.Add(filename, asset);
-                return asset as IAsset<T>;
+                return asset as Asset<T>;
             }
             
-            if (typeof(IShaderProgram).IsAssignableFrom(typeof(T)))
+            if (typeof(Shader).IsAssignableFrom(typeof(T)))
             {
                 string path = Asset.GetAssetPath(filename);
-                var shader = m_graphicsResourceFactory.CreateShader(path);
-                asset = new ShaderAsset(shader, filename);
+                var shader = m_resourceFactory.CreateShader(path);
+                asset = new Asset<ShaderProgram>(filename, shader);
                 m_loadedAssets.Add(filename, asset);
-                return asset as IAsset<T>;
+                return asset as Asset<T>;
             }
 
             throw new NotSupportedException();
@@ -69,11 +70,11 @@ internal class AssetManager : IAssetManager
         
         if (fileInfo.FullName.EndsWith(".png"))
         {
-            Load<Texture2DAsset>(filename);
+            Load<Asset<Texture>>(filename);
         }
         else if (fileInfo.FullName.EndsWith(".glsl"))
         {
-            Load<ShaderAsset>(filename);
+            Load<Asset<Shader>>(filename);
         }
         else
         {

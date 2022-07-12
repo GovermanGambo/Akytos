@@ -4,6 +4,7 @@ using System.Numerics;
 using Akytos.Assets;
 using Akytos.Editor.Renderers;
 using LightInject;
+using Veldrid;
 
 namespace Akytos.Editor;
 
@@ -15,7 +16,7 @@ internal class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.Register<IGuiControlRenderer<string>, TextControlRenderer>();
         serviceRegistry.Register<IGuiControlRenderer<float>, FloatControlRenderer>();
         serviceRegistry.Register<IGuiControlRenderer<Vector2>, Vector2ControlRenderer>();
-        serviceRegistry.Register<IGuiControlRenderer<Texture2DAsset>, Texture2DAssetRenderer>();
+        serviceRegistry.Register<IGuiControlRenderer<Asset<Texture>?>, TextureAssetRenderer>();
         serviceRegistry.Register<IGuiControlRenderer<bool>, BoolControlRenderer>();
         serviceRegistry.Register<IGuiControlRenderer<Color>, ColorControlRenderer>();
     }

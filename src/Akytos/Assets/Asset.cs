@@ -1,8 +1,28 @@
-
 namespace Akytos.Assets;
 
-public static class Asset
+public class Asset<TData> : Asset
 {
+    public Asset(string filePath, TData data)
+        : base(filePath)
+    {
+        Data = data;
+    }
+
+    public TData Data { get; }
+}
+
+public abstract class Asset
+{
+    protected Asset(string filePath)
+    {
+        FilePath = filePath;
+    }
+
+    public string Name { get; }
+    public string FilePath { get; }
+
+    
+    
     public static string GetAssetPath(string path)
     {
         return Path.Combine(AssetsDirectory, path);

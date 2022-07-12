@@ -71,7 +71,6 @@ internal class HierarchyPanel : EditorPanel
         bool isSelected = m_sceneEditorContext.SelectedNode?.GetPath() == nodePath;
         var flags = (isSelected ? ImGuiTreeNodeFlags.Selected : 0) |
                     ImGuiTreeNodeFlags.OpenOnArrow |
-                    ImGuiTreeNodeFlags.SpanAvailWidth |
                     ImGuiTreeNodeFlags.DefaultOpen;
 
 

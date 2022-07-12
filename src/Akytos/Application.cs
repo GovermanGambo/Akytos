@@ -8,6 +8,7 @@ using Akytos.Windowing;
 using LightInject;
 using Silk.NET.Input;
 using Silk.NET.Windowing;
+using Veldrid;
 
 namespace Akytos;
 
@@ -22,7 +23,7 @@ public abstract class Application : IConfigureGame, IConfigureLayers
     private readonly List<Action> m_layerFuncs = new();
 
     private bool m_disposed;
-    private IGraphicsDevice m_graphicsDevice = null!;
+    private GraphicsDevice m_graphicsDevice = null!;
 
     private string m_initialWindowTitle = "Akytos";
     private int m_initialWindowWidth = 960;

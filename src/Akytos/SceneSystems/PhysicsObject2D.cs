@@ -1,5 +1,6 @@
 using System.Numerics;
 using Akytos.Assets;
+using Akytos.Physics;
 
 namespace Akytos.SceneSystems;
 
@@ -14,7 +15,7 @@ public class PhysicsObject2D : CollisionObject2D
     {
     }
 
-    public PhysicsObject2D(string name, Shape2DAsset shape)
+    public PhysicsObject2D(string name, Asset<IShape2D> shape)
         : base(name, shape)
     {
     }

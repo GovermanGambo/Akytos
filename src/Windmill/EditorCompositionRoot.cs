@@ -7,6 +7,7 @@ using Akytos.Graphics.Buffers;
 using Akytos.SceneSystems;
 using Akytos.Windowing;
 using LightInject;
+using Veldrid;
 using Windmill.Actions;
 using Windmill.Panels;
 using Windmill.ProjectManagement;
@@ -82,41 +83,51 @@ public class EditorCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton(factory =>
         {
             var editorViewport = factory.GetInstance<IEditorViewport>();
-            var framebufferSpecification = new FrameBufferSpecification
-            {
-                Width = (uint) editorViewport.Width,
-                Height = (uint) editorViewport.Height
-            };
-            framebufferSpecification.Attachments = new FramebufferAttachmentSpecification(
-                new List<FramebufferTextureSpecification>
+            var resourceFactory = factory.GetInstance<IResourceFactory>();
+            
+            var rgbaAttachment = resourceFactory.CreateTexture(editorViewport.Width, editorViewport.Height,
+                PixelFormat.R8_G8_B8_A8_UInt, TextureUsage.RenderTarget);
+            var redIntegerAttachment = resourceFactory.CreateTexture(editorViewport.Width, editorViewport.Height,
+                PixelFormat.R32_UInt, TextureUsage.RenderTarget);
+            var depthAttachment = resourceFactory.CreateTexture(editorViewport.Width, editorViewport.Height,
+                PixelFormat.D24_UNorm_S8_UInt, TextureUsage.DepthStencil);
+            
+            var framebufferDescription = new FramebufferDescription(
+                new FramebufferAttachmentDescription(depthAttachment, 0),
+                new[]
                 {
-                    new(FramebufferTextureFormat.Rgba8),
-                    new(FramebufferTextureFormat.RedInteger),
-                    new(FramebufferTextureFormat.Depth)
+                    new FramebufferAttachmentDescription(rgbaAttachment, 0),
+                    new FramebufferAttachmentDescription(redIntegerAttachment, 0)
                 });
-
-            var graphicsResourceFactory = factory.GetInstance<IGraphicsResourceFactory>();
-            return graphicsResourceFactory.CreateFramebuffer(framebufferSpecification);
+            
+            var framebuffer = resourceFactory.CreateFramebuffer(framebufferDescription);
+            return framebuffer;
         }, "editorFramebuffer");
-        
         
         serviceRegistry.RegisterSingleton(factory =>
         {
-            var framebufferSpecification = new FrameBufferSpecification
-            {
-                Width = 1920,
-                Height = 1080
-            };
-            framebufferSpecification.Attachments = new FramebufferAttachmentSpecification(
-                new List<FramebufferTextureSpecification>
-                {
-                    new(FramebufferTextureFormat.Rgba8),
-                    new(FramebufferTextureFormat.RedInteger),
-                    new(FramebufferTextureFormat.Depth)
-                });
+            var resourceFactory = factory.GetInstance<IResourceFactory>();
 
-            var graphicsResourceFactory = factory.GetInstance<IGraphicsResourceFactory>();
-            return graphicsResourceFactory.CreateFramebuffer(framebufferSpecification);
+            int width = 1920;
+            int height = 1080;
+            
+            var rgbaAttachment = resourceFactory.CreateTexture(width, height,
+                PixelFormat.R8_G8_B8_A8_UInt, TextureUsage.RenderTarget);
+            var redIntegerAttachment = resourceFactory.CreateTexture(width, height,
+                PixelFormat.R32_UInt, TextureUsage.RenderTarget);
+            var depthAttachment = resourceFactory.CreateTexture(width, height,
+                PixelFormat.D24_UNorm_S8_UInt, TextureUsage.DepthStencil);
+            
+            var framebufferDescription = new FramebufferDescription(
+                new FramebufferAttachmentDescription(depthAttachment, 0),
+                new[]
+                {
+                    new FramebufferAttachmentDescription(rgbaAttachment, 0),
+                    new FramebufferAttachmentDescription(redIntegerAttachment, 0)
+                });
+            
+            var framebuffer = resourceFactory.CreateFramebuffer(framebufferDescription);
+            return framebuffer;
         }, "gameFramebuffer");
     }
 }

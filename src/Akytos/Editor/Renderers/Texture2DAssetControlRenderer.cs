@@ -2,21 +2,21 @@
 
 using System.Runtime.InteropServices;
 using Akytos.Assets;
-using Akytos.Graphics;
 using ImGuiNET;
+using Veldrid;
 
 namespace Akytos.Editor.Renderers;
 
-internal class Texture2DAssetRenderer : IGuiControlRenderer<Texture2DAsset?>
+internal class TextureAssetRenderer : IGuiControlRenderer<Asset<Texture>?>
 {
     private readonly IAssetManager m_assetManager;
 
-    public Texture2DAssetRenderer(IAssetManager assetManager)
+    public TextureAssetRenderer(IAssetManager assetManager)
     {
         m_assetManager = assetManager;
     }
 
-    public unsafe bool DrawControl(string label, ref Texture2DAsset? value, object? arguments = null)
+    public unsafe bool DrawControl(string label, ref Asset<Texture>? value, object? arguments = null)
     {
         AkGui.BeginField(label);
 
@@ -35,7 +35,7 @@ internal class Texture2DAssetRenderer : IGuiControlRenderer<Texture2DAsset?>
 
                 if (handle.Target is string filePath && Path.GetExtension(filePath) == ".png")
                 {
-                    if (m_assetManager.Load<ITexture2D>(filePath) is Texture2DAsset asset)
+                    if (m_assetManager.Load<Texture>(filePath) is { } asset)
                     {
                         value = asset;
                         result = true;
@@ -58,7 +58,7 @@ internal class Texture2DAssetRenderer : IGuiControlRenderer<Texture2DAsset?>
 
     public bool DrawControl(string label, ref object? value, object? arguments = null)
     {
-        var textureAsset = value as Texture2DAsset;
+        var textureAsset = value as Asset<Texture>;
 
         if (DrawControl(label, ref textureAsset, arguments))
         {

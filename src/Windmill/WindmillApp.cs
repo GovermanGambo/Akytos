@@ -59,7 +59,7 @@ public class WindmillApp : Application
 
     protected override void RegisterServices(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.AddGraphics(GraphicsBackend.OpenGL);
+        serviceRegistry.AddGraphics();
         serviceRegistry.AddSceneSystems(SceneProcessMode.Editor);
         serviceRegistry.RegisterFrom<EditorCompositionRoot>();
         serviceRegistry.RegisterSingleton(_ => m_consoleService);

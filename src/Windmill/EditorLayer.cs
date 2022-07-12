@@ -5,6 +5,7 @@ using Akytos.Graphics;
 using Akytos.Graphics.Buffers;
 using Akytos.Layers;
 using Akytos.SceneSystems;
+using Veldrid;
 using Windmill.Panels;
 using Windmill.ProjectManagement;
 using Windmill.Services;
@@ -16,7 +17,7 @@ internal class EditorLayer : ILayer
     private readonly AssemblyManager m_assemblyManager;
     private readonly EditorHotKeyService m_editorHotKeyService;
     private readonly IEditorViewport m_editorViewport;
-    private readonly IGraphicsDevice m_graphicsDevice;
+    private readonly GraphicsDevice m_graphicsDevice;
     private readonly MenuService m_menuService;
     private readonly ModalStack m_modalStack;
     private readonly PanelManager m_panelManager;
@@ -24,13 +25,15 @@ internal class EditorLayer : ILayer
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly SceneTree m_sceneTree;
     private readonly ICamera m_camera;
-    private readonly IFramebuffer m_editorFramebuffer;
-    private readonly IFramebuffer m_gameFramebuffer;
+    private readonly Framebuffer m_editorFramebuffer;
+    private readonly Framebuffer m_gameFramebuffer;
+    private readonly CommandList m_commandList;
+    private readonly Pipeline m_pipeline;
 
-    public EditorLayer(IGraphicsDevice graphicsDevice,
+    public EditorLayer(GraphicsDevice graphicsDevice,
         IEditorViewport editorViewport, PanelManager panelManager, MenuService menuService, ModalStack modalStack, 
         EditorHotKeyService editorHotKeyService, SceneEditorContext sceneEditorContext, IProjectManager projectManager, 
-        AssemblyManager assemblyManager, SceneTree sceneTree, IFramebuffer editorFramebuffer, IFramebuffer gameFramebuffer)
+        AssemblyManager assemblyManager, SceneTree sceneTree, Framebuffer editorFramebuffer, Framebuffer gameFramebuffer, CommandList commandList, Pipeline pipeline)
     {
         m_graphicsDevice = graphicsDevice;
         m_editorViewport = editorViewport;
@@ -44,6 +47,8 @@ internal class EditorLayer : ILayer
         m_sceneTree = sceneTree;
         m_editorFramebuffer = editorFramebuffer;
         m_gameFramebuffer = gameFramebuffer;
+        m_commandList = commandList;
+        m_pipeline = pipeline;
 
         m_camera = new OrthographicCamera(245, 135);
     }
@@ -82,26 +87,18 @@ internal class EditorLayer : ILayer
         
         // -- UPDATE END -- //
 
-        m_editorFramebuffer.Bind();
-        
-        m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
-        m_graphicsDevice.Clear();
-
-        // -- RENDER START -- //
-        
-        m_sceneTree.OnRender(m_editorViewport.Camera);
-
-        m_panelManager.OnRender();
-        
-        // -- RENDER END -- //
-
-        m_editorFramebuffer.Unbind();
-        
-        m_gameFramebuffer.Bind();
-        m_graphicsDevice.ClearColor(new Color(0.1f, 0.1f, 0.1f));
-        m_graphicsDevice.Clear();
+        m_commandList.Begin();
+        m_commandList.SetFramebuffer(m_editorFramebuffer);
+        m_commandList.ClearColorTarget(0, new RgbaFloat(0.1f, 0.1f, 0.1f, 1.0f));
         m_sceneTree.OnRender(m_camera);
-        m_gameFramebuffer.Unbind();
+        
+        m_commandList.SetFramebuffer(m_gameFramebuffer);
+        m_commandList.ClearColorTarget(0, new RgbaFloat(0.1f, 0.1f, 0.1f, 1.0f));
+        m_sceneTree.OnRender(m_camera);
+
+        m_commandList.End();
+        m_graphicsDevice.SubmitCommands(m_commandList);
+        m_graphicsDevice.SwapBuffers();
     }
 
     public void OnEvent(IEvent e)

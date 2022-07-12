@@ -1,12 +1,13 @@
 ﻿using System.Numerics;
 using Akytos.Assets;
 using Akytos.Graphics;
+using Veldrid;
 
 namespace Akytos.SceneSystems;
 
 public class SpriteNode : Node2D
 {
-    [SerializeField("Texture")] private Texture2DAsset? m_textureAsset;
+    [SerializeField("Texture")] private Asset<Texture>? m_textureAsset;
     [SerializeField] private bool m_isCentered;
 
     public SpriteNode() : base("NewSpriteNode")
@@ -17,7 +18,7 @@ public class SpriteNode : Node2D
     {
     }
 
-    public SpriteNode(string name, Texture2DAsset? texture)
+    public SpriteNode(string name, Asset<Texture>? texture)
         : base(name)
     {
         m_textureAsset = texture;
@@ -36,5 +37,5 @@ public class SpriteNode : Node2D
     public int HorizontalFrames { get; set; } = 1;
     public int VerticalFrames { get; set; } = 1;
     public Vector2 Offset { get; set; }
-    public ITexture2D? Texture => m_textureAsset?.Data;
+    public Texture? Texture => m_textureAsset?.Data;
 }

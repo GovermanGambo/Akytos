@@ -1,5 +1,6 @@
 using Akytos.Assets;
 using Akytos.Graphics;
+using Veldrid;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Core.Tokens;
@@ -7,7 +8,7 @@ using Scalar = YamlDotNet.Core.Events.Scalar;
 
 namespace Akytos.Serialization.Surrogates;
 
-internal class Texture2DAssetSerializationSurrogate : ISerializationSurrogate<Texture2DAsset?>
+internal class Texture2DAssetSerializationSurrogate : ISerializationSurrogate<Asset<Texture>?>
 {
     private readonly IAssetManager m_assetManager;
 
@@ -16,7 +17,7 @@ internal class Texture2DAssetSerializationSurrogate : ISerializationSurrogate<Te
         m_assetManager = assetManager;
     }
 
-    public Texture2DAsset? Deserialize(Scanner scanner)
+    public Asset<Texture>? Deserialize(Scanner scanner)
     {
         scanner.Read<BlockMappingStart>();
 
@@ -29,10 +30,10 @@ internal class Texture2DAssetSerializationSurrogate : ISerializationSurrogate<Te
             return null;
         }
 
-        return m_assetManager.Load<ITexture2D>(path) as Texture2DAsset;
+        return m_assetManager.Load<Texture>(path);
     }
 
-    public void Serialize(IEmitter emitter, Texture2DAsset? value)
+    public void Serialize(IEmitter emitter, Asset<Texture>? value)
     {
         emitter.Emit(new MappingStart());
         
@@ -44,7 +45,7 @@ internal class Texture2DAssetSerializationSurrogate : ISerializationSurrogate<Te
     
     public void Serialize(IEmitter emitter, object? value)
     {
-        Serialize(emitter, value as Texture2DAsset);
+        Serialize(emitter, value as Asset<Texture>);
     }
 
     object ISerializationSurrogate.Deserialize(Scanner value)
