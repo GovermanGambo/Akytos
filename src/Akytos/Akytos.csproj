@@ -93,7 +93,7 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>cimguizmo.so</TargetPath>
         </ContentWithTargetPath>
-        <!--<ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimguizmo\osx-x64\cimguizmo.dylib"  Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
+        <!--<ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimguizmo\win-x64\cimguizmo.dll"  Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>cimguizmo.dylib</TargetPath>
         </ContentWithTargetPath>-->

@@ -58,9 +58,13 @@ public static class ServiceRegistryExtensions
                 throw new ArgumentException();
             }
 
+            var framebufferService = factory.GetInstance<FramebufferService>();
+            var framebuffer = framebufferService.GetFramebuffer("Viewport");
+            var output = framebuffer.OutputDescription;
+            
             var pipelineDescription = new GraphicsPipelineDescription
             {
-                BlendState = BlendStateDescription.SingleOverrideBlend,
+                BlendState = new BlendStateDescription(RgbaFloat.White, BlendAttachmentDescription.AlphaBlend, BlendAttachmentDescription.Disabled),
                 DepthStencilState = new DepthStencilStateDescription(
                     true, true, ComparisonKind.LessEqual),
                 RasterizerState = new RasterizerStateDescription(FaceCullMode.Back, PolygonFillMode.Solid,
@@ -68,7 +72,7 @@ public static class ServiceRegistryExtensions
                 PrimitiveTopology = PrimitiveTopology.TriangleStrip,
                 ResourceLayouts = Array.Empty<ResourceLayout>(),
                 ShaderSet = new ShaderSetDescription(new[] {vertexLayout}, shaders),
-                Outputs = graphicsDevice.SwapchainFramebuffer.OutputDescription
+                Outputs = output
             };
 
             return graphicsDevice.ResourceFactory.CreateGraphicsPipeline(pipelineDescription);

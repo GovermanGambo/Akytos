@@ -32,7 +32,7 @@ public class GameWindow : IGameWindow
     public double DeltaTime => m_window.PollIntervalInMs / 1000;
     public bool IsVisible => m_window.Visible;
     
-    public InputSnapshot InputSnapshot { get; private set; }
+    public InputSnapshot? InputSnapshot { get; private set; }
 
     public bool IsVSyncEnabled
     {

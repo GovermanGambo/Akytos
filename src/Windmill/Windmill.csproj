@@ -60,4 +60,14 @@
         <DependentUpon>LocalizedStrings.resx</DependentUpon>
       </Compile>
     </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="ImGui.NET, Version=1.78.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\Akytos\vendor\ImGui.NET\ImGui.NET.dll</HintPath>
+      </Reference>
+      <Reference Include="ImGuizmo.NET, Version=1.61.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\Akytos\vendor\ImGui.NET\ImGuizmo.NET.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+    
 </Project>

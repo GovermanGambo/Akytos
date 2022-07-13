@@ -85,9 +85,9 @@ public class EditorCompositionRoot : ICompositionRoot
             var resourceRegistry = factory.GetInstance<GraphicsResourceRegistry>();
 
             var rgbaAttachment = resourceFactory.CreateTexture(editorViewport.Width, editorViewport.Height,
-                PixelFormat.R8_G8_B8_A8_UInt, TextureUsage.RenderTarget);
+                PixelFormat.R16_G16_B16_A16_Float, TextureUsage.RenderTarget);
             var redIntegerAttachment = resourceFactory.CreateTexture(editorViewport.Width, editorViewport.Height,
-                PixelFormat.R32_UInt, TextureUsage.RenderTarget);
+                PixelFormat.R32_SInt, TextureUsage.RenderTarget);
             var depthAttachment = resourceFactory.CreateTexture(editorViewport.Width, editorViewport.Height,
                 PixelFormat.D32_Float_S8_UInt, TextureUsage.DepthStencil);
 
@@ -103,9 +103,9 @@ public class EditorCompositionRoot : ICompositionRoot
             int height = 1080;
 
             var gameRgbaAttachment = resourceFactory.CreateTexture(width, height,
-                PixelFormat.R8_G8_B8_A8_UInt, TextureUsage.RenderTarget);
+                PixelFormat.R16_G16_B16_A16_Float, TextureUsage.RenderTarget);
             var gameRedIntegerAttachment = resourceFactory.CreateTexture(width, height,
-                PixelFormat.R32_UInt, TextureUsage.RenderTarget);
+                PixelFormat.R32_SInt, TextureUsage.RenderTarget);
             var gameDepthAttachment = resourceFactory.CreateTexture(width, height,
                 PixelFormat.D32_Float_S8_UInt, TextureUsage.DepthStencil);
 

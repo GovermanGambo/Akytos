@@ -59,7 +59,10 @@ internal class ImGuiLayer : ILayer
     public void OnUpdate(DeltaTime time)
     {
         var snapshot = m_window.InputSnapshot;
-        m_renderer.Update(time, snapshot);
+        if (snapshot is not null)
+        {
+            m_renderer.Update(time, snapshot);
+        }
     }
 
     public void OnRender()

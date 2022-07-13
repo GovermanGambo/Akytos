@@ -41,7 +41,7 @@ public class SpriteBatch : ISpriteBatch
         uint[] indices = CreateElements();
 
         var indexBufferDescription = new BufferDescription((uint)indices.Length * sizeof(uint), BufferUsage.IndexBuffer);
-        var indexBuffer = graphicsDevice.ResourceFactory.CreateBuffer(indexBufferDescription);
+        m_indexBuffer = graphicsDevice.ResourceFactory.CreateBuffer(indexBufferDescription);
 
         int[] samplers = new int[MaxTextureSlots];
         for (int i = 0; i < MaxTextureSlots; i++)
