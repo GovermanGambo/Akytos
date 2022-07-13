@@ -50,7 +50,7 @@ internal class AssetManager : IAssetManager
             {
                 string path = Asset.GetAssetPath(filename);
                 var shader = m_resourceFactory.CreateShader(path);
-                asset = new Asset<ShaderProgram>(filename, shader);
+                asset = new Asset<Shader[]>(filename, shader);
                 m_loadedAssets.Add(filename, asset);
                 return asset as Asset<T>;
             }

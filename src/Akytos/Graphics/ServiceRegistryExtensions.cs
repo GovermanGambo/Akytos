@@ -6,6 +6,7 @@ using Silk.NET.Windowing;
 using Veldrid;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
+using Shader = Veldrid.Shader;
 
 namespace Akytos.Graphics;
 
@@ -20,6 +21,9 @@ public static class ServiceRegistryExtensions
                 var graphicsDevice = factory.GetInstance<GraphicsDevice>();
                 return graphicsDevice.ResourceFactory.CreateCommandList();
             })
+            .RegisterSingleton<GraphicsResourceRegistry>()
+            .Register<IResourceFactory, ResourceFactory>()
+            .AddImGui()
             .RegisterDefaultPipeline();
 
         return serviceRegistry;
@@ -39,17 +43,17 @@ public static class ServiceRegistryExtensions
             
             var graphicsDevice = factory.GetInstance<GraphicsDevice>();
             var resourceFactory = factory.GetInstance<IResourceFactory>();
-            ShaderProgram? shaderProgram = null;
+            Shader[]? shaders = null;
             using (var stream = Assembly.GetExecutingAssembly()
                        .GetManifestResourceStream("Akytos.Resources.Shaders.Sprites_Default.glsl"))
             {
                 if (stream is not null)
                 {
-                    shaderProgram = resourceFactory.CreateShader(stream);
+                    shaders = resourceFactory.CreateShader(stream);
                 }
             }
 
-            if (shaderProgram is null)
+            if (shaders is null)
             {
                 throw new ArgumentException();
             }
@@ -63,7 +67,7 @@ public static class ServiceRegistryExtensions
                     FrontFace.Clockwise, true, false),
                 PrimitiveTopology = PrimitiveTopology.TriangleStrip,
                 ResourceLayouts = Array.Empty<ResourceLayout>(),
-                ShaderSet = new ShaderSetDescription(new[] {vertexLayout}, new [] { shaderProgram.VertexShader, shaderProgram.FragmentShader}),
+                ShaderSet = new ShaderSetDescription(new[] {vertexLayout}, shaders),
                 Outputs = graphicsDevice.SwapchainFramebuffer.OutputDescription
             };
 
@@ -83,8 +87,22 @@ public static class ServiceRegistryExtensions
         
         serviceRegistry.Register<GraphicsDevice>(factory =>
         {
-            var window = factory.GetInstance<Sdl2Window>();
-            return VeldridStartup.CreateGraphicsDevice(window, options);
+            var window = factory.GetInstance<IGameWindow>();
+            return VeldridStartup.CreateGraphicsDevice((Sdl2Window)window.GetNativeWindow(), options);
+        });
+
+        return serviceRegistry;
+    }
+
+    private static IServiceRegistry AddImGui(this IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.RegisterSingleton(factory =>
+        {
+            var graphicsDevice = factory.GetInstance<GraphicsDevice>();
+            var window = factory.GetInstance<IGameWindow>();
+            var renderer = new ImGuiRenderer(graphicsDevice, graphicsDevice.SwapchainFramebuffer.OutputDescription, window.Width, window.Height);
+
+            return renderer;
         });
 
         return serviceRegistry;

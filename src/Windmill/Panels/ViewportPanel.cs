@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using Akytos;
 using Akytos.Editor;
 using Akytos.Events;
+using Akytos.Graphics;
 using Akytos.SceneSystems;
 using ImGuiNET;
 using Veldrid;
@@ -27,9 +28,9 @@ internal class ViewportPanel : EditorPanel
     private readonly SceneEditorContext m_sceneEditorContext;
     private readonly Vector2[] m_viewportBounds = new Vector2[2];
     private readonly RuntimeManager m_runtimeManager;
-    private readonly Framebuffer m_framebuffer;
     private readonly ImGuiRenderer m_imGuiRenderer;
     private readonly GraphicsDevice m_graphicsDevice;
+    private readonly FramebufferService m_framebufferService;
     private Vector2 m_currentCursorPosition;
     private Vector2 m_dragStartPosition;
 
@@ -40,16 +41,16 @@ internal class ViewportPanel : EditorPanel
     private bool m_shouldFocus;
 
     public ViewportPanel(IEditorViewport editorViewport, GizmoService gizmoService,
-        SceneEditorContext sceneEditorContext, ModalStack modalStack, RuntimeManager runtimeManager, Framebuffer editorFramebuffer, GraphicsDevice graphicsDevice, ImGuiRenderer imGuiRenderer)
+        SceneEditorContext sceneEditorContext, ModalStack modalStack, RuntimeManager runtimeManager, GraphicsDevice graphicsDevice, ImGuiRenderer imGuiRenderer, FramebufferService framebufferService)
     {
         m_editorViewport = editorViewport;
         m_gizmoService = gizmoService;
         m_sceneEditorContext = sceneEditorContext;
         m_modalStack = modalStack;
         m_runtimeManager = runtimeManager;
-        m_framebuffer = editorFramebuffer;
         m_graphicsDevice = graphicsDevice;
         m_imGuiRenderer = imGuiRenderer;
+        m_framebufferService = framebufferService;
         m_runtimeManager.GameEnded += RuntimeManager_OnGameEnded;
     }
 
@@ -67,7 +68,8 @@ internal class ViewportPanel : EditorPanel
         var viewportPanelSize = ImGui.GetContentRegionAvail();
         if (m_editorViewport.Size != viewportPanelSize) OnViewportResized(viewportPanelSize);
 
-        var texture = m_framebuffer.ColorTargets[0].Target;
+        var framebuffer = m_framebufferService.GetFramebuffer("Viewport");
+        var texture = framebuffer.ColorTargets[0].Target;
         var textureId = m_imGuiRenderer.GetOrCreateImGuiBinding(m_graphicsDevice.ResourceFactory, texture);
         ImGui.Image(textureId, m_editorViewport.Size, new Vector2(0.0f, 1.0f), new Vector2(1.0f, 0.0f));
 
@@ -125,12 +127,13 @@ internal class ViewportPanel : EditorPanel
             m_currentCursorPosition = new Vector2(mouseX - m_editorViewport.Width / 2,
                 mouseY - m_editorViewport.Height / 2);
 
-            int nodeId = m_framebuffer.ReadPixel(1, mouseX, mouseY);
+            // TODO: Fix this
+            /*int nodeId = m_framebuffer.ReadPixel(1, mouseX, mouseY);
 
             if (nodeId == -1) return;
 
             m_hoveredNode = m_sceneEditorContext.SceneTree.CurrentScene.GetChildren(true, node => node.Id == nodeId)
-                .FirstOrDefault();
+                .FirstOrDefault();*/
 
             if (m_isDragging)
             {
@@ -155,7 +158,7 @@ internal class ViewportPanel : EditorPanel
 
     private void OnViewportResized(Vector2 newViewportSize)
     {
-        m_framebuffer.Resize((uint) newViewportSize.X, (uint) newViewportSize.Y);
+        m_framebufferService.ResizeFramebuffer("Viewport", (int)newViewportSize.X, (int)newViewportSize.Y);
 
         m_editorViewport.ResizeViewport((int) newViewportSize.X, (int) newViewportSize.Y);
     }

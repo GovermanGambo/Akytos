@@ -6,6 +6,6 @@ internal class WindowingCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.Register<IWindowFactory, WindowsWindowFactory>();
+        serviceRegistry.Register<IWindowFactory, WindowFactory>();
     }
 }

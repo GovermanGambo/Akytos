@@ -10,6 +10,7 @@ public interface IGameWindow : IDisposable
     bool IsClosing { get; }
     bool IsInitialized { get; }
     double Time { get; }
+    double DeltaTime { get; }
     bool IsVisible { get; }
     bool IsVSyncEnabled { get; set; }
     internal void SetEventCallback(Action<IEvent> e);

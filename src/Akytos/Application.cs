@@ -23,7 +23,7 @@ public abstract class Application : IConfigureGame, IConfigureLayers
     private readonly List<Action> m_layerFuncs = new();
 
     private bool m_disposed;
-    private GraphicsDevice m_graphicsDevice = null!;
+    private CommandList m_commandList;
 
     private string m_initialWindowTitle = "Akytos";
     private int m_initialWindowWidth = 960;
@@ -123,10 +123,8 @@ public abstract class Application : IConfigureGame, IConfigureLayers
         while (!m_window.IsClosing)
         {
             m_window.OnUpdate();
-
-            float currentTime = (float) m_window.Time;
-            var deltaTime = new DeltaTime(currentTime - m_lastFrameTime);
-            m_lastFrameTime = currentTime;
+            
+            var deltaTime = new DeltaTime((float)m_window.DeltaTime);
 
             foreach (var layer in m_layerStack)
                 if (layer.IsEnabled)
@@ -168,7 +166,7 @@ public abstract class Application : IConfigureGame, IConfigureLayers
         
         m_window.Initialize();
 
-        Input.Initialize(((IWindow) m_window.GetNativeWindow()).CreateInput());
+        //Input.Initialize(((IWindow) m_window.GetNativeWindow()).CreateInput());
 
         RegisterServices(m_serviceContainer);
 
@@ -178,7 +176,7 @@ public abstract class Application : IConfigureGame, IConfigureLayers
         }
         m_layerFuncs.Clear();
 
-        m_graphicsDevice = m_serviceContainer.GetInstance<IGraphicsDevice>();
+        m_commandList = m_serviceContainer.GetInstance<CommandList>();
     }
 
     protected abstract void OnRestart();
@@ -229,7 +227,7 @@ public abstract class Application : IConfigureGame, IConfigureLayers
 
     private bool OnWindowResized(WindowResizedEvent e)
     {
-        m_graphicsDevice.SetViewport(0, 0, e.Width, e.Height);
+        m_commandList.SetViewport(0, new Viewport(0, 0, e.Width, e.Height, 0, 0));
 
         return false;
     }

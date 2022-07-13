@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Akytos.Editor;
 using Akytos.Graphics;
-using Akytos.Graphics.Buffers;
 using Akytos.SceneSystems;
 using Akytos.Windowing;
 using LightInject;
@@ -84,14 +82,15 @@ public class EditorCompositionRoot : ICompositionRoot
         {
             var editorViewport = factory.GetInstance<IEditorViewport>();
             var resourceFactory = factory.GetInstance<IResourceFactory>();
-            
+            var resourceRegistry = factory.GetInstance<GraphicsResourceRegistry>();
+
             var rgbaAttachment = resourceFactory.CreateTexture(editorViewport.Width, editorViewport.Height,
                 PixelFormat.R8_G8_B8_A8_UInt, TextureUsage.RenderTarget);
             var redIntegerAttachment = resourceFactory.CreateTexture(editorViewport.Width, editorViewport.Height,
                 PixelFormat.R32_UInt, TextureUsage.RenderTarget);
             var depthAttachment = resourceFactory.CreateTexture(editorViewport.Width, editorViewport.Height,
-                PixelFormat.D24_UNorm_S8_UInt, TextureUsage.DepthStencil);
-            
+                PixelFormat.D32_Float_S8_UInt, TextureUsage.DepthStencil);
+
             var framebufferDescription = new FramebufferDescription(
                 new FramebufferAttachmentDescription(depthAttachment, 0),
                 new[]
@@ -99,35 +98,29 @@ public class EditorCompositionRoot : ICompositionRoot
                     new FramebufferAttachmentDescription(rgbaAttachment, 0),
                     new FramebufferAttachmentDescription(redIntegerAttachment, 0)
                 });
-            
-            var framebuffer = resourceFactory.CreateFramebuffer(framebufferDescription);
-            return framebuffer;
-        }, "editorFramebuffer");
-        
-        serviceRegistry.RegisterSingleton(factory =>
-        {
-            var resourceFactory = factory.GetInstance<IResourceFactory>();
 
             int width = 1920;
             int height = 1080;
-            
-            var rgbaAttachment = resourceFactory.CreateTexture(width, height,
+
+            var gameRgbaAttachment = resourceFactory.CreateTexture(width, height,
                 PixelFormat.R8_G8_B8_A8_UInt, TextureUsage.RenderTarget);
-            var redIntegerAttachment = resourceFactory.CreateTexture(width, height,
+            var gameRedIntegerAttachment = resourceFactory.CreateTexture(width, height,
                 PixelFormat.R32_UInt, TextureUsage.RenderTarget);
-            var depthAttachment = resourceFactory.CreateTexture(width, height,
-                PixelFormat.D24_UNorm_S8_UInt, TextureUsage.DepthStencil);
-            
-            var framebufferDescription = new FramebufferDescription(
-                new FramebufferAttachmentDescription(depthAttachment, 0),
+            var gameDepthAttachment = resourceFactory.CreateTexture(width, height,
+                PixelFormat.D32_Float_S8_UInt, TextureUsage.DepthStencil);
+
+            var gameFramebufferDescription = new FramebufferDescription(
+                new FramebufferAttachmentDescription(gameDepthAttachment, 0),
                 new[]
                 {
-                    new FramebufferAttachmentDescription(rgbaAttachment, 0),
-                    new FramebufferAttachmentDescription(redIntegerAttachment, 0)
+                    new FramebufferAttachmentDescription(gameRgbaAttachment, 0),
+                    new FramebufferAttachmentDescription(gameRedIntegerAttachment, 0)
                 });
-            
-            var framebuffer = resourceFactory.CreateFramebuffer(framebufferDescription);
-            return framebuffer;
-        }, "gameFramebuffer");
+
+            var framebufferService = new FramebufferService(resourceFactory, resourceRegistry);
+            framebufferService.CreateFramebuffer("Viewport", framebufferDescription);
+            framebufferService.CreateFramebuffer("Game", gameFramebufferDescription);
+            return framebufferService;
+        });
     }
 }

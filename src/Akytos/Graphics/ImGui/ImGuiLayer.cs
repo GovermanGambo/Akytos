@@ -4,30 +4,24 @@ using Akytos.Events;
 using Akytos.Layers;
 using Akytos.Windowing;
 using ImGuiNET;
-using Silk.NET.Input;
-using Silk.NET.OpenGL;
-using Silk.NET.Windowing;
+using Veldrid;
 
 namespace Akytos.Graphics;
 
 internal class ImGuiLayer : ILayer
 {
-    private readonly IImGuiController m_controller;
+    private readonly ImGuiRenderer m_renderer;
+    private readonly GameWindow m_window;
+    private readonly GraphicsDevice m_graphicsDevice;
+    private readonly CommandList m_commandList;
 
-    public ImGuiLayer(IGameWindow window)
+    public ImGuiLayer(GraphicsDevice graphicsDevice, IGameWindow window, CommandList commandList, ImGuiRenderer renderer)
     {
-        var nativeWindow = window.GetNativeWindow() as IWindow;
+        m_graphicsDevice = graphicsDevice;
+        m_commandList = commandList;
+        m_renderer = renderer;
 
-        if (nativeWindow == null)
-        {
-            throw new ArgumentOutOfRangeException();
-        }
-        
-        var config = new ImGuiFontConfig("assets/fonts/open_sans/OpenSans-Regular.ttf", 19);
-        m_controller = new OpenGLImGuiController(nativeWindow.CreateOpenGL(),
-            nativeWindow,
-            nativeWindow.CreateInput(),
-            config);
+        m_window = (GameWindow) window;
         
         var io = ImGui.GetIO();
         io.ConfigFlags |= ImGuiConfigFlags.ViewportsEnable;
@@ -49,7 +43,7 @@ internal class ImGuiLayer : ILayer
     
     public void Dispose()
     {
-        m_controller.Dispose();
+        m_renderer.Dispose();
     }
 
     public bool IsEnabled { get; set; } = true;
@@ -64,12 +58,13 @@ internal class ImGuiLayer : ILayer
 
     public void OnUpdate(DeltaTime time)
     {
-        m_controller.Update(time);
+        var snapshot = m_window.InputSnapshot;
+        m_renderer.Update(time, snapshot);
     }
 
     public void OnRender()
     {
-        m_controller.Render();
+        m_renderer.Render(m_graphicsDevice, m_commandList);
     }
 
     public void OnEvent(IEvent e)

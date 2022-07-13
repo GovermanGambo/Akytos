@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-using SharpDX.Text;
 using Veldrid;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -12,19 +10,22 @@ namespace Akytos.Graphics;
 internal class ResourceFactory : IResourceFactory
 {
     private readonly GraphicsDevice m_graphicsDevice;
+    private readonly GraphicsResourceRegistry m_resourceRegistry;
 
-
-    public ResourceFactory(GraphicsDevice graphicsDevice)
+    public ResourceFactory(GraphicsDevice graphicsDevice, GraphicsResourceRegistry resourceRegistry)
     {
         m_graphicsDevice = graphicsDevice;
+        m_resourceRegistry = resourceRegistry;
     }
 
     public Framebuffer CreateFramebuffer(FramebufferDescription framebufferDescription)
     {
-        return m_graphicsDevice.ResourceFactory.CreateFramebuffer(framebufferDescription);
+        var framebuffer = m_graphicsDevice.ResourceFactory.CreateFramebuffer(framebufferDescription);
+        m_resourceRegistry.Register(framebuffer);
+        return framebuffer;
     }
 
-    public ShaderProgram CreateShader(string filePath)
+    public Shader[] CreateShader(string filePath)
     {
         string shaderSource = File.ReadAllText(filePath);
         
@@ -40,11 +41,14 @@ internal class ResourceFactory : IResourceFactory
         {
             throw new ArgumentException();
         }
-        
-        return new ShaderProgram(shaders[0], shaders[1]);
+
+        m_resourceRegistry.Register(shaders[0]);
+        m_resourceRegistry.Register(shaders[1]);
+
+        return shaders;
     }
 
-    public ShaderProgram CreateShader(Stream fileStream)
+    public Shader[] CreateShader(Stream fileStream)
     {
         string shaderSource;
         
@@ -66,13 +70,18 @@ internal class ResourceFactory : IResourceFactory
             throw new ArgumentException();
         }
         
-        return new ShaderProgram(shaders[0], shaders[1]);
+        m_resourceRegistry.Register(shaders[0]);
+        m_resourceRegistry.Register(shaders[1]);
+
+        return shaders;
     }
 
     public Texture CreateTexture(int width, int height, PixelFormat pixelFormat, TextureUsage usage)
     {
         var textureDescription = TextureDescription.Texture2D((uint) width, (uint) height, 1, 1, pixelFormat, usage);
-        return m_graphicsDevice.ResourceFactory.CreateTexture(textureDescription);
+        var texture = m_graphicsDevice.ResourceFactory.CreateTexture(textureDescription);
+        m_resourceRegistry.Register(texture);
+        return texture;
     }
 
     public Texture CreateTexture(string filePath, TextureUsage usage = TextureUsage.Sampled)
@@ -89,6 +98,8 @@ internal class ResourceFactory : IResourceFactory
             m_graphicsDevice.UpdateTexture(texture, accessor.GetRowSpan(0).ToArray(), 0, 0, 0, (uint)image.Width, (uint)image.Height, 1, 0, 0);
         });
 
+        m_resourceRegistry.Register(texture);
+        
         return texture;
     }
     
@@ -97,6 +108,7 @@ internal class ResourceFactory : IResourceFactory
         string[] result = new string[2];
 
         string[] shaderSources = sourceString.Split("#type ");
+        int index = 0;
 
         for (int i = 0; i < shaderSources.Length; i++)
         {
@@ -106,7 +118,8 @@ internal class ResourceFactory : IResourceFactory
             string newLine = PlatformConstants.NewLine;
             
             string source = shaderSource[(shaderSource.IndexOf(newLine, StringComparison.Ordinal) + 1)..];
-            result[i] = source;
+            result[index] = source;
+            index++;
         }
 
         return result;

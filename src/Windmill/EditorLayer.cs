@@ -1,8 +1,6 @@
 using Akytos;
-using Akytos.Editor;
 using Akytos.Events;
 using Akytos.Graphics;
-using Akytos.Graphics.Buffers;
 using Akytos.Layers;
 using Akytos.SceneSystems;
 using Veldrid;
@@ -16,27 +14,22 @@ internal class EditorLayer : ILayer
 {
     private readonly AssemblyManager m_assemblyManager;
     private readonly EditorHotKeyService m_editorHotKeyService;
-    private readonly IEditorViewport m_editorViewport;
     private readonly GraphicsDevice m_graphicsDevice;
     private readonly MenuService m_menuService;
     private readonly ModalStack m_modalStack;
     private readonly PanelManager m_panelManager;
     private readonly IProjectManager m_projectManager;
     private readonly SceneEditorContext m_sceneEditorContext;
+    private readonly FramebufferService m_framebufferService;
     private readonly SceneTree m_sceneTree;
     private readonly ICamera m_camera;
-    private readonly Framebuffer m_editorFramebuffer;
-    private readonly Framebuffer m_gameFramebuffer;
     private readonly CommandList m_commandList;
-    private readonly Pipeline m_pipeline;
 
-    public EditorLayer(GraphicsDevice graphicsDevice,
-        IEditorViewport editorViewport, PanelManager panelManager, MenuService menuService, ModalStack modalStack, 
+    public EditorLayer(GraphicsDevice graphicsDevice, PanelManager panelManager, MenuService menuService, ModalStack modalStack, 
         EditorHotKeyService editorHotKeyService, SceneEditorContext sceneEditorContext, IProjectManager projectManager, 
-        AssemblyManager assemblyManager, SceneTree sceneTree, Framebuffer editorFramebuffer, Framebuffer gameFramebuffer, CommandList commandList, Pipeline pipeline)
+        AssemblyManager assemblyManager, SceneTree sceneTree, CommandList commandList, FramebufferService framebufferService)
     {
         m_graphicsDevice = graphicsDevice;
-        m_editorViewport = editorViewport;
         m_panelManager = panelManager;
         m_menuService = menuService;
         m_modalStack = modalStack;
@@ -45,10 +38,8 @@ internal class EditorLayer : ILayer
         m_projectManager = projectManager;
         m_assemblyManager = assemblyManager;
         m_sceneTree = sceneTree;
-        m_editorFramebuffer = editorFramebuffer;
-        m_gameFramebuffer = gameFramebuffer;
         m_commandList = commandList;
-        m_pipeline = pipeline;
+        m_framebufferService = framebufferService;
 
         m_camera = new OrthographicCamera(245, 135);
     }
@@ -88,11 +79,11 @@ internal class EditorLayer : ILayer
         // -- UPDATE END -- //
 
         m_commandList.Begin();
-        m_commandList.SetFramebuffer(m_editorFramebuffer);
+        m_commandList.SetFramebuffer(m_framebufferService.GetFramebuffer("Viewport"));
         m_commandList.ClearColorTarget(0, new RgbaFloat(0.1f, 0.1f, 0.1f, 1.0f));
         m_sceneTree.OnRender(m_camera);
         
-        m_commandList.SetFramebuffer(m_gameFramebuffer);
+        m_commandList.SetFramebuffer(m_framebufferService.GetFramebuffer("Game"));
         m_commandList.ClearColorTarget(0, new RgbaFloat(0.1f, 0.1f, 0.1f, 1.0f));
         m_sceneTree.OnRender(m_camera);
 
@@ -126,7 +117,7 @@ internal class EditorLayer : ILayer
         if (!m_projectManager.LoadLastOpenedProject())
         {
             // TODO: Display project manager window at once. May have a separate launcher program?
-            m_projectManager.CreateNewProject("TestProject", "C:/Akytos/TestProject");
+            m_projectManager.CreateNewProject("TestProject", "/Users/Shared/Akytos/TestProject");
             m_sceneEditorContext.CreateNewScene<Node2D>();
         }
         else
