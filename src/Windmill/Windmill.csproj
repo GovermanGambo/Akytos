@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <Configurations>Debug;Release;Debug_Editor;Release_Editor</Configurations>
         <Platforms>AnyCPU</Platforms>
@@ -10,12 +10,6 @@
         <AssemblyVersion>0.1.0</AssemblyVersion>
         <FileVersion>0.1.0</FileVersion>
     </PropertyGroup>
-
-    <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
-        <UseWpf>true</UseWpf>
-        <UseWindowsForms>true</UseWindowsForms>
-    </PropertyGroup>
-
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
       <DefineConstants>TRACE;AKYTOS_EDITOR</DefineConstants>
     </PropertyGroup>
@@ -44,95 +38,6 @@
         <Content Include="Akytos.ini">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Reference Include="ImGui.NET">
-            <HintPath>..\Akytos\vendor\ImGui.NET\ImGui.NET.dll</HintPath>
-        </Reference>
-        <Reference Include="ImGuizmo.NET">
-            <HintPath>..\Akytos\vendor\ImGui.NET\ImGuizmo.NET.dll</HintPath>
-        </Reference>
-        <Reference Include="ImNodes.NET">
-            <HintPath>..\Akytos\vendor\ImGui.NET\ImNodes.NET.dll</HintPath>
-        </Reference>
-        <Reference Include="ImPlot.NET">
-            <HintPath>..\Akytos\vendor\ImGui.NET\ImPlot.NET.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-        <!--imgui-->
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimgui\linux-x64\cimgui.so" Condition="'$(IsLinux)'=='true'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimgui.so</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimgui\osx-x64\cimgui.dylib" Condition="'$(IsOSX)'=='true'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimgui.dylib</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimgui\win-x64\cimgui.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimgui.dll</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimgui\win-x86\cimgui.dll" Condition="'$(IsWindows)'=='true' And '$(Platform)'=='x86'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimgui.dll</TargetPath>
-        </ContentWithTargetPath>
-
-        <!--implot-->
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimplot\linux-x64\cimplot.so" Condition="'$(IsLinux)'=='true'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimplot.so</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimplot\osx-x64\cimplot.dylib" Condition="'$(IsOSX)'=='true'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimplot.dylib</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimplot\win-x64\cimplot.dll" Condition="'$(IsWindows)'=='true' And '$(Platform)'=='x64'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimplot.dll</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimplot\win-x86\cimplot.dll" Condition="'$(IsWindows)'=='true' And '$(Platform)'=='x86'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimplot.dll</TargetPath>
-        </ContentWithTargetPath>
-
-        <!--imguizmo-->
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimguizmo\linux-x64\cimguizmo.so" Condition="'$(IsLinux)'=='true'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimguizmo.so</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimguizmo\osx-x64\cimguizmo.dylib" Condition="'$(IsOSX)'=='true'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimguizmo.dylib</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimguizmo\win-x64\cimguizmo.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimguizmo.dll</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimguizmo\win-x86\cimguizmo.dll" Condition="'$(IsWindows)'=='true' And '$(Platform)'=='x86'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimguizmo.dll</TargetPath>
-        </ContentWithTargetPath>
-
-        <!--imnodes-->
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimnodes\linux-x64\cimnodes.so" Condition="'$(IsLinux)'=='true'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimnodes.so</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimnodes\osx-x64\cimnodes.dylib" Condition="'$(IsOSX)'=='true'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimnodes.dylib</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimnodes\win-x64\cimnodes.dll" Condition="'$(IsWindows)'=='true' And '$(Platform)'=='x64'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimnodes.dll</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimnodes\win-x86\cimnodes.dll" Condition="'$(IsWindows)'=='true' And '$(Platform)'=='x86'">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimnodes.dll</TargetPath>
-        </ContentWithTargetPath>
     </ItemGroup>
 
     <ItemGroup>
