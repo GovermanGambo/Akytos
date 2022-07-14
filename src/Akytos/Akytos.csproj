@@ -21,7 +21,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="ImGui.NET.Docking" Version="1.75.0" />
       <PackageReference Include="LightInject" Version="6.4.1" />
       <PackageReference Include="Serilog" Version="2.10.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
@@ -40,6 +39,9 @@
         <Reference Include="ImGui.NET">
             <HintPath>vendor/ImGui.NET/ImGui.NET.dll</HintPath>
         </Reference>
+        <Reference Include="ImGui.NET, Version=1.78.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>vendor\ImGui.NET\ImGui.NET.dll</HintPath>
+        </Reference>
         <Reference Include="ImGuizmo.NET">
             <HintPath>vendor\ImGui.NET\ImGuizmo.NET.dll</HintPath>
         </Reference>
@@ -57,9 +59,9 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <TargetPath>cimgui.so</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="../Akytos/vendor/ImGui.NET/cimgui/osx-x64/cimgui.dylib" Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
+        <ContentWithTargetPath Include="../Akytos/vendor/ImGui.NET/cimgui/win-x64/cimgui.dll" Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimgui.dylib</TargetPath>
+            <TargetPath>cimgui.dll</TargetPath>
         </ContentWithTargetPath>
         <ContentWithTargetPath Include="..\Akytos\vendor\ImGui.NET\cimgui\win-x64\cimgui.dll" Condition="'$(OS)' == 'Windows_NT'">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
