@@ -129,7 +129,7 @@ internal class EditorLayer : ILayer
         if (!m_projectManager.LoadLastOpenedProject())
         {
             // TODO: Display project manager window at once. May have a separate launcher program?
-            m_projectManager.CreateNewProject("TestProject", "C:/Akytos/TestProject");
+            m_projectManager.CreateNewProject("TestProject", "F:/akytos/TestProject");
             m_sceneEditorContext.CreateNewScene<Node2D>();
         }
         else
